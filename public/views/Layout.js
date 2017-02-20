@@ -5,50 +5,43 @@ import {FloatingActionButton} from 'material-ui'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import {ReactMic, startRecording, stopRecording, saveRecording, getBlobURL } from 'react-mic/lib/index';
+import Recorder from 'react-recorder'
 
 export default class Layout extends React.Component {
 
     constructor() {
         super();
 
+        this.onStop = (blob) => {
+          console.log(blob);
+          // Do something with the blob file of the recording
+        }
         this.startRecorder = () => {
-          //console.log(ReactMic);
-          startRecording();
+          this.refs.Recorder.start();
         }
-        this.stopRecorder = () => {
-          stopRecording();
+        this.start = () => {
+          console.log('Sup buddy');
         }
-
-        this.saveRecording = () => {
-          const savedRecordingBlob = saveRecording();
-          console.log('the saved recording is (it is a blob): ', savedRecordingBlob);
+        this.stop = () => {
+          this.refs.Recorder.stop();
         }
     }
 
     render() {
       return (<MuiThemeProvider>
         <div>
-          <ReactMic backgroundColor="#FF4081"
-            strokeColor="#000000"
-          />
+          <Recorder ref='Recorder' onStop={this.onStop} onStart ={this.start}/>
           <FloatingActionButton
             secondary={true}
             onTouchTap={this.startRecorder}>
             Hi Microphone here
-          </FloatingActionButton>\
-
+          </FloatingActionButton>
           <FloatingActionButton
             secondary={true}
-            onTouchTap={this.stopRecorder}>
-            Hi Microphone Stop
+            onTouchTap={this.stop}>
+            Stop
           </FloatingActionButton>
 
-          <FloatingActionButton
-            secondary={true}
-            onTouchTap={this.saveRecording}>
-            Hi Save Stop
-          </FloatingActionButton>
         </div>
         </MuiThemeProvider>)
     }
