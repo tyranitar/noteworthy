@@ -18,6 +18,7 @@ const OctaveClient = function (octaveDir, port, bufferSize = 1000000) {
   });
 
   this.socket.on('data', (chunk) => {
+    // Placeholder logic.
     console.log(chunk.toString());
   });
 };
