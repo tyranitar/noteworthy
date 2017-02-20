@@ -4,3 +4,4 @@ examples
 *.mid
 *.wav
 *.exe
+*.min.js
