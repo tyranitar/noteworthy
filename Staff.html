@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="SheetMaker.js"></script>
+<script>
+$(document).ready(function(){
+  $('#button').on('click', function(){
+    var notes = $('#note-input').val();
+	var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
+	var times = $('#time-input').val();
+	var timeResult = times.split(/,| /).filter(function(n){ return n != ''; });
+	console.log(noteResult, timeResult);
+	
+	plotSheet(noteResult, timeResult);
+	/*
+			// If > 4.2 ?
+			if (time >= 3.8 && time <= 4.2)
+			{
+				//whole note
+			}
+			else if (time >= 2.8)
+			{
+				//half + dot (3/4)
+			}
+			else if (time >= 1.8)
+			{
+				//half
+			}
+			else if (time >= 1.3)
+			{
+				//quarter + dot (3/8)
+			}
+			else if (time >= 0.8)
+			{
+				//quarter
+			}
+			else if (time >= 0.3)
+			{
+				//eighth
+			}
+		}
+	}*/
+  });
+});
+</script>
+Notes: <input id="note-input" type="text" name="NoteInput" /><br/>
+Times: <input id="time-input" type="text" name="TimeInput" /><br/>
+<input id="button" type="button" value="Generate Sheet" />
+
+<div id="sheet">
+</div>
+
+</body>
+</html>
