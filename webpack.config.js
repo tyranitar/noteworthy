@@ -1,7 +1,7 @@
-var webpack = require('webpack');
-var path    = require('path');
+const webpack = require('webpack');
+const path    = require('path');
 
-var babelLoader = {
+const babelLoader = {
     test    : /\.jsx?$/,
     exclude : /(node_modules|bower_components)/,
     loader  : 'babel-loader',
@@ -11,19 +11,19 @@ var babelLoader = {
     }
 };
 
-// Not transpiling server code since everything breaks.
-module.exports = { // Client.
-    context : path.join(__dirname, '.', 'public'),
+module.exports = {
+    context : path.join(__dirname, 'src', 'public'),
+
     entry: [
-        './client.js'
+        './app.js'
     ],
-    
+
     module: {
         loaders: [ babelLoader ]
     },
 
     output: {
-        path     : path.join(__dirname, 'public'),
-        filename : 'client.min.js'
+        path     : path.join(__dirname, 'src', 'public'),
+        filename : 'app.min.js'
     }
 };

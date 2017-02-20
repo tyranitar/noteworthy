@@ -1,2 +1,10 @@
 node_modules
+data
+examples
+
+local.bat
+
+*.exe
+*.mid
 *.min.js
+*.wav

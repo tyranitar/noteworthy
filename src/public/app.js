@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, useRouterHistory } from 'react-router';
 import { createHashHistory } from 'history';
 import Layout from './views/Layout';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-var injectTapEventPlugin = require("react-tap-event-plugin");
-injectTapEventPlugin();
-
-const history = useRouterHistory(createHashHistory)({ queryKey: false });
+const history = useRouterHistory(createHashHistory)();
 const app = document.getElementById('app');
+
+injectTapEventPlugin();
 
 ReactDOM.render(
     <Router history={ history }>
-        <Route path='/' component={Layout}></Route>
+        <Route path='/' component={ Layout }></Route>
     </Router>,
 app);

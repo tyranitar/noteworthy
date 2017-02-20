@@ -8,7 +8,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Recorder from 'react-recorder'
 
 export default class Layout extends React.Component {
-
     constructor() {
         super();
 
@@ -28,7 +27,9 @@ export default class Layout extends React.Component {
     }
 
     render() {
-      return (<MuiThemeProvider>
+
+      return (
+      <MuiThemeProvider>
         <div>
           <Recorder ref='Recorder' onStop={this.onStop} onStart ={this.start}/>
           <FloatingActionButton
@@ -41,8 +42,7 @@ export default class Layout extends React.Component {
             onTouchTap={this.stop}>
             Stop
           </FloatingActionButton>
-
         </div>
-        </MuiThemeProvider>)
+      </MuiThemeProvider>)
     }
 }
