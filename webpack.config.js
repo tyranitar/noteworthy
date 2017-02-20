@@ -17,11 +17,7 @@ module.exports = { // Client.
     entry: [
         './client.js'
     ],
-
-    node: {
-      __dirname: true,
-    },
-
+    
     module: {
         loaders: [ babelLoader ]
     },
