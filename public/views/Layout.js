@@ -10,7 +10,6 @@ export default class Layout extends React.Component {
     }
 
     render() {
-      console.log("fuck?");
-      return (<div>Sup buddy</div>)
+      return (<MuiThemeProvider><div>Sup buddy</div></MuiThemeProvider>)
     }
 }
