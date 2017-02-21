@@ -47,14 +47,19 @@ function plotSheet(chordArray, timeArray)
 					
 					
 					//Iterate through each note in chord
-					for (var i=0, len = noteValues.length; i < len; i++)
+					for (var i=0, len = noteValues.length, dx = 0, shifted = false; i < len; i++)
 					{
-						var dx = 0,
-							yPosition = staffTop - noteValues[i]*5;
+						var yPosition = staffTop - noteValues[i]*5;
 						
 						if (i > 0 && noteValues[i-1] + 1 == noteValues[i])
 						{
-							dx = 11;
+							if (dx == 11)
+								dx = 0;
+							else
+							{
+								dx = 11;
+								shifted = true;
+							}
 						}
 						
 						//whole notes
@@ -102,7 +107,7 @@ function plotSheet(chordArray, timeArray)
 						}
 					}
 					
-					xPosition += (time >= 0.5)? time*50 : 25;
+					xPosition +=  + (time >= 0.5)? time*50 : shifted ? 25 : 16;
 					index++;
 				}
 				
