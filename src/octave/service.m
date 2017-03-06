@@ -11,14 +11,14 @@ listen(s, 0);
 client = accept(s);
 
 while true
-  [buffer, count] = recv(client, bufferSize);
+    [buffer, count] = recv(client, bufferSize);
 
-  if count > 0
-    % Data parsing logic.
-    disp(buffer);
-    send(client, buffer);
-  else
-    % Client disconnected.
-    break;
-  end
+    if count > 0
+        % Data parsing logic.
+        disp(buffer);
+        send(client, buffer);
+    else
+        % Client disconnected.
+        break;
+    end
 end
