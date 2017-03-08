@@ -1,5 +1,10 @@
 const OctaveClient = require('./octave-client');
 
-const octaveClient = new OctaveClient('./octave/service.m', 8080);
+const octaveClient = new OctaveClient({
+    serviceDir: './octave/service.m',
+    port: 8080
+});
 
-octaveClient.send("Hello, World!");
+octaveClient.connect().then(() => {
+    octaveClient.send("Hello, World!");
+});
