@@ -8,3 +8,7 @@ const octaveClient = new OctaveClient({
 octaveClient.connect().then(() => {
     octaveClient.send("Hello, World!");
 });
+
+octaveClient.receive((chunk) => {
+    console.log(chunk.toString());
+});
