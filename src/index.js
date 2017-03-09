@@ -7,6 +7,8 @@ const octaveClient = new OctaveClient({
 
 octaveClient.connect().then(() => {
     octaveClient.send("Hello, World!");
+}).catch(() => {
+    console.error("failed to connect to octave service");
 });
 
 octaveClient.receive((chunk) => {
