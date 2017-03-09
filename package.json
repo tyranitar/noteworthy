@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron src/main.js",
+    "start": "start webpack --watch && electron src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
