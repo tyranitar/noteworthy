@@ -6,6 +6,7 @@ vendor
 local.bat
 
 *.exe
+*.mat
 *.mid
 *.min.js
 *.wav

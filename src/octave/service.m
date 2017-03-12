@@ -15,6 +15,8 @@ while true
 
     if count > 0
         % Data parsing logic.
+        % Load the weights once upon deployment and keep it in memory.
+        % Call predict_notes here with the file location and weights as the arguments.
         disp(buffer);
         send(client, buffer);
     else
