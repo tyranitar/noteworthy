@@ -5,44 +5,40 @@
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="SheetMaker.js"></script>
 <script>
-$(document).ready(function(){
-  $('#button').on('click', function(){
+var waitForFinalEvent = (function() {
+    var timers = {};
+    return function (callback, ms, uniqueId) {
+        if (timers[uniqueId]) {
+            clearTimeout(timers[uniqueId]);
+        }
+        timers[uniqueId] = setTimeout(callback, ms);
+    };
+})();
+
+function getDataAndPlot(){
+    d3.selectAll("#sheet svg").remove();
+
     var notes = $('#note-input').val();
-	var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
-	var times = $('#time-input').val();
-	var timeResult = times.split(/,| /).filter(function(n){ return n != ''; });
-	console.log(noteResult, timeResult);
-	
-	plotSheet(noteResult, timeResult);
-	/*
-			// If > 4.2 ?
-			if (time >= 3.8 && time <= 4.2)
-			{
-				//whole note
-			}
-			else if (time >= 2.8)
-			{
-				//half + dot (3/4)
-			}
-			else if (time >= 1.8)
-			{
-				//half
-			}
-			else if (time >= 1.3)
-			{
-				//quarter + dot (3/8)
-			}
-			else if (time >= 0.8)
-			{
-				//quarter
-			}
-			else if (time >= 0.3)
-			{
-				//eighth
-			}
-		}
-	}*/
-  });
+    var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
+    var times = $('#time-input').val();
+    var timeResult = times.split(/,| /).filter(function(n){ return n != ''; });
+    console.log(noteResult, timeResult);
+
+    //Convoluted way of finding the width of the div, because .width doesn't work. $("#sheet").width() is equivalent
+    //below code may not work inside separate file
+    var divWidth = parseInt(window.getComputedStyle(document.getElementById("sheet"), null).width);
+    plotSheet(noteResult, timeResult, divWidth);
+};
+
+var allowResizePlotting = false;
+$(document).ready(function(){
+    $('#button').on('click', function(){
+        getDataAndPlot();
+        allowResizePlotting = true;
+    });
+    $(window).resize(function(){
+        waitForFinalEvent(getDataAndPlot(), 200, "");
+    });
 });
 </script>
 Notes: <input id="note-input" type="text" name="NoteInput" /><br/>
