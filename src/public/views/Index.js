@@ -4,6 +4,8 @@ import Mic from 'material-ui/svg-icons/av/mic';
 import Stop from 'material-ui/svg-icons/av/stop';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import Pause from 'material-ui/svg-icons/av/pause';
+import Delete from 'material-ui/svg-icons/action/delete';
+import Resume from 'material-ui/svg-icons/av/play-arrow';
 import { grey500, tealA400, white } from 'material-ui/styles/colors';
 import Recorder from 'react-recorder'
 import fs from 'fs';
@@ -39,6 +41,12 @@ const containerStyle = {
     justifyContent: 'center'
 };
 
+const audioTrackContainerStyle = {
+  display: 'flex',
+  'paddingTop': '25px',
+  justifyContent: 'center'
+}
+
 const buttonStyle = {
     margin: '25px',
     padding: '25px',
@@ -48,6 +56,20 @@ const buttonStyle = {
 const iconStyle = {
     width: '100px',
     height: '100px',
+    fill: tealA400
+};
+
+const buttonStyle2 = {
+    margin: '0px',
+    padding: '5px',
+    position: 'absolute',
+    left: '80%',
+    border: `2px solid ${ tealA400 }`
+};
+
+const iconStyle2 = {
+    width: '25px',
+    height: '25px',
     fill: tealA400
 };
 
@@ -185,6 +207,14 @@ export default class Index extends React.Component {
       }
     }
 
+    renderResumeOrPlayOptions() {
+      if (this.state.paused) {
+        return (<Resume/>)
+      } else {
+        return (<Mic/>)
+      }
+    }
+
     render() {
 
         const dialogActions = [
@@ -214,7 +244,7 @@ export default class Index extends React.Component {
 
                         {!this.state.playing &&
                             <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.startRecorder}>
-                                <Mic />
+                                {this.renderResumeOrPlayOptions()}
                             </FloatingActionButton>
                         } 
 
@@ -232,9 +262,15 @@ export default class Index extends React.Component {
                     </div>
 
                     {this.state.url && 
-                      <audio controls>
-                        <source src = {'../' + this.state.url} />
-                      </audio>
+                      
+                      <div style ={ audioTrackContainerStyle }>
+                        <audio controls>
+                          <source src = {'../' + this.state.url} />
+                        </audio>
+                        <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={this.deleteUrl}>
+                            <Delete />
+                        </FloatingActionButton>
+                      </div>
                     }
 
                     {this.renderSubmitButton()}
