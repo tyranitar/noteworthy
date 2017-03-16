@@ -32,34 +32,38 @@ export default class Layout extends React.Component {
         super();
 
         this.onStop = (blob) => {
-        var blobUrl = URL.createObjectURL(blob);
-        var reader = new FileReader;
-          
-        reader.onload = function() {
-          var blobAsDataUrl = reader.result;
-          var base64 = blobAsDataUrl.split(',')[1];
-          var buf = new Buffer(base64, 'base64');
-          fs.writeFile("audio/test.mp3", buf, function(err) {
-            if(err) {
-              console.log("err", err);
-            } else {
-              
-            }
-          }) 
-        };
-          
+          var blobUrl = URL.createObjectURL(blob);
+          var reader = new FileReader;
+            
+          reader.onload = function() {
+            var blobAsDataUrl = reader.result;
+            var base64 = blobAsDataUrl.split(',')[1];
+            var buf = new Buffer(base64, 'base64');
+            fs.writeFile("audio/test.mp3", buf, function(err) {
+              if(err) {
+                console.log("err", err);
+              } else { 
+              }
+            }) 
+          };
+            
           reader.readAsDataURL(blob);
-
-        //reader.readAsDataURL(blob); 
         }
+
         this.startRecorder = () => {
           this.refs.Recorder.start();
         }
+
         this.start = () => {
-          console.log('Sup buddy');
+          this.state.node.connect(this.state.audioCtx.destination);
+          this.setState({playing: true});
         }
+
         this.stop = () => {
+          this.state.node.disconnect();
           this.refs.Recorder.stop();
+          this.setState({playing: false})
+
         }
 
         this.getStream = (stream) => {
@@ -74,11 +78,9 @@ export default class Layout extends React.Component {
           analyser.fftSize = 1024;
        
           analyser.connect(javascriptNode);
-          javascriptNode.connect(audioCtx.destination);
-       
-          var ctx = document.getElementById("mic_activity").getContext("2d");
-        
+
           javascriptNode.onaudioprocess = function() {
+              var ctx = document.getElementById("mic_activity").getContext("2d");
               var array =  new Uint8Array(analyser.frequencyBinCount);
               analyser.getByteFrequencyData(array);
               var values = 0,
@@ -94,28 +96,32 @@ export default class Layout extends React.Component {
               grad.addColorStop(1,"#00FF00");
               ctx.fillStyle=grad;
               ctx.fillRect(1,148-average,28,148);
-        }
+          }
+
+          this.setState({node: javascriptNode, audioCtx: audioCtx});
+          //javascriptNode.connect(audioCtx.destination);
     }
   }
-    render() {
 
-      return (<MuiThemeProvider>
-        <div>
-          <canvas id="mic_activity" width="500" height="150"></canvas>
-          <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
-          <br/>
-          <br/>
-          <FloatingActionButton
-            secondary={true}
-            onTouchTap={this.startRecorder}>
-            Hi Microphone here
-          </FloatingActionButton>
-          <FloatingActionButton
-            secondary={true}
-            onTouchTap={this.stop}>
-            Stop
-          </FloatingActionButton>
-        </div>
-        </MuiThemeProvider>)
-    }
+  render() {
+    console.log(this.state);
+    return (<MuiThemeProvider>
+      <div>
+        <canvas id="mic_activity" width="500" height="150"></canvas>
+        <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
+        <br/>
+        <br/>
+        <FloatingActionButton
+          secondary={true}
+          onTouchTap={this.startRecorder}>
+          Hi Microphone here
+        </FloatingActionButton>
+        <FloatingActionButton
+          secondary={true}
+          onTouchTap={this.stop}>
+          Stop
+        </FloatingActionButton>
+      </div>
+      </MuiThemeProvider>)
+  }
 }
