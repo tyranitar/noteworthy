@@ -5,6 +5,9 @@ import Stop from 'material-ui/svg-icons/av/stop';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import { grey500, tealA400, white } from 'material-ui/styles/colors';
 import Recorder from 'react-recorder'
+import fs from 'fs';
+import DialogBox from '../components/DialogBox';
+import FlatButton from 'material-ui/FlatButton';
 
 const layoutStyle = {
     height: '100%',
@@ -52,21 +55,34 @@ export default class Index extends React.Component {
         super();
 
         this.state = {
-          playing: false 
+          playing: false,
+          dialogOpen: false
         }
 
         this.onStop = (blob) => {
-          var blobUrl = URL.createObjectURL(blob);
+          this.setState({blob: blob, dialogOpen: true});
+        }
+
+        this.onCancel = () => {
+          this.setState({dialogOpen: false});
+        }
+
+        this.onSuccessSubmit = () => {
+
           var reader = new FileReader;
-            
+          var blob = this.state.blob;
+          var self = this;
+
           reader.onload = function() {
             var blobAsDataUrl = reader.result;
             var base64 = blobAsDataUrl.split(',')[1];
             var buf = new Buffer(base64, 'base64');
-            fs.writeFile("audio/test.mp3", buf, function(err) {
+
+            fs.writeFile('audio/' + self.refs.Dialog.state.text + '.mp3', buf, function(err) {
               if(err) {
                 console.log("err", err);
               } else { 
+                self.setState({dialogOpen: false})
               }
             }) 
           };
@@ -126,7 +142,30 @@ export default class Index extends React.Component {
           //javascriptNode.connect(audioCtx.destination);
         }
     }
+
+    renderStopOptions() {
+      if (this.state.playing) {
+        return (<FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
+                  <Stop />
+                </FloatingActionButton>)
+      }
+    }
+
     render() {
+
+        const dialogActions = [
+          <FlatButton
+            label="Cancel"
+            primary={true}
+            onTouchTap={this.onCancel}
+          />,
+          <FlatButton
+            label="Submit"
+            primary={true}
+            onTouchTap={this.onSuccessSubmit}
+          />
+        ];
+
         return (
             <div style={ layoutStyle }>
                 <div style={ fullWidth }>
@@ -145,11 +184,10 @@ export default class Index extends React.Component {
                             </FloatingActionButton>
                         } 
 
-                        {this.state.playing && 
-                            <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
-                                <Stop />
-                            </FloatingActionButton>
-                        }
+                        <DialogBox ref='Dialog' actions={dialogActions} open={this.state.dialogOpen}/>
+
+
+                        {this.renderStopOptions()}
 
                         <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white }>
                             <FileUpload />
