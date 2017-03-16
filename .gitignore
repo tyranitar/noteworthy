@@ -8,3 +8,5 @@ local.bat
 *.mid
 *.min.js
 *.wav
+
+src/audio

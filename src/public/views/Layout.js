@@ -7,13 +7,50 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Recorder from 'react-recorder'
 
+const fs = require("fs");
+console.log(fs);
+function base64ToArrayBuffer(base64) {
+  var binaryString =  window.atob(base64);
+  var len = binaryString.length;
+  var bytes = new Uint8Array( len );
+  for (var i = 0; i < len; i++)        {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+function blobToFile(theBlob, fileName){
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    theBlob.lastModifiedDate = new Date();
+    theBlob.name = fileName;
+    return theBlob;
+}
+
+
 export default class Layout extends React.Component {
     constructor() {
         super();
 
         this.onStop = (blob) => {
-          console.log(blob);
-          // Do something with the blob file of the recording
+        var blobUrl = URL.createObjectURL(blob);
+        var reader = new FileReader;
+          
+        reader.onload = function() {
+          var blobAsDataUrl = reader.result;
+          var base64 = blobAsDataUrl.split(',')[1];
+          var buf = new Buffer(base64, 'base64');
+          fs.writeFile("audio/test.mp3", buf, function(err) {
+            if(err) {
+              console.log("err", err);
+            } else {
+              
+            }
+          }) 
+        };
+          
+          reader.readAsDataURL(blob);
+
+        //reader.readAsDataURL(blob); 
         }
         this.startRecorder = () => {
           this.refs.Recorder.start();
@@ -26,6 +63,7 @@ export default class Layout extends React.Component {
         }
 
         this.getStream = (stream) => {
+
           var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           var analyser = audioCtx.createAnalyser();
           var source = audioCtx.createMediaStreamSource(stream);
@@ -64,7 +102,7 @@ export default class Layout extends React.Component {
       return (<MuiThemeProvider>
         <div>
           <canvas id="mic_activity" width="500" height="150"></canvas>
-          <Recorder ref='Recorder' onStop={this.onStop} onStart ={this.start} gotStream={this.getStream}/>
+          <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
           <br/>
           <br/>
           <FloatingActionButton

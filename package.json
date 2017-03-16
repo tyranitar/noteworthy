@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tyron-j/noteworthy#readme",
   "dependencies": {
+    "fs": "0.0.1-security",
     "material-ui": "~0.17.0",
     "react": "~15.4.2",
     "react-dom": "~15.4.2",
