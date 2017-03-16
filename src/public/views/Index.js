@@ -3,6 +3,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Mic from 'material-ui/svg-icons/av/mic';
 import Stop from 'material-ui/svg-icons/av/stop';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
+import Pause from 'material-ui/svg-icons/av/pause';
 import { grey500, tealA400, white } from 'material-ui/styles/colors';
 import Recorder from 'react-recorder'
 import fs from 'fs';
@@ -56,7 +57,14 @@ export default class Index extends React.Component {
 
         this.state = {
           playing: false,
-          dialogOpen: false
+          dialogOpen: false,
+          text: '',
+          url: '',
+          pause: false
+        }
+
+        this.onChangeText = (evt) => {
+          this.setState({text: evt.currentTarget.value});
         }
 
         this.onStop = (blob) => {
@@ -77,12 +85,12 @@ export default class Index extends React.Component {
             var blobAsDataUrl = reader.result;
             var base64 = blobAsDataUrl.split(',')[1];
             var buf = new Buffer(base64, 'base64');
-
-            fs.writeFile('audio/' + self.refs.Dialog.state.text + '.mp3', buf, function(err) {
+            var filePath = 'audio/' + self.state.text + '.mp3'
+            fs.writeFile(filePath, buf, function(err) {
               if(err) {
                 console.log("err", err);
               } else { 
-                self.setState({dialogOpen: false})
+                self.setState({dialogOpen: false, url: filePath})
               }
             }) 
           };
@@ -91,7 +99,13 @@ export default class Index extends React.Component {
         }
 
         this.startRecorder = () => {
-          this.refs.Recorder.start();
+          if (this.state.paused && !this.state.playing) {
+            this.refs.Recorder.resume();
+            this.state.node.connect(this.state.audioCtx.destination);
+            this.setState({playing: true, paused: false})
+          } else {
+            this.refs.Recorder.start();
+          }
         }
 
         this.start = () => {
@@ -103,7 +117,12 @@ export default class Index extends React.Component {
           this.state.node.disconnect();
           this.refs.Recorder.stop();
           this.setState({playing: false})
+        }
 
+        this.pause = () => {
+           this.state.node.disconnect();
+          this.refs.Recorder.pause();
+          this.setState({playing: false, paused: true})
         }
 
         this.getStream = (stream) => {
@@ -143,11 +162,26 @@ export default class Index extends React.Component {
         }
     }
 
-    renderStopOptions() {
+    renderStopOrPauseOptions() {
       if (this.state.playing) {
-        return (<FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
-                  <Stop />
-                </FloatingActionButton>)
+        return (
+          <div>
+            <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
+              <Stop />
+            </FloatingActionButton>
+            <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.pause}>
+              <Pause />
+            </FloatingActionButton>
+          </div>
+          )
+      }
+    }
+
+    renderSubmitButton() {
+      if (!this.state.playing && this.state.url) {
+        return <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={()=>{window.location.href='/next'}}>
+                <Stop />
+               </FloatingActionButton>
       }
     }
 
@@ -184,15 +218,27 @@ export default class Index extends React.Component {
                             </FloatingActionButton>
                         } 
 
-                        <DialogBox ref='Dialog' actions={dialogActions} open={this.state.dialogOpen}/>
+                        <DialogBox ref='Dialog' actions={dialogActions} open={this.state.dialogOpen}>
+                          <label for ="fileName">File Name</label>
+                          <input type = "text" onChange={this.onChangeText}/>
+                        </DialogBox>
 
 
-                        {this.renderStopOptions()}
+                        {this.renderStopOrPauseOptions()}
 
                         <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white }>
                             <FileUpload />
                         </FloatingActionButton>
                     </div>
+
+                    {this.state.url && 
+                      <audio controls>
+                        <source src = {'../' + this.state.url} />
+                      </audio>
+                    }
+
+                    {this.renderSubmitButton()}
+
                 </div>
             </div>
         );

@@ -7,6 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Index from './views/Index';
 
+
 const history = useRouterHistory(createHashHistory)();
 const app = document.getElementById('app');
 
