@@ -8,24 +8,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Recorder from 'react-recorder'
 
 const fs = require("fs");
-console.log(fs);
-function base64ToArrayBuffer(base64) {
-  var binaryString =  window.atob(base64);
-  var len = binaryString.length;
-  var bytes = new Uint8Array( len );
-  for (var i = 0; i < len; i++)        {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return bytes.buffer;
-}
-
-function blobToFile(theBlob, fileName){
-    //A Blob() is almost a File() - it's just missing the two properties below which we will add
-    theBlob.lastModifiedDate = new Date();
-    theBlob.name = fileName;
-    return theBlob;
-}
-
 
 export default class Layout extends React.Component {
     constructor() {

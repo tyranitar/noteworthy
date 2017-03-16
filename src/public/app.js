@@ -1,9 +1,11 @@
+import { createHashHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, useRouterHistory } from 'react-router';
-import { createHashHistory } from 'history';
-import Layout from './views/Layout';
+import { Router, Route, useRouterHistory } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import Index from './views/Index';
 
 const history = useRouterHistory(createHashHistory)();
 const app = document.getElementById('app');
@@ -11,7 +13,9 @@ const app = document.getElementById('app');
 injectTapEventPlugin();
 
 ReactDOM.render(
-    <Router history={ history }>
-        <Route path='/' component={ Layout }></Route>
-    </Router>,
+    <MuiThemeProvider>
+        <Router history={ history }>
+            <Route path='/' component={ Index }></Route>
+        </Router>
+    </MuiThemeProvider>,
 app);
