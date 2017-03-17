@@ -295,7 +295,7 @@ export default class Index extends React.Component {
                         <audio id = "audioTrack" controls>
                           <source src = {'../' + this.state.url} />
                         </audio>
-                        <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={this.deleteUrl}>
+                        <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={() => {this.setState({url: ''})}}>
                             <Delete />
                         </FloatingActionButton>
                       </div>
