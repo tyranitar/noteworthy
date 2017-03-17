@@ -114,6 +114,11 @@ export default class Index extends React.Component {
             this.setState({dialogOpen: false});
         }
 
+        this.deleteUrl = () => {
+            fs.unlinkSync(this.state.url);
+            this.setState({url: ''});
+        }
+
         this.onSuccessSubmit = () => {
 
             var reader = new FileReader;
@@ -295,7 +300,7 @@ export default class Index extends React.Component {
                         <audio id = "audioTrack" controls>
                           <source src = {'../' + this.state.url} />
                         </audio>
-                        <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={() => {this.setState({url: ''})}}>
+                        <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={this.deleteUrl}>
                             <Delete />
                         </FloatingActionButton>
                       </div>
