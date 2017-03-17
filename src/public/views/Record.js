@@ -75,22 +75,22 @@ export default class Record extends React.Component {
 	    }
 
 	    this.start = () => {
-	      this.state.node.connect(this.state.audioCtx.destination);
-	      this.setState({playing: true});
+	    	this.state.node.connect(this.state.audioCtx.destination);
+	    	this.setState({playing: true});
 	    }
 
 	    this.stop = () => {
-	      var ctx = document.getElementById("mic_activity").getContext("2d");
-	      ctx.clearRect(0, 0, 500, 150);
-	      this.state.node.disconnect();
-	      this.refs.Recorder.stop();
-	      this.setState({playing: false})
+	    	var ctx = document.getElementById("mic_activity").getContext("2d");
+	    	ctx.clearRect(0, 0, 500, 150);
+	    	this.state.node.disconnect();
+	    	this.refs.Recorder.stop();
+	    	this.setState({playing: false})
 	    }
 
 	    this.pause = () => {
-	       this.state.node.disconnect();
-	      this.refs.Recorder.pause();
-	      this.setState({playing: false, paused: true})
+	    	this.state.node.disconnect();
+	    	this.refs.Recorder.pause();
+	    	this.setState({playing: false, paused: true})
 	    }
 
 	    this.getStream = (stream) => {
