@@ -1,7 +1,7 @@
 import React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
-import Styles from '../js/styles';
+import Styles from './styles';
 import Delete from 'material-ui/svg-icons/action/delete';
 
 
@@ -25,14 +25,12 @@ export default class Upload extends React.Component {
         
         if (audioTrack) {
             audioTrack.load();
-        }
-
-        console.log(this.state);
+        };
 
         return (
             <div style={ Styles.layoutStyle }>
                 <div style={ Styles.fullWidth }>
-                    <div style={ Styles.containerStyle }>
+                    <div style={ Styles.uploadContainer }>
      					<input type="file" name="audioUpload" id="audioUpload" accept="audio/*" onChange={(evt)=>{this.setState({url: evt.target.files[0].path})}} />
                     </div>
 
@@ -47,7 +45,6 @@ export default class Upload extends React.Component {
                         </FloatingActionButton>
                       </div>
                     }
-
                 </div>
             </div>
         );

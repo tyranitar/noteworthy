@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Index from './views/Index';
 import Record from './views/Record';
-import Upload from './views/Upload';
+import Upload from './views/upload/Upload';
 
 const app = document.getElementById('app');
 
