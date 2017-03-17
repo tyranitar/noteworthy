@@ -1,13 +1,44 @@
 import { grey500, tealA400, white } from 'material-ui/styles/colors';
 
+const marginLarge = 20;
+const buttonSizeLarge = 150;
+const iconSizeLarge = 120;
+const marginMedium = 10;
+const buttonSizeMedium = 75
+const iconSizeMedium = 60;
+
+const paddingLarge = (buttonSizeLarge - iconSizeLarge) / 2;
+const paddingMedium = (buttonSizeMedium - iconSizeMedium) / 2;
+
 const styles = {
 	
 	'btnSmallAudio': {
 		margin: '0px',
 	    padding: '5px',
 	    position: 'absolute',
-	    left: '67%',
+	    left: '70%',
 	    border: `2px solid ${ tealA400 }`
+	},
+
+	recordTitle: {
+		fontWeight: 'bold',
+        fontSize: '75px',
+        color: grey500,
+        textAlign: 'center'
+	},
+
+	successMessage: {
+		fontWeight: 'bold',
+        fontSize: '20px',
+        color: grey500,
+        textAlign: 'center'
+	},
+
+	recordCaption: {
+		fontWeight: 'bold',
+        fontSize: '40px',
+        color: grey500,
+        textAlign: 'center'
 	},
 
 	'iconSmall': {
@@ -17,9 +48,14 @@ const styles = {
 	},
 
 	'btnMed': {
-		margin: '10px',
-	    padding: '5px',
-	    border: `2px solid ${ tealA400 }`
+		marginTop: `${ marginMedium }px`,
+        marginLeft: `${ marginMedium }px`,
+        marginRight: `${ marginMedium }px`,
+        width: `${ buttonSizeMedium }px`,
+        height: `${ buttonSizeMedium }px`,
+        padding: `${ paddingMedium }px`,
+		margin: '25px',
+	    border: `5px solid ${ tealA400 }`
 	},
 
 	'iconMed': {
@@ -29,8 +65,13 @@ const styles = {
 	},
 
 	'btnLarge': {
+		marginTop: `${ marginLarge }px`,
+        marginLeft: `${ marginLarge }px`,
+        marginRight: `${ marginLarge }px`,
+        width: `${ buttonSizeLarge }px`,
+        height: `${ buttonSizeLarge }px`,
+        padding: `${ paddingLarge }px`,
 		margin: '25px',
-	    padding: '25px',
 	    border: `5px solid ${ tealA400 }`
 	},
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
 import Mic from 'material-ui/svg-icons/av/mic';
 import Stop from 'material-ui/svg-icons/av/stop';
 import Pause from 'material-ui/svg-icons/av/pause';
@@ -12,6 +12,24 @@ import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
 import styles from './styles';
 import sharedstyles from '../../styles/index';
+
+const mediumIconProps = {
+	style: styles.btnMed, 
+	iconStyle: styles.iconMed, 
+	backgroundColor: sharedstyles.white
+}
+
+const largeIconProps = {
+	style: styles.btnLarge,
+	iconStyle: styles.iconLarge, 
+	backgroundColor: sharedstyles.white
+}
+
+const smallIconProps = {
+	style: styles.btnSmallAudio,
+	iconStyle: styles.iconSmall, 
+	backgroundColor: sharedstyles.white
+}
 
 export default class Record extends React.Component {
 
@@ -144,13 +162,13 @@ export default class Record extends React.Component {
         if (this.state.playing) {
             return (
                 <div>
-                    <FloatingActionButton style={ styles.btnLarge } iconStyle={ styles.iconLarge } backgroundColor={ sharedstyles.white } onTouchTap={this.stop}>
+                    <IconButton { ...largeIconProps } onClick={this.stop}>
                         <Stop />
-                    </FloatingActionButton>
+                    </IconButton>
                     
-                    <FloatingActionButton style={ styles.btnLarge } iconStyle={ styles.iconLarge } backgroundColor={ sharedstyles.white } onTouchTap={this.pause}>
+                    <IconButton { ...largeIconProps } onClick={this.pause}>
                         <Pause />
-                    </FloatingActionButton>
+                    </IconButton>
                 </div>
             )
         }
@@ -159,11 +177,16 @@ export default class Record extends React.Component {
     renderSubmitButton() {
         if (!this.state.playing && this.state.url) {
             return (
-                <div style = {sharedstyles.containerStyle} > 
-                    <FloatingActionButton style={ styles.btnMed } iconStyle={ styles.iconMed } backgroundColor={ sharedstyles.white }>
-                        <Next />
-                    </FloatingActionButton>
-                </div>
+            	<div>
+	                <div style = {sharedstyles.containerStyle} >
+	                	<IconButton { ...mediumIconProps } onClick={()=>{this.props.router.push('/sheet')}}>
+	                        <Next />
+	                    </IconButton>
+	                </div>
+	                <div style = {sharedstyles.containerStyle}>
+                    	<span style={styles.successMessage}>Translate your audio file now!</span>
+                    </div>
+            	</div>
             )
         }
     }
@@ -200,15 +223,26 @@ export default class Record extends React.Component {
         return (
             <div style={ sharedstyles.layoutStyle }>
                 <div style={ sharedstyles.fullWidth }>
+
+                	<div style={ sharedstyles.containerStyle }>
+                        <span style={ styles.recordTitle }>Record Here!</span>
+                    </div>
+
+                    <div style ={sharedstyles.containerStyle}> 
+	                    {(!this.state.playing && !this.state.paused) && 
+                        	<span style={styles.recordCaption}>Press the button below to begin recording.</span>
+	                    }
+                    </div>
+
                     <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
 
                     <div style={ sharedstyles.containerStyle }>
                         <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
 
                         {!this.state.playing &&
-                            <FloatingActionButton style={ styles.btnLarge } iconStyle={ styles.iconLarge } backgroundColor={ sharedstyles.white } onTouchTap={this.startRecorder}>
+                            <IconButton { ...largeIconProps } onClick={this.startRecorder}>
                                 {this.renderResumeOrPlayOptions()}
-                            </FloatingActionButton>
+                            </IconButton>
                         } 
 
                         <DialogBox ref='Dialog' actions={dialogActions} title='Enter a name for your submission' open={this.state.dialogOpen}>
@@ -226,9 +260,9 @@ export default class Record extends React.Component {
                         <audio id = "audioTrack" controls>
                           <source src = {'../' + this.state.url} />
                         </audio>
-                        <FloatingActionButton style={ styles.btnSmallAudio } iconStyle={ styles.iconSmall } backgroundColor={ sharedstyles.white } onTouchTap={this.deleteUrl}>
+                        <IconButton { ...smallIconProps} onClick={this.deleteUrl}>
                             <Delete />
-                        </FloatingActionButton>
+                        </IconButton>
                       </div>
                     }
 
