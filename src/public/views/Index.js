@@ -11,6 +11,8 @@ import Recorder from 'react-recorder'
 import fs from 'fs';
 import DialogBox from '../components/DialogBox';
 import FlatButton from 'material-ui/FlatButton';
+import Next from 'material-ui/svg-icons/av/skip-next';
+
 
 const layoutStyle = {
     height: '100%',
@@ -19,7 +21,8 @@ const layoutStyle = {
 };
 
 const fullWidth = {
-    width: '100%'
+    width: '100%',
+    height: '100%'
 };
 
 const headerStyle1 = {
@@ -44,7 +47,8 @@ const containerStyle = {
 const audioTrackContainerStyle = {
   display: 'flex',
   'paddingTop': '25px',
-  justifyContent: 'center'
+  justifyContent: 'center',
+  position: 'relative'
 }
 
 const buttonStyle = {
@@ -63,7 +67,7 @@ const buttonStyle2 = {
     margin: '0px',
     padding: '5px',
     position: 'absolute',
-    left: '80%',
+    left: '65%',
     border: `2px solid ${ tealA400 }`
 };
 
@@ -73,61 +77,73 @@ const iconStyle2 = {
     fill: tealA400
 };
 
+const buttonStyle3 = {
+    margin: '10px',
+    padding: '5px',
+    border: `2px solid ${ tealA400 }`
+};
+
+const iconStyle3 = {
+    width: '50px',
+    height: '50px',
+    fill: tealA400
+};
+
+
 export default class Index extends React.Component {
     constructor() {
         super();
 
         this.state = {
-          playing: false,
-          dialogOpen: false,
-          text: '',
-          url: '',
-          pause: false
+            playing: false,
+            dialogOpen: false,
+            text: '',
+            url: '',
+            pause: false
         }
 
         this.onChangeText = (evt) => {
-          this.setState({text: evt.currentTarget.value});
+            this.setState({text: evt.currentTarget.value});
         }
 
         this.onStop = (blob) => {
-          this.setState({blob: blob, dialogOpen: true});
+            this.setState({blob: blob, dialogOpen: true});
         }
 
         this.onCancel = () => {
-          this.setState({dialogOpen: false});
+            this.setState({dialogOpen: false});
         }
 
         this.onSuccessSubmit = () => {
 
-          var reader = new FileReader;
-          var blob = this.state.blob;
-          var self = this;
+            var reader = new FileReader;
+            var blob = this.state.blob;
+            var self = this;
 
-          reader.onload = function() {
-            var blobAsDataUrl = reader.result;
-            var base64 = blobAsDataUrl.split(',')[1];
-            var buf = new Buffer(base64, 'base64');
-            var filePath = 'audio/' + self.state.text + '.mp3'
-            fs.writeFile(filePath, buf, function(err) {
-              if(err) {
-                console.log("err", err);
-              } else { 
-                self.setState({dialogOpen: false, url: filePath})
-              }
-            }) 
-          };
-            
-          reader.readAsDataURL(blob);
+            reader.onload = function() {
+                var blobAsDataUrl = reader.result;
+                var base64 = blobAsDataUrl.split(',')[1];
+                var buf = new Buffer(base64, 'base64');
+                var filePath = 'audio/' + self.state.text + '.mp3'
+                fs.writeFile(filePath, buf, function(err) {
+                    if (err) {
+                        console.error("err", err);
+                    } else {
+                        self.setState({dialogOpen: false, url: filePath})
+                    }
+                }) 
+            }
+            reader.readAsDataURL(blob);
         }
 
         this.startRecorder = () => {
-          if (this.state.paused && !this.state.playing) {
-            this.refs.Recorder.resume();
-            this.state.node.connect(this.state.audioCtx.destination);
-            this.setState({playing: true, paused: false})
-          } else {
-            this.refs.Recorder.start();
-          }
+            if (this.state.paused && !this.state.playing) {
+                this.refs.Recorder.resume();
+                this.state.node.connect(this.state.audioCtx.destination);
+                this.setState({playing: true, paused: false})
+            } else {
+                this.refs.Recorder.start();
+            }
         }
 
         this.start = () => {
@@ -136,6 +152,8 @@ export default class Index extends React.Component {
         }
 
         this.stop = () => {
+          var ctx = document.getElementById("mic_activity").getContext("2d");
+          ctx.clearRect(0, 0, 500, 150);
           this.state.node.disconnect();
           this.refs.Recorder.stop();
           this.setState({playing: false})
@@ -180,39 +198,43 @@ export default class Index extends React.Component {
           }
 
           this.setState({node: javascriptNode, audioCtx: audioCtx});
-          //javascriptNode.connect(audioCtx.destination);
         }
     }
 
     renderStopOrPauseOptions() {
-      if (this.state.playing) {
-        return (
-          <div>
-            <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
-              <Stop />
-            </FloatingActionButton>
-            <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.pause}>
-              <Pause />
-            </FloatingActionButton>
-          </div>
-          )
-      }
+        if (this.state.playing) {
+            return (
+                <div>
+                    <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
+                        <Stop />
+                    </FloatingActionButton>
+                    
+                    <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.pause}>
+                        <Pause />
+                    </FloatingActionButton>
+                </div>
+            )
+        }
     }
 
     renderSubmitButton() {
-      if (!this.state.playing && this.state.url) {
-        return <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={()=>{window.location.href='/next'}}>
-                <Stop />
-               </FloatingActionButton>
-      }
+        if (!this.state.playing && this.state.url) {
+            return (
+                <div style = {containerStyle} > 
+                    <FloatingActionButton style={ buttonStyle3 } iconStyle={ iconStyle3 } backgroundColor={ white } onTouchTap={()=>{window.location.href='/next'}}>
+                        <Next />
+                    </FloatingActionButton>
+                </div>
+            )
+        }
     }
 
     renderResumeOrPlayOptions() {
-      if (this.state.paused) {
-        return (<Resume/>)
-      } else {
-        return (<Mic/>)
-      }
+        if (this.state.paused) {
+            return <Resume/>
+        } else {
+            return <Mic/>
+        }
     }
 
     render() {
@@ -229,6 +251,12 @@ export default class Index extends React.Component {
             onTouchTap={this.onSuccessSubmit}
           />
         ];
+
+        const audioTrack = document.getElementById("audioTrack");
+        
+        if (audioTrack) {
+            audioTrack.load();
+        }
 
         return (
             <div style={ layoutStyle }>
@@ -264,7 +292,7 @@ export default class Index extends React.Component {
                     {this.state.url && 
                       
                       <div style ={ audioTrackContainerStyle }>
-                        <audio controls>
+                        <audio id = "audioTrack" controls>
                           <source src = {'../' + this.state.url} />
                         </audio>
                         <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={this.deleteUrl}>
