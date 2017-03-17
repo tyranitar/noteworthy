@@ -6,15 +6,6 @@ const iconSize = 120;
 const padding = (buttonSize - iconSize) / 2;
 
 export default {
-    layoutStyle: {
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center'
-    },
-
-    fullWidth: {
-        width: '100%'
-    },
 
     headerStyle1: {
         fontWeight: 'bold',
@@ -26,11 +17,6 @@ export default {
         fontWeight: 'bold',
         fontSize: '75px',
         color: tealA400
-    },
-
-    containerStyle: {
-        display: 'flex',
-        justifyContent: 'center'
     },
 
     buttonStyle: {

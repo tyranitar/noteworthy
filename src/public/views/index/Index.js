@@ -5,6 +5,7 @@ import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import { white } from 'material-ui/styles/colors';
 
 import styles from './styles';
+import sharedstyles from '../../styles/index'
 
 const iconProps = {
     style: styles.buttonStyle,
@@ -14,15 +15,15 @@ const iconProps = {
 export default class Index extends React.Component {
     render() {
         return (
-            <div style={ styles.layoutStyle }>
-                <div style={ styles.fullWidth }>
-                    <div style={ styles.containerStyle }>
+            <div style={ sharedstyles.layoutStyle }>
+                <div style={ sharedstyles.fullWidth }>
+                    <div style={ sharedstyles.containerStyle }>
                         <span style={ styles.headerStyle1 }>Note</span><span style={ styles.headerStyle2 }>worthy</span>
                     </div>
 
-                    <div style={ styles.containerStyle }>
+                    <div style={ sharedstyles.containerStyle }>
                         <div>
-                            <IconButton { ...iconProps }>
+                            <IconButton { ...iconProps } onClick={()=>{this.props.router.push('/record')}}>
                                 <Mic />
                             </IconButton>
 

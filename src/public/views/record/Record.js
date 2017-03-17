@@ -7,10 +7,11 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import Resume from 'material-ui/svg-icons/av/play-arrow';
 import Recorder from 'react-recorder'
 import fs from 'fs';
-import DialogBox from '../components/DialogBox';
+import DialogBox from '../../components/DialogBox';
 import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
-import Styles from '../js/styles';
+import styles from './styles';
+import sharedstyles from '../../styles/index';
 
 export default class Record extends React.Component {
 
@@ -143,11 +144,11 @@ export default class Record extends React.Component {
         if (this.state.playing) {
             return (
                 <div>
-                    <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={this.stop}>
+                    <FloatingActionButton style={ styles.btnLarge } iconStyle={ styles.iconLarge } backgroundColor={ sharedstyles.white } onTouchTap={this.stop}>
                         <Stop />
                     </FloatingActionButton>
                     
-                    <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={this.pause}>
+                    <FloatingActionButton style={ styles.btnLarge } iconStyle={ styles.iconLarge } backgroundColor={ sharedstyles.white } onTouchTap={this.pause}>
                         <Pause />
                     </FloatingActionButton>
                 </div>
@@ -158,8 +159,8 @@ export default class Record extends React.Component {
     renderSubmitButton() {
         if (!this.state.playing && this.state.url) {
             return (
-                <div style = {Styles.containerStyle} > 
-                    <FloatingActionButton style={ Styles.btnMed } iconStyle={ Styles.iconMed } backgroundColor={ Styles.white }>
+                <div style = {sharedstyles.containerStyle} > 
+                    <FloatingActionButton style={ styles.btnMed } iconStyle={ styles.iconMed } backgroundColor={ sharedstyles.white }>
                         <Next />
                     </FloatingActionButton>
                 </div>
@@ -197,15 +198,15 @@ export default class Record extends React.Component {
         }
 
         return (
-            <div style={ Styles.layoutStyle }>
-                <div style={ Styles.fullWidth }>
-                    <canvas id="mic_activity" style={Styles.audioCanvas}></canvas>
+            <div style={ sharedstyles.layoutStyle }>
+                <div style={ sharedstyles.fullWidth }>
+                    <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
 
-                    <div style={ Styles.containerStyle }>
+                    <div style={ sharedstyles.containerStyle }>
                         <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
 
                         {!this.state.playing &&
-                            <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={this.startRecorder}>
+                            <FloatingActionButton style={ styles.btnLarge } iconStyle={ styles.iconLarge } backgroundColor={ sharedstyles.white } onTouchTap={this.startRecorder}>
                                 {this.renderResumeOrPlayOptions()}
                             </FloatingActionButton>
                         } 
@@ -221,11 +222,11 @@ export default class Record extends React.Component {
 
                     {this.state.url && 
                       
-                      <div style ={ Styles.audioTrackContainer }>
+                      <div style ={ styles.audioTrackContainer }>
                         <audio id = "audioTrack" controls>
                           <source src = {'../' + this.state.url} />
                         </audio>
-                        <FloatingActionButton style={ Styles.btnSmallAudio } iconStyle={ Styles.iconSmall } backgroundColor={ Styles.white } onTouchTap={this.deleteUrl}>
+                        <FloatingActionButton style={ styles.btnSmallAudio } iconStyle={ styles.iconSmall } backgroundColor={ sharedstyles.white } onTouchTap={this.deleteUrl}>
                             <Delete />
                         </FloatingActionButton>
                       </div>
