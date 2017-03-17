@@ -1,5 +1,10 @@
 import { grey500, tealA400 } from 'material-ui/styles/colors';
 
+const margin = 20;
+const buttonSize = 150;
+const iconSize = 120;
+const padding = (buttonSize - iconSize) / 2;
+
 export default {
     layoutStyle: {
         height: '100%',
@@ -12,14 +17,12 @@ export default {
     },
 
     headerStyle1: {
-        fontFamily: 'Ubuntu',
         fontWeight: 'bold',
         fontSize: '75px',
         color: grey500
     },
 
     headerStyle2: {
-        fontFamily: 'Ubuntu',
         fontWeight: 'bold',
         fontSize: '75px',
         color: tealA400
@@ -31,15 +34,25 @@ export default {
     },
 
     buttonStyle: {
-        margin: '25px',
-        padding: '25px',
-        border: `5px solid ${ tealA400 }`,
-        cursor: 'pointer'
+        marginTop: `${ margin }px`,
+        marginLeft: `${ margin }px`,
+        marginRight: `${ margin }px`,
+        width: `${ buttonSize }px`,
+        height: `${ buttonSize }px`,
+        padding: `${ padding }px`
     },
 
     iconStyle: {
-        width: '100px',
-        height: '100px',
+        width: `${ iconSize }px`,
+        height: `${ iconSize }px`,
         fill: tealA400
+    },
+
+    spanStyle: {
+        display: 'block',
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: '20px',
+        color: grey500
     }
 };

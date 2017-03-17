@@ -1,5 +1,5 @@
 import React from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
 import Mic from 'material-ui/svg-icons/av/mic';
 import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import { white } from 'material-ui/styles/colors';
@@ -8,8 +8,7 @@ import styles from './styles';
 
 const iconProps = {
     style: styles.buttonStyle,
-    iconStyle: styles.iconStyle,
-    backgroundColor: white
+    iconStyle: styles.iconStyle
 };
 
 export default class Index extends React.Component {
@@ -22,13 +21,21 @@ export default class Index extends React.Component {
                     </div>
 
                     <div style={ styles.containerStyle }>
-                        <FloatingActionButton {...iconProps}>
-                            <Mic />
-                        </FloatingActionButton>
+                        <div>
+                            <IconButton { ...iconProps }>
+                                <Mic />
+                            </IconButton>
 
-                        <FloatingActionButton {...iconProps}>
-                            <FileUpload />
-                        </FloatingActionButton>
+                            <span style={ styles.spanStyle }>Record</span>
+                        </div>
+
+                        <div>
+                            <IconButton { ...iconProps }>
+                                <FileUpload />
+                            </IconButton>
+
+                            <span style={ styles.spanStyle }>Upload</span>
+                        </div>
                     </div>
                 </div>
             </div>
