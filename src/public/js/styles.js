@@ -79,6 +79,16 @@ const styles = {
 		'paddingTop': '25px',
 		justifyContent: 'center',
 		position: 'relative'
+    },
+
+    'audioCanvas': {
+    	'paddingLeft': 0,
+	    'paddingRight': 0,
+	    'marginLeft': 'auto',
+	    'marginRight': 'auto',
+	    'display': 'block',
+	    'width': '500px',
+	    'height': '150px'
     }
 }
 

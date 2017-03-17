@@ -94,7 +94,6 @@ export default class Record extends React.Component {
 	    }
 
 	    this.getStream = (stream) => {
-
 		    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		    const analyser = audioCtx.createAnalyser();
 		    const source = audioCtx.createMediaStreamSource(stream);
@@ -105,24 +104,36 @@ export default class Record extends React.Component {
 		    analyser.fftSize = 1024;
 		   
 		    analyser.connect(javascriptNode);
-
+		    const ctx = document.getElementById("mic_activity").getContext("2d");
+		    var gradient = ctx.createLinearGradient(0,0,0,300);
+		    gradient.addColorStop(1,'#000000');
+		    gradient.addColorStop(0.75,'#ff0000');
+		    gradient.addColorStop(0.25,'#ffff00');
+		    gradient.addColorStop(0,'#ffffff');
+		 
+		    // when the javascript node is called
+		    // we use information from the analyzer node
+		    // to draw the volume
 		    javascriptNode.onaudioprocess = function() {
-		        const ctx = document.getElementById("mic_activity").getContext("2d");
-		        const array =  new Uint8Array(analyser.frequencyBinCount);
+		 
+		        // get the average for the first channel
+		        var array =  new Uint8Array(analyser.frequencyBinCount);
 		        analyser.getByteFrequencyData(array);
-		        let values = 0, length = array.length;
-		   
-		        for (let i = 0; i < length; i++) values += array[i];
-		   
-		        const average = values / length;
-		        ctx.clearRect(0, 0, 30, 150);
-		        const grad = ctx.createLinearGradient(1,1,28,148);
-		        grad.addColorStop(0,"#FF0000");
-		        grad.addColorStop(0.5, "yellow");
-		        grad.addColorStop(1,"#00FF00");
-		        ctx.fillStyle=grad;
-		        ctx.fillRect(1,148-average,28,148);
+		 
+		        // clear the current state
+		        ctx.clearRect(0, 0, 1000, 325);
+		 
+		        // set the fill style
+		        ctx.fillStyle=gradient;
+		        drawSpectrum(array);
+		 
 		    }
+		    function drawSpectrum(array) {
+		    	for ( var i = 0; i < (array.length); i++ ){
+		            var value = array[i];
+		            ctx.fillRect(i*5,325-value,3,325);
+		        }
+		    };
 
 	    	this.setState({node: javascriptNode, audioCtx: audioCtx});
    	 	}
@@ -188,7 +199,7 @@ export default class Record extends React.Component {
         return (
             <div style={ Styles.layoutStyle }>
                 <div style={ Styles.fullWidth }>
-                    <canvas id="mic_activity" width="500" height="150"></canvas>
+                    <canvas id="mic_activity" style={Styles.audioCanvas}></canvas>
 
                     <div style={ Styles.containerStyle }>
                         <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
@@ -200,8 +211,8 @@ export default class Record extends React.Component {
                         } 
 
                         <DialogBox ref='Dialog' actions={dialogActions} title='Enter a name for your submission' open={this.state.dialogOpen}>
-                          <label for ="fileName">File Name</label>
-                          <input type = "text" onChange={this.onChangeText}/>
+                          <label htmlFor ='fileName'>File Name</label>
+                          <input type = "text" onChange={this.onChangeText} id='fileName'/>
                         </DialogBox>
 
 
