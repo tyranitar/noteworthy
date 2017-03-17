@@ -5,87 +5,12 @@ import Stop from 'material-ui/svg-icons/av/stop';
 import Pause from 'material-ui/svg-icons/av/pause';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Resume from 'material-ui/svg-icons/av/play-arrow';
-import { grey500, tealA400, white } from 'material-ui/styles/colors';
 import Recorder from 'react-recorder'
 import fs from 'fs';
 import DialogBox from '../components/DialogBox';
 import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
-
-const layoutStyle = {
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center'
-};
-
-const fullWidth = {
-    width: '100%',
-    height: '100%'
-};
-
-const headerStyle1 = {
-    fontFamily: 'Ubuntu',
-    fontWeight: 'bold',
-    fontSize: '75px',
-    color: grey500
-};
-
-const headerStyle2 = {
-    fontFamily: 'Ubuntu',
-    fontWeight: 'bold',
-    fontSize: '75px',
-    color: tealA400
-}
-
-const containerStyle = {
-    display: 'flex',
-    justifyContent: 'center'
-};
-
-const audioTrackContainerStyle = {
-  display: 'flex',
-  'paddingTop': '25px',
-  justifyContent: 'center',
-  position: 'relative'
-}
-
-const buttonStyle = {
-    margin: '25px',
-    padding: '25px',
-    border: `5px solid ${ tealA400 }`
-};
-
-const iconStyle = {
-    width: '100px',
-    height: '100px',
-    fill: tealA400
-};
-
-const buttonStyle2 = {
-    margin: '0px',
-    padding: '5px',
-    position: 'absolute',
-    left: '65%',
-    border: `2px solid ${ tealA400 }`
-};
-
-const iconStyle2 = {
-    width: '25px',
-    height: '25px',
-    fill: tealA400
-};
-
-const buttonStyle3 = {
-    margin: '10px',
-    padding: '5px',
-    border: `2px solid ${ tealA400 }`
-};
-
-const iconStyle3 = {
-    width: '50px',
-    height: '50px',
-    fill: tealA400
-};
+import Styles from '../js/styles';
 
 export default class Record extends React.Component {
 
@@ -132,7 +57,7 @@ export default class Record extends React.Component {
 	                if (err) {
 	                    console.error("err", err);
 	                } else {
-	                    self.setState({dialogOpen: false, url: filePath})
+	                    this.setState({dialogOpen: false, url: filePath})
 	                }
 	            }) 
 	        }
@@ -207,11 +132,11 @@ export default class Record extends React.Component {
         if (this.state.playing) {
             return (
                 <div>
-                    <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.stop}>
+                    <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={this.stop}>
                         <Stop />
                     </FloatingActionButton>
                     
-                    <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.pause}>
+                    <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={this.pause}>
                         <Pause />
                     </FloatingActionButton>
                 </div>
@@ -222,8 +147,8 @@ export default class Record extends React.Component {
     renderSubmitButton() {
         if (!this.state.playing && this.state.url) {
             return (
-                <div style = {containerStyle} > 
-                    <FloatingActionButton style={ buttonStyle3 } iconStyle={ iconStyle3 } backgroundColor={ white } onTouchTap={()=>{window.location.href='/next'}}>
+                <div style = {Styles.containerStyle} > 
+                    <FloatingActionButton style={ Styles.btnMed } iconStyle={ Styles.iconMed } backgroundColor={ Styles.white }>
                         <Next />
                     </FloatingActionButton>
                 </div>
@@ -240,7 +165,7 @@ export default class Record extends React.Component {
     }
 
     render() {
-    	
+
     	const dialogActions = [
           <FlatButton
             label="Cancel"
@@ -261,20 +186,20 @@ export default class Record extends React.Component {
         }
 
         return (
-            <div style={ layoutStyle }>
-                <div style={ fullWidth }>
+            <div style={ Styles.layoutStyle }>
+                <div style={ Styles.fullWidth }>
                     <canvas id="mic_activity" width="500" height="150"></canvas>
 
-                    <div style={ containerStyle }>
+                    <div style={ Styles.containerStyle }>
                         <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
 
                         {!this.state.playing &&
-                            <FloatingActionButton style={ buttonStyle } iconStyle={ iconStyle } backgroundColor={ white } onTouchTap={this.startRecorder}>
+                            <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={this.startRecorder}>
                                 {this.renderResumeOrPlayOptions()}
                             </FloatingActionButton>
                         } 
 
-                        <DialogBox ref='Dialog' actions={dialogActions} open={this.state.dialogOpen}>
+                        <DialogBox ref='Dialog' actions={dialogActions} title='Enter a name for your submission' open={this.state.dialogOpen}>
                           <label for ="fileName">File Name</label>
                           <input type = "text" onChange={this.onChangeText}/>
                         </DialogBox>
@@ -285,11 +210,11 @@ export default class Record extends React.Component {
 
                     {this.state.url && 
                       
-                      <div style ={ audioTrackContainerStyle }>
+                      <div style ={ Styles.audioTrackContainer }>
                         <audio id = "audioTrack" controls>
                           <source src = {'../' + this.state.url} />
                         </audio>
-                        <FloatingActionButton style={ buttonStyle2 } iconStyle={ iconStyle2 } backgroundColor={ white } onTouchTap={this.deleteUrl}>
+                        <FloatingActionButton style={ Styles.btnSmallAudio } iconStyle={ Styles.iconSmall } backgroundColor={ Styles.white } onTouchTap={this.deleteUrl}>
                             <Delete />
                         </FloatingActionButton>
                       </div>
