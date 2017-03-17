@@ -14,7 +14,7 @@ export default class Index extends React.Component {
         return (
             <div style={ Styles.layoutStyle }>
                 <div style={ Styles.fullWidth }>
-                    <div style={ Sty;es.containerStyle }>
+                    <div style={ Styles.containerStyle }>
                         <span style={ Styles.headerStyle1 }>Note</span><span style={ Styles.headerStyle2 }>worthy</span>
                     </div>
                     <div style={ Styles.containerStyle }>
