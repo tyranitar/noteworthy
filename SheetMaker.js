@@ -1,12 +1,13 @@
 function plotSheet(chordArray, timeArray, divWidth) {
     console.log(~~null);
-    var xPosition = 25, staffTop = 30, distanceBetweenNotes = 50;
+    var xPosition = 25, distanceBetweenNotes = 50;
+    const staffMiddle = 50;
+    const shift = 11;
     //var divWidth = window.getComputedStyle(document.getElementById("sheet"), null).width;
     //Adjustment for skew
     const skewX15Adjustment = Math.tan(Math.PI/12);
     const skewY10Adjustment = Math.tan(Math.PI/18);
     const skewY30Adjustment = Math.tan(Math.PI/6);
-    const shift = 11;
 
     //Check if arrays
     if (!(chordArray instanceof Array && timeArray instanceof Array)) {
@@ -40,25 +41,12 @@ function plotSheet(chordArray, timeArray, divWidth) {
                 .map(mapNoteValues)
                 .sort(sortNumbers);
 
-            // for (var i=0, j=0, len = notes.length; i <len; i++)
-            // {
-            //     var octave = notes[i].match(/[+-]?[0-9]+/);
-            //     var letter = notes[i].match(/[a-g]/);
-            //     if (octave !== null && letter !== null)
-            //     {
-            //         // -97 for ASCII conversion, -35 and -5 to shift to F5 = -137 ... might consider moving to B5 (middle note in staff)
-            //         noteValues[j] = parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 137;
-            //         j++;
-            //     }
-            //     else { console.log("Error: chordArray[" + index + "]->notes[" + i + "] = " + notes[i]); }
-            // }
-            // noteValues.sort(sortNumbers);
             var time = timeArray[index];
 
 
             //Iterate through each note in chord
             for (var i=0, len = noteValues.length, dx = 0, shifted = false; i < len; i++) {
-                var yPosition = staffTop - noteValues[i]*5;
+                var yPosition = staffMiddle - noteValues[i]*5;
 
                 if (i > 0 && noteValues[i-1] + 1 == noteValues[i]) {
                     //shift note right if adjacent to another, shift back if 2nd adjcent note
@@ -163,5 +151,6 @@ function sortNumbers(a, b) {
 function mapNoteValues(note) {
     var octave = note.match(/[+-]?[0-9]+/);
     var letter = note.match(/[a-g]/);
-    return (!!octave && !!letter) && parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 137;
+    // -97 for ASCII conversion, -28 to octave #4 and -6 to shift to B4 = -126, -133 for right-hand staff
+    return (!!octave && !!letter) && parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 126;
 }
