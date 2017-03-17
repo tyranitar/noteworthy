@@ -10,7 +10,7 @@ export default class DialogBox extends React.Component {
     	return (
 	      <div>
 	        <Dialog
-	          title=""
+	          title={this.props.title}
 	          actions={this.props.actions}
 	          modal={true}
 	          open={this.props.open}
