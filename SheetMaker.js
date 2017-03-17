@@ -1,5 +1,5 @@
-function plotSheet(chordArray, timeArray, divWidth)
-{
+function plotSheet(chordArray, timeArray, divWidth) {
+    console.log(~~null);
     var xPosition = 25, staffTop = 30, distanceBetweenNotes = 50;
     //var divWidth = window.getComputedStyle(document.getElementById("sheet"), null).width;
     //Adjustment for skew
@@ -9,8 +9,7 @@ function plotSheet(chordArray, timeArray, divWidth)
     const shift = 11;
 
     //Check if arrays
-    if (!(chordArray instanceof Array && timeArray instanceof Array))
-    {
+    if (!(chordArray instanceof Array && timeArray instanceof Array)) {
         console.error("Inputs are not arrays.");
         return;
     }
@@ -20,10 +19,7 @@ function plotSheet(chordArray, timeArray, divWidth)
     //Check if arrays match
     var length = chordArray.length < timeArray.length ? chordArray.length : timeArray.length;
 
-    for (i=0, len=timeArray.length; i < len; i++)
-    {
-        timeArray[i] = parseFloat(timeArray[i]);
-    }
+    timeArray = timeArray.map(parseFloat);
 
     do {
         var staff = d3.select("#sheet")
@@ -33,52 +29,49 @@ function plotSheet(chordArray, timeArray, divWidth)
         //Reset position
         xPosition = 25;
 
-        //console.log(typeof timeArray[index+1] !== 'undefined');
-
         while (index < length// && typeof timeArray[index+1] !== 'undefined'
-        && xPosition + timeArray[index] < divWidth)
-        {
+        && xPosition + timeArray[index] < divWidth) {
             //Splits up chord into notes and computes value
             console.log(index);
             console.log(chordArray[index].toLowerCase());
-            var notes = chordArray[index].toLowerCase().split(/(?=[a-z])/);
-            var noteValues = [];
-            for (var i=0, j=0, len = notes.length; i <len; i++)
-            {
-                var octave = notes[i].match(/[+-]?[0-9]+/);
-                var letter = notes[i].match(/[a-g]/);
-                if (octave !== null && letter !== null)
-                {
-                    // -97 for ASCII conversion, -35 and -5 to shift to F5 = -137 ... might consider moving to B5 (middle note in staff)
-                    noteValues[j] = parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 137;
-                    j++;
-                }
-                else { console.log("Error: chordArray[" + index + "]->notes[" + i + "] = " + notes[i]); }
-            }
-            noteValues.sort(sortNumbers);
+
+            var noteValues = chordArray[index].toLowerCase()
+                .split(/(?=[a-z])/)
+                .map(mapNoteValues)
+                .sort(sortNumbers);
+
+            // for (var i=0, j=0, len = notes.length; i <len; i++)
+            // {
+            //     var octave = notes[i].match(/[+-]?[0-9]+/);
+            //     var letter = notes[i].match(/[a-g]/);
+            //     if (octave !== null && letter !== null)
+            //     {
+            //         // -97 for ASCII conversion, -35 and -5 to shift to F5 = -137 ... might consider moving to B5 (middle note in staff)
+            //         noteValues[j] = parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 137;
+            //         j++;
+            //     }
+            //     else { console.log("Error: chordArray[" + index + "]->notes[" + i + "] = " + notes[i]); }
+            // }
+            // noteValues.sort(sortNumbers);
             var time = timeArray[index];
 
 
             //Iterate through each note in chord
-            for (var i=0, len = noteValues.length, dx = 0, shifted = false; i < len; i++)
-            {
+            for (var i=0, len = noteValues.length, dx = 0, shifted = false; i < len; i++) {
                 var yPosition = staffTop - noteValues[i]*5;
 
-                if (i > 0 && noteValues[i-1] + 1 == noteValues[i])
-                {
+                if (i > 0 && noteValues[i-1] + 1 == noteValues[i]) {
                     //shift note right if adjacent to another, shift back if 2nd adjcent note
                     if (dx == shift)
                         dx = 0;
-                    else
-                    {
+                    else {
                         dx = shift;
                         shifted = true;
                     }
                 }
 
                 //whole notes
-                if (time >= 3.8)//time <= 4.2
-                {
+                if (time >= 3.8) {
                     staff.append("ellipse")
                         .attr("cx", xPosition + dx)
                         .attr("cy", yPosition)
@@ -93,8 +86,7 @@ function plotSheet(chordArray, timeArray, divWidth)
                         .attr("transform", "skewX(15)")
                         .style("fill", "#fff");
                 }
-                else
-                {
+                else {
                     //black note
                     staff.append("ellipse")
                         .attr("cx", xPosition + dx)
@@ -104,8 +96,7 @@ function plotSheet(chordArray, timeArray, divWidth)
                         .attr("transform", "skewY(-10)")
                         .style("fill", "#000");
 
-                    if (time >= 1.8)
-                    {
+                    if (time >= 1.8) {
                         //half note
                         staff.append("ellipse")
                             .attr("cx", xPosition + dx)
@@ -167,4 +158,10 @@ function plotSheet(chordArray, timeArray, divWidth)
 
 function sortNumbers(a, b) {
     return a - b;
+}
+
+function mapNoteValues(note) {
+    var octave = note.match(/[+-]?[0-9]+/);
+    var letter = note.match(/[a-g]/);
+    return (!!octave && !!letter) && parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 137;
 }

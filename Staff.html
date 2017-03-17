@@ -15,7 +15,7 @@ var waitForFinalEvent = (function() {
     };
 })();
 
-function getDataAndPlot(){
+function getDataAndPlot() {
     d3.selectAll("#sheet svg").remove();
 
     var notes = $('#note-input').val();
@@ -31,12 +31,12 @@ function getDataAndPlot(){
 };
 
 var allowResizePlotting = false;
-$(document).ready(function(){
-    $('#button').on('click', function(){
+$(document).ready(function() {
+    $('#button').on('click', function() {
         getDataAndPlot();
         allowResizePlotting = true;
     });
-    $(window).resize(function(){
+    $(window).resize(function() {
         waitForFinalEvent(getDataAndPlot(), 200, "");
     });
 });
