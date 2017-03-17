@@ -40,7 +40,7 @@ const styles = {
 		 margin: '0px',
 	    padding: '5px',
 	    position: 'absolute',
-	    left: '65%',
+	    left: '67%',
 	    border: `2px solid ${ tealA400 }`
 	},
 

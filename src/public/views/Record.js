@@ -45,15 +45,15 @@ export default class Record extends React.Component {
 
 	    this.onSuccessSubmit = () => {
 
-	        var reader = new FileReader;
-	        var blob = this.state.blob;
+	        const reader = new FileReader;
+	       	const blob = this.state.blob;
 
 	        reader.onload = () => {
-	            var blobAsDataUrl = reader.result;
-	            var base64 = blobAsDataUrl.split(',')[1];
-	            var buf = new Buffer(base64, 'base64');
-	            var filePath = '../temp/' + this.state.text + '.mp3'
-	            fs.writeFile(filePath, buf, function(err) {
+	            const blobAsDataUrl = reader.result;
+	            const base64 = blobAsDataUrl.split(',')[1];
+	            const buf = new Buffer(base64, 'base64');
+	            const filePath = '../temp/' + this.state.text + '.mp3'
+	            fs.writeFile(filePath, buf, (err) => {
 	                if (err) {
 	                    console.error("err", err);
 	                } else {
@@ -80,7 +80,7 @@ export default class Record extends React.Component {
 	    }
 
 	    this.stop = () => {
-	    	var ctx = document.getElementById("mic_activity").getContext("2d");
+	    	const ctx = document.getElementById("mic_activity").getContext("2d");
 	    	ctx.clearRect(0, 0, 500, 150);
 	    	this.state.node.disconnect();
 	    	this.refs.Recorder.stop();
@@ -95,11 +95,11 @@ export default class Record extends React.Component {
 
 	    this.getStream = (stream) => {
 
-		    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-		    var analyser = audioCtx.createAnalyser();
-		    var source = audioCtx.createMediaStreamSource(stream);
+		    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+		    const analyser = audioCtx.createAnalyser();
+		    const source = audioCtx.createMediaStreamSource(stream);
 		    source.connect(analyser);
-		    var javascriptNode = audioCtx.createScriptProcessor(2048, 1, 1);
+		    const javascriptNode = audioCtx.createScriptProcessor(2048, 1, 1);
 
 		    analyser.smoothingTimeConstant = 0.3;
 		    analyser.fftSize = 1024;
@@ -107,16 +107,16 @@ export default class Record extends React.Component {
 		    analyser.connect(javascriptNode);
 
 		    javascriptNode.onaudioprocess = function() {
-		        var ctx = document.getElementById("mic_activity").getContext("2d");
-		        var array =  new Uint8Array(analyser.frequencyBinCount);
+		        const ctx = document.getElementById("mic_activity").getContext("2d");
+		        const array =  new Uint8Array(analyser.frequencyBinCount);
 		        analyser.getByteFrequencyData(array);
-		        var values = 0, length = array.length;
+		        let values = 0, length = array.length;
 		   
-		        for (var i = 0; i < length; i++) values += array[i];
+		        for (let i = 0; i < length; i++) values += array[i];
 		   
-		        var average = values / length;
+		        const average = values / length;
 		        ctx.clearRect(0, 0, 30, 150);
-		        var grad = ctx.createLinearGradient(1,1,28,148);
+		        const grad = ctx.createLinearGradient(1,1,28,148);
 		        grad.addColorStop(0,"#FF0000");
 		        grad.addColorStop(0.5, "yellow");
 		        grad.addColorStop(1,"#00FF00");
