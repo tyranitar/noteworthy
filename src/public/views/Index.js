@@ -22,7 +22,7 @@ export default class Index extends React.Component {
                             <Mic />
                         </FloatingActionButton>
 
-                        <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white }>
+                        <FloatingActionButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white } onTouchTap={()=> {this.props.router.push('/upload')}}>
                             <FileUpload />
                         </FloatingActionButton>
                     </div>
