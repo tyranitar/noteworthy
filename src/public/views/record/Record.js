@@ -12,6 +12,8 @@ import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
 import styles from './styles';
 import sharedStyles from '../../styles/index';
+import Snackbar from 'material-ui/Snackbar';
+
 
 const mediumIconProps = {
 	style: styles.btnMed, 
@@ -41,7 +43,9 @@ export default class Record extends React.Component {
 	        playing: false,
 	        dialogOpen: false,
 	        text: '',
-	        paused: false
+	        paused: false,
+	        snackBarOpen: false,
+	        snackBarMessage: ''
 	    }
 
 	    this.onStop = (blob) => {
@@ -53,8 +57,13 @@ export default class Record extends React.Component {
 	    }
 
 	    this.deleteUrl = () => {
-	        fs.unlink(this.url).then(()=> {
-	        	this.url = '';
+	        fs.unlink(this.url, (err) => {
+	        	if (err) {
+	        		this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Error deleting file. Please try again.'});
+	        	} else {
+		        	this.setState({snackBarOpen: true, snackBarMessage: 'File has been deleted.'});
+		        	this.url = '';
+	        	}
 	        });
 	    }
 
@@ -71,6 +80,7 @@ export default class Record extends React.Component {
 	            fs.writeFile(filePath, buf, (err) => {
 	                if (err) {
 	                    console.error(err);
+	                	this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops! Something went wrong with the audio conversion. Please refresh the page and try again.'})
 	                } else {
 	                	this.url = filePath;
 	                    this.setState({dialogOpen: false});
@@ -264,6 +274,8 @@ export default class Record extends React.Component {
                     }
 
                     {this.renderSubmitButton()}
+
+                    <Snackbar open={this.state.snackBarOpen} message={this.state.snackBarMessage} autoHideDuration={2000} onRequestClose={()=> {this.setState({snackBarOpen: false})}}/>
 
                 </div>
             </div>
