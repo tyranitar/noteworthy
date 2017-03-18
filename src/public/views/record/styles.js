@@ -22,38 +22,38 @@ const styles = {
 
 	recordTitle: {
 		fontWeight: 'bold',
-    	fontSize: '75px',
+		fontSize: '75px',
     	color: grey500,
     	textAlign: 'center'
 	},
 
 	successMessage: {
 		fontWeight: 'bold',
-    	fontSize: '20px',
+		fontSize: '20px',
     	color: grey500,
     	textAlign: 'center'
 	},
 
 	recordCaption: {
 		fontWeight: 'bold',
-    	fontSize: '40px',
+		fontSize: '40px',
     	color: grey500,
     	textAlign: 'center'
 	},
 
 	'iconSmall': {
 		width: '25px',
-   		height: '25px',
-    	fill: tealA400
+		height: '25px',
+		fill: tealA400
 	},
 
 	'btnMed': {
 		marginTop: `${ marginMedium }px`,
-    	marginLeft: `${ marginMedium }px`,
-    	marginRight: `${ marginMedium }px`,
-    	width: `${ buttonSizeMedium }px`,
-    	height: `${ buttonSizeMedium }px`,
-    	padding: `${ paddingMedium }px`,
+		marginLeft: `${ marginMedium }px`,
+		marginRight: `${ marginMedium }px`,
+		width: `${ buttonSizeMedium }px`,
+		height: `${ buttonSizeMedium }px`,
+		padding: `${ paddingMedium }px`,
 		margin: '25px',
 		border: `5px solid ${ tealA400 }`
 	},
@@ -66,36 +66,34 @@ const styles = {
 
 	'btnLarge': {
 		marginTop: `${ marginLarge }px`,
-    	marginLeft: `${ marginLarge }px`,
-    	marginRight: `${ marginLarge }px`,
-    	width: `${ buttonSizeLarge }px`,
-    	height: `${ buttonSizeLarge }px`,
-    	padding: `${ paddingLarge }px`,
+		marginLeft: `${ marginLarge }px`,
+		marginRight: `${ marginLarge }px`,
+		width: `${ buttonSizeLarge }px`,
+		height: `${ buttonSizeLarge }px`,
+		padding: `${ paddingLarge }px`,
 		margin: '25px',
 		border: `5px solid ${ tealA400 }`
 	},
 
 	'iconLarge': {
 		width: '100px',
-   		height: '100px',
-    	fill: tealA400
+		height: '100px',
+		fill: tealA400
 	},
 
 	'audioTrackContainer': {
-    	display: 'flex',
+		display: 'flex',
 		'paddingTop': '25px',
-		justifyContent: 'center',
-		position: 'relative'
+		justifyContent: 'center',position: 'relative'
     },
 
     'audioCanvas': {
     	'paddingLeft': 0,
-	 	'paddingRight': 0,
-		'marginLeft': 'auto',
-		'marginRight': 'auto',
-		'display': 'block',
-		'width': '500px',
-		'height': '150px'
+    	'paddingRight': 0,
+    	'marginLeft': 'auto',
+    	'marginRight': 'auto',
+    	'display': 'block','width': '500px',
+    	'height': '150px'
     }
 }
 

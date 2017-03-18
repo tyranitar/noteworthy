@@ -48,7 +48,7 @@ export default class Record extends React.Component {
 	        snackBarMessage: ''
 	    }
 
-	    this.pause = this.pause.bind(this);
+		this.pause = this.pause.bind(this);
    	 	this.onSuccessSubmit = this.onSuccessSubmit.bind(this);
    	 	this.onCancel = this.onCancel.bind(this);
    	 	this.onStop = this.onStop.bind(this);
