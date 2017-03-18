@@ -41,7 +41,6 @@ export default class Sheet extends React.Component {
 	    var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
 	    var times = document.getElementById('time-input').value;
 	    var timeResult = times.split(/,| /).filter(function(n){ return n != ''; });
-	    console.log(noteResult, timeResult);
 	    //Convoluted way of finding the width of the div, because .width doesn't work. $("#sheet").width() is equivalent
 	    //below code may not work inside separate file
 	    var divWidth = parseInt(window.getComputedStyle(document.getElementById("sheet"), null).width);
