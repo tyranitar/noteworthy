@@ -18,7 +18,8 @@ export default class Index extends React.Component {
             <div style={ sharedStyles.layoutStyle }>
                 <div style={ sharedStyles.fullWidth }>
                     <div style={ sharedStyles.containerStyle }>
-                        <span style={ styles.headerStyle1 }>Note</span><span style={ styles.headerStyle2 }>worthy</span>
+                        <span style={ styles.headerStyle1 }>Note</span>
+                        <span style={ styles.headerStyle2 }>worthy</span>
                     </div>
 
                     <div style={ sharedStyles.containerStyle }>
