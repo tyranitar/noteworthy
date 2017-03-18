@@ -9,4 +9,4 @@ vendor
 *.min.js
 *.wav
 
-temp/*
+temp
