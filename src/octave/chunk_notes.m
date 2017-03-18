@@ -48,16 +48,16 @@ function [start_indices, finish_indices] = chunk_notes(y)
         start_indices = start_indices(1:end - 1);
     end
 
-    hold; % Debug.
-    plot(y_abs); % Debug.
-    plot(mean_vals, 'g'); % Debug.
-
-    % Debug
-    for i=1:length(start_indices)
-        start_index = start_indices(i);
-        finish_index = finish_indices(i);
-
-        vert_line(start_index, 1, 'r');
-        vert_line(finish_index, 1, 'm');
-    end
+    % hold; % Debug.
+    % plot(y_abs); % Debug.
+    % plot(mean_vals, 'g'); % Debug.
+    %
+    % % Debug
+    % for i=1:length(start_indices)
+    %     start_index = start_indices(i);
+    %     finish_index = finish_indices(i);
+    %
+    %     vert_line(start_index, 1, 'r');
+    %     vert_line(finish_index, 1, 'm');
+    % end
 end

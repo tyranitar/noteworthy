@@ -1,9 +1,16 @@
-function labeled = generate_labeled(file_location)
+function [notes, note_timestamps] = generate_labeled(file_location)
+    % Convert midi file into a vector of notes.
+
     printf('generating labeled data from %s\n', file_location);
 
-    labeled = [];
-
-    % Convert midi file into a vector of notes.
     midi = readmidi(file_location);
-    notes = midiInfo(midi, 0);
+    midi_info = midiInfo(midi, 0);
+
+    % TODO: Either readmidi is wrong, or Reaper is wrong.
+    notes = midi_info(:, 3);
+    note_timestamps = midi_info(:, 5);
+
+    % % Debug.
+    % disp(notes);
+    % disp(note_timestamps);
 end

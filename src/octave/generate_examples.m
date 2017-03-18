@@ -49,15 +49,27 @@ function generate_examples()
             if exist(midi_file_path, 'file')
                 % For each wav file, call generate_input to get unlabeled data.
                 % Store the unlabeled FFT vectors in the unlabeled folder (n x 2).
-                unlabeled = generate_unlabeled(wav_file_path);
+                [freq_vecs, freq_vec_timestamps] = generate_unlabeled(wav_file_path);
+
+                unlabeled_struct = struct(
+                    'freq_vecs', freq_vecs,
+                    'freq_vec_timestamps', freq_vec_timestamps
+                );
+
                 unlabeled_path = strcat(unlabeled_dir, name, '.mat');
-                dlmwrite(unlabeled_path, unlabeled);
+                save(unlabeled_path, '-struct', 'unlabeled_struct');
 
                 % Store the labeled note vectors in the labeled folder (n x 2).
                 % Labeled data should ideally have range of timestamps for flexibility.
-                labeled = generate_labeled(midi_file_path);
+                [notes, note_timestamps] = generate_labeled(midi_file_path);
+
+                labeled_struct = struct(
+                    'notes', notes,
+                    'note_timestamps', note_timestamps
+                );
+
                 labeled_path = strcat(labeled_dir, name, '.mat');
-                dlmwrite(labeled_path, labeled);
+                save(labeled_path, '-struct', 'labeled_struct');
             else
                 error('a corresponding midi file must exist for every wav file');
             end
