@@ -6,6 +6,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Index from './views/index/Index';
 import Record from './views/record/Record';
+import Sheet from './views/sheet/Sheet';
 
 const app = document.getElementById('app');
 
@@ -16,6 +17,7 @@ ReactDOM.render(
         <Router history={ hashHistory }>
             <Route path='/' component={ Index }></Route>
             <Route path='/record' component={ Record }></Route>
+            <Route path='/sheet' component={ Sheet }></Route>
         </Router>
     </MuiThemeProvider>,
 app);
