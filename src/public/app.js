@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, useRouterHistory } from 'react-router';
-import { createHashHistory } from 'history';
-import Layout from './views/Layout';
+import { Router, Route, hashHistory } from 'react-router';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-const history = useRouterHistory(createHashHistory)();
+import Index from './views/index/Index';
+import Record from './views/record/Record';
+
 const app = document.getElementById('app');
 
 injectTapEventPlugin();
 
 ReactDOM.render(
-    <Router history={ history }>
-        <Route path='/' component={ Layout }></Route>
-    </Router>,
+    <MuiThemeProvider>
+        <Router history={ hashHistory }>
+            <Route path='/' component={ Index }></Route>
+            <Route path='/record' component={ Record }></Route>
+        </Router>
+    </MuiThemeProvider>,
 app);

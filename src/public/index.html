@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Noteworthy</title>
-  </head>
-  <body>
-    <h1>Noteworthy</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-    <div id='app'></div>
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <title>Noteworthy</title>
+    </head>
+    <body>
+        <div id="app"></div>
+    </body>
 
-  <script>
-    require('./renderer.js');
-  </script>
+    <script>
+        require("./renderer.js");
+    </script>
 
-  <script src='./app.min.js'></script>
+    <script src="./app.min.js"></script>
 </html>
