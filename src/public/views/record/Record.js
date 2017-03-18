@@ -144,12 +144,14 @@ export default class Record extends React.Component {
 		        drawSpectrum(array);
 		 
 		    }
+
 		    function drawSpectrum(array) {
 		    	for ( var i = 0; i < (array.length); i++ ){
 		            var value = array[i];
 		            ctx.fillRect(i*5,325-value,3,325);
 		        }
 		    };
+		    
 		    this.node = javascriptNode;
 		    this.audioCtx = audioCtx;
    	 	}
