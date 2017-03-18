@@ -59,7 +59,7 @@ export default class Record extends React.Component {
 	    this.deleteUrl = this.deleteUrl.bind(this);
 	    this.getStream = this.getStream.bind(this);
 	}
-	
+
    	onSuccessSubmit() {
 	    const reader = new FileReader;
 	    const blob = this.state.blob;
@@ -203,7 +203,7 @@ export default class Record extends React.Component {
 	}
 
    	renderStopOrPauseOptions() {
-        if (this.state.playing) {
+   		if (this.state.playing) {
             return (
                 <div>
                     <IconButton { ...largeIconProps } onClick={this.stop}>
@@ -222,16 +222,16 @@ export default class Record extends React.Component {
         if (!this.state.playing && this.url) {
             return (
             	<div>
-	                <div style = {sharedStyles.containerStyle} >
-	                	<IconButton { ...mediumIconProps } onClick={()=>{this.props.router.push('/sheet')}}>
-	                        <Next />
-	                    </IconButton>
-	                </div>
-	                <div style = {sharedStyles.containerStyle}>
-                    	<span style={styles.successMessage}>Translate your audio file now!</span>
-                    </div>
-            	</div>
-            )
+					<div style = {sharedStyles.containerStyle} >
+						<IconButton { ...mediumIconProps } onClick={()=>{this.props.router.push('/sheet')}}>
+							<Next />
+						</IconButton>
+					</div>
+					<div style = {sharedStyles.containerStyle}>
+						<span style={styles.successMessage}>Translate your audio file now!</span>
+					</div>
+				</div>
+			)
         }
     }
 
