@@ -11,4 +11,4 @@ local.bat
 *.min.js
 *.wav
 
-temp/*
+temp

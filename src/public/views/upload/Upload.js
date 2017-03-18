@@ -4,7 +4,6 @@ import FileUpload from 'material-ui/svg-icons/file/file-upload';
 import Styles from './styles';
 import Delete from 'material-ui/svg-icons/action/delete';
 
-
 export default class Upload extends React.Component {
 
 	constructor() {
@@ -31,7 +30,12 @@ export default class Upload extends React.Component {
             <div style={ Styles.layoutStyle }>
                 <div style={ Styles.fullWidth }>
                     <div style={ Styles.uploadContainer }>
-     					<input type="file" name="audioUpload" id="audioUpload" accept="audio/*" onChange={(evt)=>{this.setState({url: evt.target.files[0].path})}} />
+                        <div className = "image-upload">
+                            <IconButton style={ Styles.btnLarge } iconStyle={ Styles.iconLarge } backgroundColor={ Styles.white }>
+                                <FileUpload />
+                            </IconButton>
+                            <input type="file" name="audioUpload" id="audioUpload" accept="audio/*" onChange={(evt)=>{this.setState({url: evt.target.files[0].path})}} />
+                        </div>
                     </div>
 
                     {this.state.url && 
