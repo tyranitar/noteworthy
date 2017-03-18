@@ -13,6 +13,7 @@ import Next from 'material-ui/svg-icons/av/skip-next';
 import styles from './styles';
 import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
+import TextField from 'material-ui/TextField';
 
 
 const mediumIconProps = {
@@ -285,9 +286,8 @@ export default class Record extends React.Component {
                             </IconButton>
                         } 
 
-                        <Dialog title={this.props.title} actions={dialogActions} title="Enter your file name" modal={true} open={this.state.dialogOpen}>
-                        	<label htmlFor ='fileName'>File Name</label>
-                         	<input type = "text" onChange={(evt)=>this.setState({text: evt.currentTarget.value})} id='fileName'/>
+                        <Dialog title={this.props.title} actions={dialogActions} title="Name Your Audio File" modal={true} open={this.state.dialogOpen}>
+                        	<TextField hintText="Enter your file name here...." onChange={(evt)=>this.setState({text: evt.currentTarget.value})}/>
                         </Dialog>
 
                         {this.renderStopOrPauseOptions()}

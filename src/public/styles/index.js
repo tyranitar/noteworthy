@@ -57,6 +57,7 @@ export default {
         padding: '5px',
         position: 'absolute',
         left: '70%',
+        borderRadius: '50%',
         border: `2px solid ${ tealA400 }`
     },
 
@@ -74,6 +75,7 @@ export default {
         height: `${ buttonSizeMedium }px`,
         padding: `${ paddingMedium }px`,
         margin: '25px',
+        borderRadius: '50%',
         border: `5px solid ${ tealA400 }`
     },
 
@@ -91,6 +93,7 @@ export default {
         height: `${ buttonSizeLarge }px`,
         padding: `${ paddingLarge }px`,
         margin: '25px',
+        borderRadius: '50%',
         border: `5px solid ${ tealA400 }`
     },
 
