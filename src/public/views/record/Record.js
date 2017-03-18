@@ -16,20 +16,20 @@ import Snackbar from 'material-ui/Snackbar';
 
 
 const mediumIconProps = {
-	style: styles.btnMed, 
-	iconStyle: styles.iconMed, 
+	style: sharedStyles.btnMed, 
+	iconStyle: sharedStyles.iconMed, 
 	backgroundColor: sharedStyles.white
 }
 
 const largeIconProps = {
-	style: styles.btnLarge,
-	iconStyle: styles.iconLarge, 
+	style: sharedStyles.btnLarge,
+	iconStyle: sharedStyles.iconLarge, 
 	backgroundColor: sharedStyles.white
 }
 
 const smallIconProps = {
-	style: styles.btnSmallAudio,
-	iconStyle: styles.iconSmall, 
+	style: sharedStyles.btnSmallAudio,
+	iconStyle: sharedStyles.iconSmall, 
 	backgroundColor: sharedStyles.white
 }
 
@@ -295,7 +295,7 @@ export default class Record extends React.Component {
 
                     {this.url && 
                       
-                      <div style ={ styles.audioTrackContainer }>
+                      <div style ={ sharedStyles.audioTrackContainer }>
                         <audio id = "audio-track" controls>
                           <source src = {'../' + this.url} />
                         </audio>
