@@ -37,9 +37,9 @@ export default class Record extends React.Component {
 
 	constructor() {
 
-		super();
+	    super();
 
-		this.state = {
+	    this.state = {
 	        playing: false,
 	        dialogOpen: false,
 	        text: '',
@@ -48,18 +48,18 @@ export default class Record extends React.Component {
 	        snackBarMessage: ''
 	    }
 
-		this.pause = this.pause.bind(this);
-   	 	this.onSuccessSubmit = this.onSuccessSubmit.bind(this);
-   	 	this.onCancel = this.onCancel.bind(this);
-   	 	this.onStop = this.onStop.bind(this);
-   	 	this.onCancel = this.onCancel.bind(this);
-   	 	this.stop = this.stop.bind(this);
-   	 	this.startRecorder = this.startRecorder.bind(this);
-   	 	this.start = this.start.bind(this);
-   	 	this.deleteUrl = this.deleteUrl.bind(this);
-   	 	this.getStream = this.getStream.bind(this);
-   	}
-
+	    this.pause = this.pause.bind(this);
+	    this.onSuccessSubmit = this.onSuccessSubmit.bind(this);
+	    this.onCancel = this.onCancel.bind(this);
+	    this.onStop = this.onStop.bind(this);
+	    this.onCancel = this.onCancel.bind(this);
+	    this.stop = this.stop.bind(this);
+	    this.startRecorder = this.startRecorder.bind(this);
+	    this.start = this.start.bind(this);
+	    this.deleteUrl = this.deleteUrl.bind(this);
+	    this.getStream = this.getStream.bind(this);
+	}
+	
    	onSuccessSubmit() {
    		const reader = new FileReader;
        	const blob = this.state.blob;
