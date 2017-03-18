@@ -6,7 +6,6 @@ const iconSize = 120;
 const padding = (buttonSize - iconSize) / 2;
 
 export default {
-
     headerStyle1: {
         fontWeight: 'bold',
         fontSize: '75px',

@@ -7,28 +7,28 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import Resume from 'material-ui/svg-icons/av/play-arrow';
 import Recorder from 'react-recorder'
 import fs from 'fs';
-import DialogBox from '../../components/DialogBox';
+import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
 import styles from './styles';
-import sharedstyles from '../../styles/index';
+import sharedStyles from '../../styles/index';
 
 const mediumIconProps = {
 	style: styles.btnMed, 
 	iconStyle: styles.iconMed, 
-	backgroundColor: sharedstyles.white
+	backgroundColor: sharedStyles.white
 }
 
 const largeIconProps = {
 	style: styles.btnLarge,
 	iconStyle: styles.iconLarge, 
-	backgroundColor: sharedstyles.white
+	backgroundColor: sharedStyles.white
 }
 
 const smallIconProps = {
 	style: styles.btnSmallAudio,
 	iconStyle: styles.iconSmall, 
-	backgroundColor: sharedstyles.white
+	backgroundColor: sharedStyles.white
 }
 
 export default class Record extends React.Component {
@@ -41,16 +41,11 @@ export default class Record extends React.Component {
 	        playing: false,
 	        dialogOpen: false,
 	        text: '',
-	        url: '',
-	        pause: false
-	    }
-
-	    this.onChangeText = (evt) => {
-	        this.setState({text: evt.currentTarget.value});
+	        paused: false
 	    }
 
 	    this.onStop = (blob) => {
-	        this.setState({blob: blob, dialogOpen: true});
+	        this.setState({blob, dialogOpen: true});
 	    }
 
 	    this.onCancel = () => {
@@ -58,8 +53,10 @@ export default class Record extends React.Component {
 	    }
 
 	    this.deleteUrl = () => {
-	        fs.unlinkSync(this.state.url);
-	        this.setState({url: ''});
+	        fs.unlink(this.url).then(()=> {
+	        	console.log('Unlinked');
+	        	this.url = '';
+	        });
 	    }
 
 	    this.onSuccessSubmit = () => {
@@ -71,10 +68,10 @@ export default class Record extends React.Component {
 	            const blobAsDataUrl = reader.result;
 	            const base64 = blobAsDataUrl.split(',')[1];
 	            const buf = new Buffer(base64, 'base64');
-	            const filePath = '../temp/' + this.state.text + '.mp3'
+	            const filePath = '../temp/' + this.state.text + '.wav'
 	            fs.writeFile(filePath, buf, (err) => {
 	                if (err) {
-	                    console.error("err", err);
+	                    console.error(err);
 	                } else {
 	                    this.setState({dialogOpen: false, url: filePath})
 	                }
@@ -84,9 +81,9 @@ export default class Record extends React.Component {
 	    }
 
 	    this.startRecorder = () => {
-	        if (this.state.paused && !this.state.playing) {
+	        if (this.state.paused) {
 	            this.refs.Recorder.resume();
-	            this.state.node.connect(this.state.audioCtx.destination);
+	            this.node.connect(this.audioCtx.destination);
 	            this.setState({playing: true, paused: false})
 	        } else {
 	            this.refs.Recorder.start();
@@ -94,20 +91,20 @@ export default class Record extends React.Component {
 	    }
 
 	    this.start = () => {
-	    	this.state.node.connect(this.state.audioCtx.destination);
+	    	this.node.connect(this.audioCtx.destination);
 	    	this.setState({playing: true});
 	    }
 
 	    this.stop = () => {
 	    	const ctx = document.getElementById("mic_activity").getContext("2d");
 	    	ctx.clearRect(0, 0, 500, 150);
-	    	this.state.node.disconnect();
+	    	this.node.disconnect();
 	    	this.refs.Recorder.stop();
 	    	this.setState({playing: false})
 	    }
 
 	    this.pause = () => {
-	    	this.state.node.disconnect();
+	    	this.node.disconnect();
 	    	this.refs.Recorder.pause();
 	    	this.setState({playing: false, paused: true})
 	    }
@@ -153,9 +150,12 @@ export default class Record extends React.Component {
 		            ctx.fillRect(i*5,325-value,3,325);
 		        }
 		    };
-
-	    	this.setState({node: javascriptNode, audioCtx: audioCtx});
+		    this.node = javascriptNode;
+		    this.audioCtx = audioCtx;
    	 	}
+
+   	 	this.onSuccessSubmit.bind(this);
+   	 	this.onCancel.bind(this);
    	}
 
    	renderStopOrPauseOptions() {
@@ -175,15 +175,15 @@ export default class Record extends React.Component {
     }
 
     renderSubmitButton() {
-        if (!this.state.playing && this.state.url) {
+        if (!this.state.playing && this.url) {
             return (
             	<div>
-	                <div style = {sharedstyles.containerStyle} >
+	                <div style = {sharedStyles.containerStyle} >
 	                	<IconButton { ...mediumIconProps } onClick={()=>{this.props.router.push('/sheet')}}>
 	                        <Next />
 	                    </IconButton>
 	                </div>
-	                <div style = {sharedstyles.containerStyle}>
+	                <div style = {sharedStyles.containerStyle}>
                     	<span style={styles.successMessage}>Translate your audio file now!</span>
                     </div>
             	</div>
@@ -192,11 +192,7 @@ export default class Record extends React.Component {
     }
 
     renderResumeOrPlayOptions() {
-        if (this.state.paused) {
-            return <Resume/>
-        } else {
-            return <Mic/>
-        }
+    	return this.state.paused ? <Resume/> : <Mic/>
     }
 
     render() {
@@ -205,30 +201,30 @@ export default class Record extends React.Component {
           <FlatButton
             label="Cancel"
             primary={true}
-            onTouchTap={this.onCancel}
+            onClick={this.onCancel}
           />,
           <FlatButton
             label="Submit"
             primary={true}
-            onTouchTap={this.onSuccessSubmit}
+            onClick={this.onSuccessSubmit}
           />
         ];
 
-        const audioTrack = document.getElementById("audioTrack");
+        const audioTrack = document.getElementById("audio-track");
         
         if (audioTrack) {
             audioTrack.load();
         }
 
         return (
-            <div style={ sharedstyles.layoutStyle }>
-                <div style={ sharedstyles.fullWidth }>
+            <div style={ sharedStyles.layoutStyle }>
+                <div style={ sharedStyles.fullWidth }>
 
-                	<div style={ sharedstyles.containerStyle }>
+                	<div style={ sharedStyles.containerStyle }>
                         <span style={ styles.recordTitle }>Record Here!</span>
                     </div>
 
-                    <div style ={sharedstyles.containerStyle}> 
+                    <div style ={sharedStyles.containerStyle}> 
 	                    {(!this.state.playing && !this.state.paused) && 
                         	<span style={styles.recordCaption}>Press the button below to begin recording.</span>
 	                    }
@@ -236,8 +232,8 @@ export default class Record extends React.Component {
 
                     <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
 
-                    <div style={ sharedstyles.containerStyle }>
-                        <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/mp3'}} onStart ={this.start} gotStream={this.getStream}/>
+                    <div style={ sharedStyles.containerStyle }>
+                        <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/wav'}} onStart ={this.start} gotStream={this.getStream}/>
 
                         {!this.state.playing &&
                             <IconButton { ...largeIconProps } onClick={this.startRecorder}>
@@ -245,20 +241,19 @@ export default class Record extends React.Component {
                             </IconButton>
                         } 
 
-                        <DialogBox ref='Dialog' actions={dialogActions} title='Enter a name for your submission' open={this.state.dialogOpen}>
-                          <label htmlFor ='fileName'>File Name</label>
-                          <input type = "text" onChange={this.onChangeText} id='fileName'/>
-                        </DialogBox>
-
+                        <Dialog title={this.props.title} actions={dialogActions} title="Enter your file name" modal={true} open={this.state.dialogOpen}>
+                        	<label htmlFor ='fileName'>File Name</label>
+                         	<input type = "text" onChange={(evt)=>this.setState({text: evt.currentTarget.value})} id='fileName'/>
+                        </Dialog>
 
                         {this.renderStopOrPauseOptions()}
                     </div>
 
-                    {this.state.url && 
+                    {this.url && 
                       
                       <div style ={ styles.audioTrackContainer }>
-                        <audio id = "audioTrack" controls>
-                          <source src = {'../' + this.state.url} />
+                        <audio id = "audio-track" controls>
+                          <source src = {'../' + this.url} />
                         </audio>
                         <IconButton { ...smallIconProps} onClick={this.deleteUrl}>
                             <Delete />
