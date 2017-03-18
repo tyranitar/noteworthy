@@ -7,83 +7,40 @@ const padding = (buttonSize - iconSize) / 2;
 
 export default {
 
-	'white': white,
+    hiddenFileInput: {
+        display: 'none'
+    },
 
-	'layoutStyle': {
-		height: '100%',
-	    display: 'flex',
-	    alignItems: 'center'
-	},
-	
-	hiddenFileInput: {
-		display: 'none'
-	},
+    imageUpload: {
+        display: 'none'
+    },
 
-	'fullWidth': {
-		width: '100%',
-    	height: '100%'
-	},
+    uploadPageWidthAndHeight: {
+    	width: '100%',
+    	height: '40%'
+    },
 
-	imageUpload: {
-		display: 'none'
-	},
-
-	'btnLarge': {
-		marginTop: `${ margin }px`,
+    btnLarge: {
+        marginTop: `${ margin }px`,
         marginLeft: `${ margin }px`,
         marginRight: `${ margin }px`,
         width: `${ buttonSize }px`,
         height: `${ buttonSize }px`,
         padding: `${ padding }px`
-	},
-
-	'containerStyle': {
-		display: 'flex',
-    	justifyContent: 'center'
-	},
-
-	'iconLarge': {
-		width: '100px',
-    	height: '100px',
-    	fill: tealA400
-	},
-
-	'uploadCaption': {
-		fontWeight: 'bold',
-        fontSize: '40px',
-        color: grey500,
-        textAlign: 'center'
-	},
-
-	'uploadContainer': {
-		width: '100px',
-	    height: '100px',
-	    position: 'absolute',
-	    top:0,
-	    bottom: 0,
-	    left: 0,
-	    right: 0,
-	    margin: 'auto'
-	},
-
-	'audioTrackContainer': {
-    	display: 'flex',
-		'paddingTop': '25px',
-		justifyContent: 'center',
-		position: 'relative'
     },
 
-    'btnSmallAudio': {
-		margin: '0px',
-	    padding: '5px',
-	    position: 'absolute',
-	    left: '67%',
-	    border: `2px solid ${ tealA400 }`
-	},
+    iconLarge: {
+        width: '100px',
+        height: '100px',
+        fill: tealA400
+    },
 
-	'iconSmall': {
-		width: '25px',
-    	height: '25px',
-    	fill: tealA400
+    uploadContainer: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        margin: 'auto',
+        textAlign: 'center'
     }
 }

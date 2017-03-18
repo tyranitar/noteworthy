@@ -19,6 +19,20 @@ export default {
     containerStyle: {
         display: 'flex',
         justifyContent: 'center'
+    },
+
+    largeCaption: {
+        fontWeight: 'bold',
+        fontSize: '75px',
+        color: grey500,
+        textAlign: 'center'
+    },
+
+    subtitleCaption: {
+        fontWeight: 'bold',
+        fontSize: '40px',
+        color: grey500,
+        textAlign: 'center'
     }
     // Shared styles.
 };

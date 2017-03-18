@@ -31,7 +31,7 @@ export default class Index extends React.Component {
                         </div>
 
                         <div>
-                            <IconButton { ...iconProps }>
+                            <IconButton { ...iconProps } onClick={()=>{this.props.router.push('/upload')}}>
                                 <FileUpload />
                             </IconButton>
 

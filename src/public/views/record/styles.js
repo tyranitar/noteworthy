@@ -20,23 +20,9 @@ const styles = {
         border: `2px solid ${ tealA400 }`
     },
 
-    recordTitle: {
-        fontWeight: 'bold',
-        fontSize: '75px',
-        color: grey500,
-        textAlign: 'center'
-    },
-
     successMessage: {
         fontWeight: 'bold',
         fontSize: '20px',
-        color: grey500,
-        textAlign: 'center'
-    },
-
-    recordCaption: {
-        fontWeight: 'bold',
-        fontSize: '40px',
         color: grey500,
         textAlign: 'center'
     },

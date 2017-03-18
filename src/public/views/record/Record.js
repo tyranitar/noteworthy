@@ -265,12 +265,12 @@ export default class Record extends React.Component {
                 <div style={ sharedStyles.fullWidth }>
 
                 	<div style={ sharedStyles.containerStyle }>
-                        <span style={ styles.recordTitle }>Record Here!</span>
+                        <span style={ sharedStyles.largeCaption }>Record Here!</span>
                     </div>
 
                     <div style ={sharedStyles.containerStyle}> 
 	                    {(!this.state.playing && !this.state.paused) && 
-                        	<span style={styles.recordCaption}>Press the button below to begin recording.</span>
+                        	<span style={ sharedStyles.subtitleCaption }>Press the button below to begin recording.</span>
 	                    }
                     </div>
 
