@@ -1,6 +1,6 @@
 import React from 'react';
 
-const waitForFinalEvent = (function() {
+const waitForFinalEvent = (()=>{
     let timers = {};
     return function (callback, ms, uniqueId) {
         if (timers[uniqueId]) {
