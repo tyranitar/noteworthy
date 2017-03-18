@@ -2,11 +2,11 @@ import { grey500, tealA400, white } from 'material-ui/styles/colors';
 
 export default {
 
-	'white': white,
-	'grey500': grey500,
-	'tealA400': tealA400,
+    'white': white,
+    'grey500': grey500,
+    'tealA400': tealA400,
 
-	layoutStyle: {
+    layoutStyle: {
         height: '100%',
         display: 'flex',
         alignItems: 'center'
@@ -19,6 +19,6 @@ export default {
     containerStyle: {
         display: 'flex',
         justifyContent: 'center'
-    }    
+    }
     // Shared styles.
 };
