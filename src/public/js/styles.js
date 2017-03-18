@@ -1,5 +1,10 @@
 import { grey500, tealA400, white } from 'material-ui/styles/colors';
 
+const margin = 20;
+const buttonSize = 150;
+const iconSize = 120;
+const padding = (buttonSize - iconSize) / 2;
+
 const styles = {
 	
 	'white': white,
@@ -63,9 +68,12 @@ const styles = {
 	},
 
 	'btnLarge': {
-		margin: '25px',
-	    padding: '25px',
-	    border: `5px solid ${ tealA400 }`
+		marginTop: `${ margin }px`,
+        marginLeft: `${ margin }px`,
+        marginRight: `${ margin }px`,
+        width: `${ buttonSize }px`,
+        height: `${ buttonSize }px`,
+        padding: `${ padding }px`
 	},
 
 	'iconLarge': {
