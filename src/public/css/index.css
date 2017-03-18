@@ -1,3 +1,7 @@
+html {
+    font-family: 'Ubuntu';
+}
+
 html, body, #app {
     height: 100%;
 }

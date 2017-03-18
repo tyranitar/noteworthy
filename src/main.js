@@ -1,6 +1,7 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const contextMenu = require('electron-context-menu');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -37,7 +38,7 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
         app.quit();
     }
-})
+});
 
 app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
@@ -45,7 +46,9 @@ app.on('activate', function () {
     if (mainWindow === null) {
         createWindow();
     }
-})
+});
+
+contextMenu();
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
