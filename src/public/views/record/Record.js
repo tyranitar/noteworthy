@@ -54,7 +54,6 @@ export default class Record extends React.Component {
 
 	    this.deleteUrl = () => {
 	        fs.unlink(this.url).then(()=> {
-	        	console.log('Unlinked');
 	        	this.url = '';
 	        });
 	    }
@@ -73,7 +72,8 @@ export default class Record extends React.Component {
 	                if (err) {
 	                    console.error(err);
 	                } else {
-	                    this.setState({dialogOpen: false, url: filePath})
+	                	this.url = filePath;
+	                    this.setState({dialogOpen: false});
 	                }
 	            }) 
 	        }
@@ -151,7 +151,7 @@ export default class Record extends React.Component {
 		            ctx.fillRect(i*5,325-value,3,325);
 		        }
 		    };
-		    
+
 		    this.node = javascriptNode;
 		    this.audioCtx = audioCtx;
    	 	}
