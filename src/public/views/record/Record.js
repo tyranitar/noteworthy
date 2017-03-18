@@ -61,69 +61,90 @@ export default class Record extends React.Component {
 	}
 	
    	onSuccessSubmit() {
-   		const reader = new FileReader;
-       	const blob = this.state.blob;
+	    const reader = new FileReader;
+	    const blob = this.state.blob;
 
-        reader.onload = () => {
-            const blobAsDataUrl = reader.result;
-            const base64 = blobAsDataUrl.split(',')[1];
-            const buf = new Buffer(base64, 'base64');
-            const filePath = '../temp/' + this.state.text + '.wav'
-            fs.writeFile(filePath, buf, (err) => {
-                if (err) {
-                    console.error(err);
-                	this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops! Something went wrong with the audio conversion. Please refresh the page and try again.'})
-                } else {
-                	this.url = filePath;
-                    this.setState({dialogOpen: false});
-                }
-            }) 
-        }
-        reader.readAsDataURL(blob);
-   	}
+	    reader.onload = () => {
+	        const blobAsDataUrl = reader.result;
+	        const base64 = blobAsDataUrl.split(',')[1];
+	        const buf = new Buffer(base64, 'base64');
+	        const filePath = '../temp/' + this.state.text + '.wav'
+	        fs.writeFile(filePath, buf, (err) => {
+	            if (err) {
+	                console.error(err);
+	                this.setState({
+	                    snackBarOpen: true,
+	                    snackBarMessage: err.message || 'Oops! Something went wrong with the audio conversion. Please refresh the page and try again.'
+	                })
+	            } else {
+	                this.url = filePath;
+	                this.setState({
+	                    dialogOpen: false
+	                });
+	            }
+	        })
+	    }
+	    reader.readAsDataURL(blob);
+	}
 
-   	deleteUrl() {
-   		fs.unlink(this.url, (err) => {
-        	if (err) {
-        		this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Error deleting file. Please try again.'});
-        	} else {
-	        	this.setState({snackBarOpen: true, snackBarMessage: 'File has been deleted.'});
-	        	this.url = '';
-        	}
-        });
-   	}
+	deleteUrl() {
+	    fs.unlink(this.url, (err) => {
+	        if (err) {
+	            this.setState({
+	                snackBarOpen: true,
+	                snackBarMessage: err.message || 'Error deleting file. Please try again.'
+	            });
+	        } else {
+	            this.setState({
+	                snackBarOpen: true,
+	                snackBarMessage: 'File has been deleted.'
+	            });
+	            this.url = '';
+	        }
+	    });
+	}
 
-   	start() {
-   		this.node.connect(this.audioCtx.destination);
-    	this.setState({playing: true});
-   	}
+	start() {
+	    this.node.connect(this.audioCtx.destination);
+	    this.setState({
+	        playing: true
+	    });
+	}
 
-   	startRecorder() {
-        if (this.state.paused) {
-            this.refs.Recorder.resume();
-            this.node.connect(this.audioCtx.destination);
-            this.setState({playing: true, paused: false})
-        } else {
-            this.refs.Recorder.start();
-        }
-    }
+	startRecorder() {
+	    if (this.state.paused) {
+	        this.refs.Recorder.resume();
+	        this.node.connect(this.audioCtx.destination);
+	        this.setState({
+	            playing: true,
+	            paused: false
+	        })
+	    } else {
+	        this.refs.Recorder.start();
+	    }
+	}
 
-   	stop() {
-   		const ctx = document.getElementById("mic_activity").getContext("2d");
-    	ctx.clearRect(0, 0, 500, 150);
-    	this.node.disconnect();
-    	this.refs.Recorder.stop();
-    	this.setState({playing: false})
-   	}
+	stop() {
+	    const ctx = document.getElementById("mic_activity").getContext("2d");
+	    ctx.clearRect(0, 0, 500, 150);
+	    this.node.disconnect();
+	    this.refs.Recorder.stop();
+	    this.setState({
+	        playing: false
+	    })
+	}
 
-   	pause() {
-   		this.node.disconnect();
-    	this.refs.Recorder.pause();
-    	this.setState({playing: false, paused: true})
-   	}
+	pause() {
+	    this.node.disconnect();
+	    this.refs.Recorder.pause();
+	    this.setState({
+	        playing: false,
+	        paused: true
+	    })
+	}
 
-   	getStream(stream) {
-	    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+	getStream(stream) {
+	    const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 	    const analyser = audioCtx.createAnalyser();
 	    const source = audioCtx.createMediaStreamSource(stream);
 	    source.connect(analyser);
@@ -131,36 +152,36 @@ export default class Record extends React.Component {
 
 	    analyser.smoothingTimeConstant = 0.3;
 	    analyser.fftSize = 1024;
-	   
+
 	    analyser.connect(javascriptNode);
 	    const ctx = document.getElementById("mic_activity").getContext("2d");
-	    const gradient = ctx.createLinearGradient(0,0,0,300);
-	    gradient.addColorStop(1,'#000000');
-	    gradient.addColorStop(0.75,'#ff0000');
-	    gradient.addColorStop(0.25,'#ffff00');
-	    gradient.addColorStop(0,'#ffffff');
+	    const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+	    gradient.addColorStop(1, '#000000');
+	    gradient.addColorStop(0.75, '#ff0000');
+	    gradient.addColorStop(0.25, '#ffff00');
+	    gradient.addColorStop(0, '#ffffff');
 	    // when the javascript node is called
 	    // we use information from the analyzer node
 	    // to draw the volume
 	    javascriptNode.onaudioprocess = function() {
-	 
+
 	        // get the average for the first channel
-	        const array =  new Uint8Array(analyser.frequencyBinCount);
+	        const array = new Uint8Array(analyser.frequencyBinCount);
 	        analyser.getByteFrequencyData(array);
-	 
+
 	        // clear the current state
 	        ctx.clearRect(0, 0, 1000, 325);
-	 
+
 	        // set the fill style
-	        ctx.fillStyle=gradient;
+	        ctx.fillStyle = gradient;
 	        drawSpectrum(array);
-	 
+
 	    }
 
 	    function drawSpectrum(array) {
-	    	for (let i = 0; i < (array.length); i++ ){
+	        for (let i = 0; i < (array.length); i++) {
 	            let value = array[i];
-	            ctx.fillRect(i*5,325-value,3,325);
+	            ctx.fillRect(i * 5, 325 - value, 3, 325);
 	        }
 	    };
 
@@ -168,13 +189,18 @@ export default class Record extends React.Component {
 	    this.audioCtx = audioCtx;
 	}
 
-   	onCancel() {
-        this.setState({dialogOpen: false});
-    }
+	onCancel() {
+	    this.setState({
+	        dialogOpen: false
+	    });
+	}
 
-   	onStop(blob) {
-        this.setState({blob, dialogOpen: true});
-    }
+	onStop(blob) {
+	    this.setState({
+	        blob,
+	        dialogOpen: true
+	    });
+	}
 
    	renderStopOrPauseOptions() {
         if (this.state.playing) {
