@@ -1,17 +1,35 @@
 function [f, freq_vec] = fourier_transform(note, fs)
-    num_freqs = 2000;
+    % TODO: Allow frequency resolution to be specified.
+    % Then round accordingly in the bucket logic.
+    freq_lo = 1;
+    freq_hi = 1000;
 
     note_len = length(note);
 
-    % TODO: Inconsistent frequency intervals.
-    % Consider putting frequencies into buckets.
+    % Actual Fourier Transform logic.
     f = fs * (0:(note_len / 2)) / note_len;
-
     freq_vec = abs(fft(note) / note_len);
     freq_vec = freq_vec(1:note_len / 2 + 1);
     freq_vec(2:end - 1) = 2 * freq_vec(2:end - 1);
 
-    % TODO: Fix this.
-    freq_vec = freq_vec(1:num_freqs);
-    f = f(1:num_freqs);
+    % Normalizing frequency vectors.
+    freq_buckets = freq_lo:1:freq_hi; % Resolution is 1.
+    freq_vec_norm = zeros(freq_hi - freq_lo + 1, 1);
+
+    for i = 1:length(f)
+        freq = round(f(i));
+        freq_mag = freq_vec(i);
+
+        if freq >= freq_lo
+            if freq <= freq_hi
+                freq_vec_norm(freq) = freq_mag;
+            else
+                % Exceeded max frequency.
+                break;
+            end
+        end
+    end
+
+    freq_vec = freq_vec_norm;
+    f = freq_buckets;
 end
