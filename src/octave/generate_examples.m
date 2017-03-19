@@ -32,14 +32,14 @@ function generate_examples(wipe = false)
         wipe_dir(unlabeled_dir);
     end
 
-    % Iterate through the wav folder and find corresponding midi files.
-    % If there isn't a corresponding midi file with the same name, throw an error.
     [wav_files, err, msg] = readdir(wav_dir);
 
     if err
         error(msg);
     end
 
+    % Iterate through the wav folder and find corresponding midi files.
+    % If there isn't a corresponding midi file with the same name, skip the iteration.
     for i = 1:length(wav_files)
         wav_file = wav_files{i};
         [dir, name, ext] = fileparts(wav_file);
