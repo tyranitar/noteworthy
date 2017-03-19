@@ -29,8 +29,10 @@ function train_algorithm()
 
     % Use unlabeled and labeled folders to generate weights.
     % Store weights in the weights folder.
-    for i = 1:length(unlabeled_files)
-        unlabeled_file = unlabeled_files{i};
+    rand_file_indices = randperm(length(unlabeled_files));
+
+    for file_i = rand_file_indices
+        unlabeled_file = unlabeled_files{file_i};
         [unused, name, ext] = fileparts(unlabeled_file);
 
         if ~strcmp(ext, '.mat')
@@ -49,10 +51,13 @@ function train_algorithm()
         freq_vecs = load(unlabeled_path);
         note_vecs = load(labeled_path);
 
-        % Iterate through the input data randomly.
-        for i = 1:size(freq_vecs, 1)
-            freq_vec = freq_vecs(i, :); % Input.
-            note_vec = note_vecs(i, :); % Expected output.
+        rand_freq_indices = randperm(size(freq_vecs, 1));
+
+        for freq_i = rand_freq_indices
+            freq_vec = freq_vecs(freq_i, :); % Input.
+            note_vec = note_vecs(freq_i, :); % Expected output.
         end
     end
+
+    disp('finished training algorithm');
 end

@@ -86,4 +86,6 @@ function generate_examples(wipe = false)
             printf('an error occurred while processing %s\n', wav_file_path);
         end
     end
+
+    disp('finished generating examples');
 end
