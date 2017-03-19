@@ -20,11 +20,10 @@ function plotSheet(chordArray, timeArray, divWidth) {
     //Check if arrays match
     var length = chordArray.length < timeArray.length ? chordArray.length : timeArray.length;
 
-    //timeArray = timeArray.map(parseFloat);
-    timeArray[0] = parseFloat(timeArray[0]);
-	for (i=0; i < length-1; i++)
+    timeArray = timeArray.map(parseFloat);
+    for (i=0, len=length-1; i < len; i++)
 	{
-		timeArray[i] = parseFloat(timeArray[i+1]) - timeArray[i];
+		timeArray[i] = timeArray[i+1] - timeArray[i];
 	}
     timeArray[length-1] = 1;
 
