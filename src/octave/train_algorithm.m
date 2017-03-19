@@ -5,6 +5,8 @@ function train_algorithm()
     data_dir = '../../data/';
     labeled_dir = strcat(data_dir, 'labeled/');
     unlabeled_dir = strcat(data_dir, 'unlabeled/');
+    weights_path = strcat(data_dir, 'weights/index.mat');
+
     [unlabeled_files, err, msg] = readdir(unlabeled_dir);
 
     if err
@@ -16,6 +18,10 @@ function train_algorithm()
     end
 
     disp('training algorithm...');
+
+    if exist(weights_path, 'file')
+        unlink(weights_path); % Delete existing weights.
+    end
 
     % Use unlabeled and labeled folders to generate weights.
     % Store weights in the weights folder.
