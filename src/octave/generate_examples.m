@@ -70,13 +70,13 @@ function generate_examples(wipe = false)
 
         try
             [freq_vecs, freq_vec_timestamps] = generate_unlabeled(wav_file_path);
-            [notes, note_timestamps] = generate_labeled(midi_file_path);
+            [note_vecs, note_vec_timestamps] = generate_labeled(midi_file_path);
 
-            verified = verify_timestamps(freq_vec_timestamps, note_timestamps);
+            verified = verify_timestamps(freq_vec_timestamps, note_vec_timestamps);
 
             if verified
                 dlmwrite(unlabeled_path, freq_vecs);
-                dlmwrite(labeled_path, notes);
+                dlmwrite(labeled_path, note_vecs);
             else
                 printf('failed to verify timestamps for %s\n', wav_file_path);
             end
