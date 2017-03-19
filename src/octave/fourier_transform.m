@@ -20,16 +20,18 @@ function [f, freq_vec] = fourier_transform(note, fs)
         freq = round(f(i));
         freq_mag = freq_vec(i);
 
-        if freq >= freq_lo
-            if freq <= freq_hi
-                % Only keep the highest magnitude in each bucket.
-                if freq_mag > freq_vec_norm(freq)
-                    freq_vec_norm(freq) = freq_mag;
-                end
-            else
-                % Exceeded max frequency.
-                break;
-            end
+        if freq < freq_lo
+            continue;
+        end
+
+        if freq > freq_hi
+            % Exceeded max frequency.
+            break;
+        end
+
+        % Only keep the highest magnitude in each bucket.
+        if freq_mag > freq_vec_norm(freq - freq_lo + 1)
+            freq_vec_norm(freq - freq_lo + 1) = freq_mag;
         end
     end
 
