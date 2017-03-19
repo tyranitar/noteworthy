@@ -16,7 +16,7 @@ function [start_indices, finish_indices] = chunk_notes(y)
 
     % Base case.
     if mean_val > thresh_hi
-        start_indices = vertcat(start_indices, i);
+        start_indices = vertcat(start_indices, 1);
         finding_start = false;
     end
 
