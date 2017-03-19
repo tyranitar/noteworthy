@@ -1,4 +1,18 @@
 import React from 'react';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import styles from './styles';
+import sharedStyles from '../../styles/index';
+import IconButton from 'material-ui/IconButton';
+import Download from 'material-ui/svg-icons/file/file-download';
+import jspdf from 'jspdf';
+
+const iconProps = {
+	style: styles.downloadBtnSmall, 
+	iconStyle: styles.downloadIconSmall, 
+	backgroundColor: sharedStyles.white
+}
+
+const doc = new jspdf();
 
 const waitForFinalEvent = (()=>{
     let timers = {};
@@ -27,6 +41,7 @@ export default class Sheet extends React.Component {
 
 	    this.plotSheet = this.plotSheet.bind(this);
 	    this.getDataAndPlot = this.getDataAndPlot.bind(this);
+		this.download = this.download.bind(this);
 	}
 
 	componentDidMount() {
@@ -34,6 +49,21 @@ export default class Sheet extends React.Component {
         	waitForFinalEvent(this.getDataAndPlot(), 200, "");
         });
     }
+
+    download() {
+    	console.log(document.getElementById("cardContainer").innerHTML);
+    		
+    	doc.addHTML(document.getElementById('cardContainer'), 0, 0, function() {
+        	console.log('callback');
+        	doc.save('sampler-file.pdf');
+        });
+
+    	//doc.fromHTML(document.getElementById("cardContainer").innerHTML, 15, 15, {
+	     //   'width': 170,
+	    //});
+	    //doc.save('sample-file.pdf');
+    }
+
 
 	getDataAndPlot() {
 	    d3.selectAll("#sheet svg").remove();
@@ -191,13 +221,20 @@ export default class Sheet extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div style = { styles.sheetContainer } >
 				<span>Notes:</span>
 				<input id="note-input" type="text" name="NoteInput" /><br/>
 				<span>Times:</span>
 				<input id="time-input" type="text" name="TimeInput" /><br/>
 				<button type="button" value="Generate Sheet" onClick={this.getDataAndPlot} />
-				<div id="sheet"></div>
+				<div style = {{float: 'right'}}><IconButton {...iconProps} onClick = {this.download}><Download/></IconButton></div>
+				<div id = "cardContainer" style = {styles.cardContainer}>
+					<Card style = { styles.cardStyle }>
+					    <CardHeader style={ styles.cardHeaderTitle } title="Score sheet for #####" titleStyle={ styles.cardTitle }>
+					    </CardHeader>
+						<div id="sheet"></div>
+					</Card>
+				</div>
 			</div>
 		)
 	}
