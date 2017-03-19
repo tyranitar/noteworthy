@@ -9,10 +9,10 @@ function generate_examples(wipe = false)
     unlabeled_dir = strcat(data_dir, 'unlabeled/');
     wav_dir = strcat(data_dir, 'wav/');
 
-    function wipe_dir(dir)
-        printf('wiping directory: %s\n', dir);
+    function wipe_dir(file_dir)
+        printf('wiping directory: %s\n', file_dir);
 
-        [files, err, msg] = readdir(dir);
+        [files, err, msg] = readdir(file_dir);
 
         if err
             error(msg);
@@ -20,8 +20,8 @@ function generate_examples(wipe = false)
 
         for i = 1:length(files)
             file = files{i};
-            file_path = strcat(dir, file);
-            [file_dir, name, ext] = fileparts(file_path);
+            file_path = strcat(file_dir, file);
+            [unused, name, ext] = fileparts(file_path);
 
             if strcmp(ext, '.')
                 continue;
@@ -47,7 +47,7 @@ function generate_examples(wipe = false)
     % If there isn't a corresponding midi file with the same name, skip the iteration.
     for i = 1:length(wav_files)
         wav_file = wav_files{i};
-        [dir, name, ext] = fileparts(wav_file);
+        [unused, name, ext] = fileparts(wav_file);
 
         if ~strcmp(ext, '.wav')
             continue;
