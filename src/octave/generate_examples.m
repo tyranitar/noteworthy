@@ -21,6 +21,11 @@ function generate_examples(wipe = false)
         for i = 1:length(files)
             file = files{i};
             file_path = strcat(dir, file);
+            [file_dir, name, ext] = fileparts(file_path);
+
+            if strcmp(ext, '.')
+                continue;
+            end
 
             unlink(file_path);
         end
