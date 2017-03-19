@@ -10,16 +10,25 @@ function [start_indices, finish_indices] = chunk_notes(y)
     start_indices = [];
     finish_indices = [];
 
-    finding_start = true; % Otherwise, finding the note finish point.
-
     mean_val = mean(y_abs(1:num_samples));
-    mean_vals = zeros(len, 1); % Debug.
+    finding_start = true; % Otherwise, finding the note finish point.
     decay_count = 0;
 
-    for i = 1:(len - num_samples)
+    % Base case.
+    if mean_val > thresh_hi
+        start_indices = vertcat(start_indices, i);
+        finding_start = false;
+    end
+
+    % Debug.
+    mean_vals = zeros(len, 1);
+    mean_vals(1) = mean_val;
+
+    for i = 2:(len - num_samples)
+        % Update mean.
         first_val = y_abs(i);
-        last_val = y_abs(i + num_samples);
-        mean_val = mean_val + (last_val - first_val) / num_samples;
+        new_val = y_abs(i + num_samples);
+        mean_val = mean_val + (new_val - first_val) / num_samples;
 
         mean_vals(i) = mean_val; % Debug.
 
