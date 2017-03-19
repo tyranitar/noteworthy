@@ -23,6 +23,8 @@ function train_algorithm()
         unlink(weights_path); % Delete existing weights.
     end
 
+    % Initialize weights here.
+
     % Use unlabeled and labeled folders to generate weights.
     % Store weights in the weights folder.
     for i = 1:length(unlabeled_files)
@@ -43,6 +45,11 @@ function train_algorithm()
         end
 
         freq_vecs = load(unlabeled_path);
-        notes = load(labeled_path);
+        note_vecs = load(labeled_path);
+
+        for i = 1:size(freq_vecs, 1)
+            freq_vec = freq_vecs(i, :); % Input.
+            note_vec = note_vecs(i, :); % Expected output.
+        end
     end
 end
