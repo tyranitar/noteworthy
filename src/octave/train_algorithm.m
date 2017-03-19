@@ -1,6 +1,42 @@
-disp('training algorithm...');
+function train_algorithm()
+    generate_examples();
 
-generate_examples();
+    % Directories.
+    data_dir = '../../data/';
+    labeled_dir = strcat(data_dir, 'labeled/');
+    unlabeled_dir = strcat(data_dir, 'unlabeled/');
+    [unlabeled_files, err, msg] = readdir(unlabeled_dir);
 
-% Use unlabeled and labeled folders to generate weights.
-% Store weights in the weights folder.
+    if err
+        error(msg);
+    end
+
+    if ~length(unlabeled_files)
+        error('there is no data to train the algorithm');
+    end
+
+    disp('training algorithm...');
+
+    % Use unlabeled and labeled folders to generate weights.
+    % Store weights in the weights folder.
+    for i = 1:length(unlabeled_files)
+        unlabeled_file = unlabeled_files{i};
+        [dir, name, ext] = fileparts(unlabeled_file);
+
+        if ~strcmp(ext, '.mat')
+            continue;
+        end
+
+        % The unlabeled file and the labeled file share the same name.
+        unlabeled_path = strcat(unlabeled_dir, unlabeled_file);
+        labeled_path = strcat(labeled_dir, unlabeled_file);
+
+        if ~exist(labeled_path, 'file')
+            printf('failed to locate a corresponding labeled file for %s\n', unlabeled_path);
+            continue;
+        end
+
+        freq_vecs = load(unlabeled_path);
+        notes = load(labeled_path);
+    end
+end
