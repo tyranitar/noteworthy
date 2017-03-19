@@ -13,8 +13,8 @@ function [freq_vecs, freq_vec_timestamps] = generate_unlabeled(file_location)
     t = delta_t * (0:(len - 1))';
 
     % Debug.
-    t = t(1:160000);
-    y = y(1:160000);
+    t = t(50000:300000);
+    y = y(50000:300000);
 
     [start_indices, finish_indices] = chunk_notes(y);
     num_notes = length(start_indices);
