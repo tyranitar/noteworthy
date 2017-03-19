@@ -13,7 +13,7 @@ const babelLoader = {
 
 module.exports = {
     context : path.join(__dirname, 'src', 'public'),
-
+    target: "electron",
     entry: [
         './app.js'
     ],

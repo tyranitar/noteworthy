@@ -8,3 +8,5 @@ vendor
 *.mid
 *.min.js
 *.wav
+
+temp
