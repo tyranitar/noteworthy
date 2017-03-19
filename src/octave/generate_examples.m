@@ -1,4 +1,4 @@
-function generate_examples()
+function generate_examples(wipe = false)
     addpath('vendor');
     disp('generating examples...');
 
@@ -26,9 +26,11 @@ function generate_examples()
         end
     end
 
-    % Wipe existing preprocessed data.
-    wipe_dir(labeled_dir);
-    wipe_dir(unlabeled_dir);
+    if wipe
+        % Wipe existing preprocessed data.
+        wipe_dir(labeled_dir);
+        wipe_dir(unlabeled_dir);
+    end
 
     % Iterate through the wav folder and find corresponding midi files.
     % If there isn't a corresponding midi file with the same name, throw an error.
@@ -42,31 +44,39 @@ function generate_examples()
         wav_file = wav_files{i};
         [dir, name, ext] = fileparts(wav_file);
 
-        if ext == '.wav'
-            wav_file_path = strcat(wav_dir, wav_file);
-            midi_file_path = strcat(midi_dir, name, '.mid');
+        if ~strcmp(ext, '.wav')
+            continue;
+        end
 
-            if exist(midi_file_path, 'file')
-                try
-                    [freq_vecs, freq_vec_timestamps] = generate_unlabeled(wav_file_path);
-                    [notes, note_timestamps] = generate_labeled(midi_file_path);
+        wav_file_path = strcat(wav_dir, wav_file);
+        midi_file_path = strcat(midi_dir, name, '.mid');
+        unlabeled_path = strcat(unlabeled_dir, name, '.mat');
+        labeled_path = strcat(labeled_dir, name, '.mat');
 
-                    verified = verify_timestamps(freq_vec_timestamps, note_timestamps);
+        if exist(unlabeled_path, 'file') && exist(labeled_path, 'file')
+            printf('the following file has already been processed: %s\n', wav_file_path);
+            continue;
+        end
 
-                    if verified
-                        unlabeled_path = strcat(unlabeled_dir, name, '.mat');
-                        labeled_path = strcat(labeled_dir, name, '.mat');
-                        dlmwrite(unlabeled_path, freq_vecs);
-                        dlmwrite(labeled_path, notes);
-                    else
-                        printf('failed to verify timestamps for %s\n', wav_file_path);
-                    end
-                catch err
-                    printf('an error occurred while processing %s\n', wav_file_path);
-                end
+        if ~exist(midi_file_path, 'file')
+            printf('failed to locate a corresponding midi file for %s\n', wav_file_path);
+            continue;
+        end
+
+        try
+            [freq_vecs, freq_vec_timestamps] = generate_unlabeled(wav_file_path);
+            [notes, note_timestamps] = generate_labeled(midi_file_path);
+
+            verified = verify_timestamps(freq_vec_timestamps, note_timestamps);
+
+            if verified
+                dlmwrite(unlabeled_path, freq_vecs);
+                dlmwrite(labeled_path, notes);
             else
-                printf('failed to locate a corresponding midi file for %s\n', wav_file_path);
+                printf('failed to verify timestamps for %s\n', wav_file_path);
             end
+        catch err
+            printf('an error occurred while processing %s\n', wav_file_path);
         end
     end
 end
