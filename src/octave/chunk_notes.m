@@ -1,35 +1,72 @@
-function chunks = chunk_notes(y) 
-	abs_y = abs(y); % This is to ensure that the mean will not be affected by negative vaules
-	filtered_y = [];
-	chunks = []
+function [start_indices, finish_indices] = chunk_notes(y)
+    num_samples = 500;
+    num_decay = 7500;
+    thresh_hi = 0.05;
+    thresh_lo = 0.05;
 
-	% Chunking notes (using 500 samples per average)
-	num_samples = 500;
-	perc_threshold = 0.05; 
+    len = length(y);
+    y_abs = abs(y);
 
-	filtered_y(1) = mean(abs_y(1:num_samples));	% Initial mean
-	peak = filtered_y(1);	% Set initial peak
-	chunked_row = 1;	% Initialize row
+    start_indices = [];
+    finish_indices = [];
 
-	for i = 2 : (length(abs_y) - num_samples)
-		% Calculating mean for current data point
-		filtered_y(i) = filtered_y(i - 1) - abs_y(i)/num_samples + abs_y(i + num_samples)/num_samples;
+    mean_val = mean(y_abs(1:num_samples));
+    finding_start = true; % Otherwise, finding the note finish point.
+    decay_count = 0;
 
-		if peak < (filtered_y(i) * perc_threshold)	% If peak is 10% of the current value, then it is a max
-			peak = filtered_y(i);		% Set peak to max value and set start index to i
-			chunks(chunked_row, 1) = i;
-			chunks(chunked_row + 1, 1) = 0;	% Set next start for next row to 0
+    % Base case.
+    if mean_val > thresh_hi
+        start_indices = vertcat(start_indices, 1);
+        finding_start = false;
+    end
 
-		elseif ((peak * perc_threshold) > filtered_y(i))	% If 10% of peak is greater than current value, then it is a min
-			peak = filtered_y(i);	% Set peak to min
+    % Debug.
+    mean_vals = zeros(len, 1);
+    mean_vals(1) = mean_val;
 
-			if chunks(chunked_row, 1) != 0	% If start of note is defined, then set the min
-				chunks(chunked_row, 2) = i;
-				chunked_row = chunked_row + 1;	% Increment chunked_row, start of another note.
-			else
-				chunks(chunked_row - 1, 2) = i;	% Start of current note is undefined, so set min for prev note
-			end
-		end
-	endfor
+    for i = 2:(len - num_samples)
+        % Update mean.
+        first_val = y_abs(i);
+        new_val = y_abs(i + num_samples);
+        mean_val = mean_val + (new_val - first_val) / num_samples;
 
+        mean_vals(i) = mean_val; % Debug.
+
+        if finding_start
+            if mean_val > thresh_hi
+                start_indices = vertcat(start_indices, i);
+                finding_start = false;
+            end
+        else
+            if mean_val < thresh_lo
+                decay_count = decay_count + 1;
+
+                if decay_count > num_decay
+                    finish_indices = vertcat(finish_indices, i + num_samples);
+                    finding_start = true;
+                    decay_count = 0;
+                end
+            elseif decay_count > 0
+                decay_count = 0;
+            end
+        end
+    end
+
+    if length(start_indices) > length(finish_indices)
+        % Pop the last one, since it has no corresponding finish index.
+        start_indices = start_indices(1:end - 1);
+    end
+
+    % hold; % Debug.
+    % plot(y_abs); % Debug.
+    % plot(mean_vals, 'g'); % Debug.
+    %
+    % % Debug
+    % for i=1:length(start_indices)
+    %     start_index = start_indices(i);
+    %     finish_index = finish_indices(i);
+    %
+    %     vert_line(start_index, 1, 'r');
+    %     vert_line(finish_index, 1, 'm');
+    % end
 end
