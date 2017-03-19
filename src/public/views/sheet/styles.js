@@ -5,7 +5,8 @@ export default {
         fontWeight: 'bold',
         fontSize: '25px',
         color: 'black',
-        margin: 'auto'
+        padding: '0px',
+        textAlign: 'center'
     },
 
     layoutStyle: {
@@ -16,12 +17,7 @@ export default {
 
     cardStyle: {
         padding: '5px', 
-        width: '60%', 
-        margin: 'auto'
-    },
-
-    cardHeaderTitle: {
-    	textAlign: 'center'
+        width: '100%'
     },
 
     downloadIconSmall: {
@@ -37,7 +33,8 @@ export default {
     cardContainer: {
     	width: '100%',
     	backgroundColor: 'white',
-    	height: '500px'
+    	height: '500px',
+    	margin: '5px'
     },
 
     sheetContainer: {

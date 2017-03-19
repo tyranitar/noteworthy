@@ -51,17 +51,10 @@ export default class Sheet extends React.Component {
     }
 
     download() {
-    	console.log(document.getElementById("cardContainer").innerHTML);
-    		
-    	doc.addHTML(document.getElementById('cardContainer'), 0, 0, function() {
-        	console.log('callback');
-        	doc.save('sampler-file.pdf');
+    	console.log(document.getElementById("cardContainer").innerHTML);	
+    	doc.addHTML(document.getElementById('cardContainer'), 0, 0, () => {
+        	doc.save('samplers-file.pdf');
         });
-
-    	//doc.fromHTML(document.getElementById("cardContainer").innerHTML, 15, 15, {
-	     //   'width': 170,
-	    //});
-	    //doc.save('sample-file.pdf');
     }
 
 
@@ -222,17 +215,19 @@ export default class Sheet extends React.Component {
 	render() {
 		return (
 			<div style = { styles.sheetContainer } >
-				<span>Notes:</span>
-				<input id="note-input" type="text" name="NoteInput" /><br/>
-				<span>Times:</span>
-				<input id="time-input" type="text" name="TimeInput" /><br/>
-				<button type="button" value="Generate Sheet" onClick={this.getDataAndPlot} />
-				<div style = {{float: 'right'}}><IconButton {...iconProps} onClick = {this.download}><Download/></IconButton></div>
+				<div>
+					<span>Notes:</span>
+					<input id="note-input" type="text" name="NoteInput" /><br/>
+					<span>Times:</span>
+					<input id="time-input" type="text" name="TimeInput" /><br/>
+					<div style = {{float: 'right'}}><IconButton {...iconProps} onClick = {this.download}><Download/></IconButton></div>
+					<button type="button" value="Generate Sheet" onClick={this.getDataAndPlot} />
+				</div>
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
-					    <CardHeader style={ styles.cardHeaderTitle } title="Score sheet for #####" titleStyle={ styles.cardTitle }>
-					    </CardHeader>
-						<div id="sheet"></div>
+					    <CardTitle title="Score sheet for #####" titleStyle={ styles.cardTitle }>
+					    </CardTitle>
+						<div id="sheet" style = {{textAlign: 'center', marginLeft: '25px', marginRight: '25px'}}></div>
 					</Card>
 				</div>
 			</div>
