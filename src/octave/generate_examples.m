@@ -1,4 +1,6 @@
 function generate_examples(wipe = false)
+    more off;
+
     addpath('vendor');
     disp('generating examples...');
 

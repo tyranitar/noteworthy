@@ -1,4 +1,6 @@
 function train_algorithm()
+    more off;
+
     generate_examples();
 
     % Directories.
@@ -29,7 +31,7 @@ function train_algorithm()
     % Store weights in the weights folder.
     for i = 1:length(unlabeled_files)
         unlabeled_file = unlabeled_files{i};
-        [dir, name, ext] = fileparts(unlabeled_file);
+        [unused, name, ext] = fileparts(unlabeled_file);
 
         if ~strcmp(ext, '.mat')
             continue;
@@ -47,6 +49,7 @@ function train_algorithm()
         freq_vecs = load(unlabeled_path);
         note_vecs = load(labeled_path);
 
+        % Iterate through the input data randomly.
         for i = 1:size(freq_vecs, 1)
             freq_vec = freq_vecs(i, :); % Input.
             note_vec = note_vecs(i, :); % Expected output.
