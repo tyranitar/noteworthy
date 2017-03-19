@@ -31,8 +31,8 @@ function [freq_vecs, freq_vec_timestamps] = generate_unlabeled(file_location)
         freq_vec_timestamps = vertcat(freq_vec_timestamps, t(start_index));
 
         % Debug.
-        [max_val, max_idx] = max(freq_vec);
-        printf('peak frequency of %d at %dHz\n', max_val, f(max_idx));
+        % [max_val, max_idx] = max(freq_vec);
+        % printf('peak frequency of %d at %dHz\n', max_val, f(max_idx));
         % figure;
         % plot(t(start_index:finish_index), note);
         % figure;
