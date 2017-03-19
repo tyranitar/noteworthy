@@ -1,8 +1,8 @@
 function plotSheet(chordArray, timeArray, divWidth) {
-    console.log(~~null);
     var xPosition = 25, distanceBetweenNotes = 50;
     const staffMiddle = 50;
-    const shift = 11;
+    const spacing = 10;
+    const shift = 12;
     //var divWidth = window.getComputedStyle(document.getElementById("sheet"), null).width;
     //Adjustment for skew
     const skewX15Adjustment = Math.tan(Math.PI/12);
@@ -20,7 +20,13 @@ function plotSheet(chordArray, timeArray, divWidth) {
     //Check if arrays match
     var length = chordArray.length < timeArray.length ? chordArray.length : timeArray.length;
 
-    timeArray = timeArray.map(parseFloat);
+    //timeArray = timeArray.map(parseFloat);
+    timeArray[0] = parseFloat(timeArray[0]);
+	for (i=0; i < length-1; i++)
+	{
+		timeArray[i] = parseFloat(timeArray[i+1]) - timeArray[i];
+	}
+    timeArray[length-1] = 1;
 
     do {
         var staff = d3.select("#sheet")
@@ -33,8 +39,6 @@ function plotSheet(chordArray, timeArray, divWidth) {
         while (index < length// && typeof timeArray[index+1] !== 'undefined'
         && xPosition + timeArray[index] < divWidth) {
             //Splits up chord into notes and computes value
-            console.log(index);
-            console.log(chordArray[index].toLowerCase());
 
             var noteValues = chordArray[index].toLowerCase()
                 .split(/(?=[a-z])/)
@@ -75,7 +79,7 @@ function plotSheet(chordArray, timeArray, divWidth) {
                         .style("fill", "#fff");
                 }
                 else {
-                    //black note
+                    //black (quarter) note
                     staff.append("ellipse")
                         .attr("cx", xPosition + dx)
                         .attr("cy", yPosition + (xPosition + dx)*skewY10Adjustment)
@@ -94,10 +98,40 @@ function plotSheet(chordArray, timeArray, divWidth) {
                             .attr("transform", "skewY(-30)")
                             .style("fill", "#fff");
                     }
-
-
-                    //If note is outside of staff, add lines - scratch that, always add lines
                 }
+            }
+            //flag
+            if (time < 3.8) {
+                var upperNote = noteValues[noteValues.length-1]*5;
+                var lowerNote = noteValues[0]*5+skewY10Adjustment*6;
+                var avg = noteValues.reduce(add, 0) >= 0;
+                staff.append("line")
+                    .attr("x1", shifted||avg ? xPosition+6 : xPosition-6)
+                    .attr("y1", avg ? staffMiddle - upperNote - 25 : staffMiddle - upperNote + skewY10Adjustment*6)
+                    .attr("x2", shifted||avg ? xPosition+6 : xPosition-6)
+                    .attr("y2", avg ? staffMiddle - lowerNote - skewY10Adjustment*6 : staffMiddle - lowerNote + 25)
+                    .style("stroke", "#000")
+                    .style("stroke-width", "0.5");
+            }
+
+            //additional lines
+            for (var linePos = staffMiddle-3*spacing, i = noteValues[noteValues.length-1]-6; i >= 0; i -= 2, linePos -= spacing) {
+                staff.append("line")
+                    .attr("x1", xPosition-10)
+                    .attr("y1", linePos)
+                    .attr("x2", shifted ? xPosition+shift+10 : xPosition+10)
+                    .attr("y2", linePos)
+                    .style("stroke", "#000")
+                    .style("stroke-width", "0.5");
+            }
+            for (var linePos = staffMiddle+3*spacing, i = noteValues[0]+6; i <= 0; i += 2, linePos += spacing) {
+                staff.append("line")
+                    .attr("x1", xPosition-10)
+                    .attr("y1", linePos)
+                    .attr("x2", shifted ? xPosition+shift+10 : xPosition+10)
+                    .attr("y2", linePos)
+                    .style("stroke", "#000")
+                    .style("stroke-width", "0.5");
             }
 
             xPosition += (time >= 0.5)? time*distanceBetweenNotes : shifted ? 25 : 16;
@@ -107,41 +141,45 @@ function plotSheet(chordArray, timeArray, divWidth) {
         //Draw staff
         staff.append("line")
             .attr("x1", "0")
-            .attr("y1", "30")
+            .attr("y1", staffMiddle-2*spacing)
             .attr("x2", "100%")
-            .attr("y2", "30")
+            .attr("y2", staffMiddle-2*spacing)
             .style("stroke", "#000")
             .style("stroke-width", "0.5");
         staff.append("line")
             .attr("x1", "0")
-            .attr("y1", "40")
+            .attr("y1", staffMiddle-spacing)
             .attr("x2", "100%")
-            .attr("y2", "40")
+            .attr("y2", staffMiddle-spacing)
             .style("stroke", "#000")
             .style("stroke-width", "0.5");
         staff.append("line")
             .attr("x1", "0")
-            .attr("y1", "50")
+            .attr("y1", staffMiddle)
             .attr("x2", "100%")
-            .attr("y2", "50")
+            .attr("y2", staffMiddle)
             .style("stroke", "#000")
             .style("stroke-width", "0.5");
         staff.append("line")
             .attr("x1", "0")
-            .attr("y1", "60")
+            .attr("y1", staffMiddle+spacing)
             .attr("x2", "100%")
-            .attr("y2", "60")
+            .attr("y2", staffMiddle+spacing)
             .style("stroke", "#000")
             .style("stroke-width", "0.5");
         staff.append("line")
             .attr("x1", "0")
-            .attr("y1", "70")
+            .attr("y1", staffMiddle+2*spacing)
             .attr("x2", "100%")
-            .attr("y2", "70")
+            .attr("y2", staffMiddle+2*spacing)
             .style("stroke", "#000")
             .style("stroke-width", "0.5");
 
     } while (index < length);
+}
+
+function add(a, b) {
+    return a + b;
 }
 
 function sortNumbers(a, b) {
