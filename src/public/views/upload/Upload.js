@@ -25,7 +25,7 @@ export default class Upload extends React.Component {
     render() {
 
         const audioTrack = document.getElementById("audioTrack");
-        
+
         if (audioTrack) {
             audioTrack.load();
         };
@@ -41,16 +41,16 @@ export default class Upload extends React.Component {
                     </div>
                     <div style={ sharedStyles.containerStyle }>
                         <span style={ sharedStyles.subtitleCaption }>
-                            { !this.state.url 
+                            { !this.state.url
                                 ? 'Press the button below to upload your file'
                                 : 'Press the button below to convert into sheet music' }
                         </span>
                     </div>
                     { !this.state.url &&
                         <div style={ styles.uploadContainer }>
-                            <IconButton style={ sharedStyles.btnLarge } 
-                                        iconStyle={ sharedStyles.iconLarge } 
-                                        backgroundColor={ sharedStyles.white } 
+                            <IconButton style={ sharedStyles.btnLarge }
+                                        iconStyle={ sharedStyles.iconLarge }
+                                        backgroundColor={ sharedStyles.white }
                                         tooltip="Upload a file"
                                         tooltipStyles={ sharedStyles.tooltipIcon }
                                         onClick={()=>{document.getElementById('audioUpload').click()}} >
@@ -60,24 +60,24 @@ export default class Upload extends React.Component {
                         </div>
                     }
 
-                    {this.state.url && 
+                    {this.state.url &&
                         <div>
                             <div style={ sharedStyles.audioTrackContainer }>
                                 <audio id = "audioTrack" controls style={ sharedStyles.audio }>
                                     <source src = {this.state.url} />
                                 </audio>
-                                <IconButton style={ sharedStyles.btnSmallUploadAudio } 
-                                            iconStyle={ sharedStyles.iconSmall } 
+                                <IconButton style={ sharedStyles.btnSmallAudio } 
+                                            iconStyle={ sharedStyles.iconSmall }
                                             tooltip="Delete file selection"
                                             tooltipStyles={ sharedStyles.tooltipIcon }
-                                            backgroundColor={ sharedStyles.white } 
+                                            backgroundColor={ sharedStyles.white }
                                             onClick={this.deleteUrl}>
                                     <Delete />
                                 </IconButton>
                             </div>
                             <div style = {sharedStyles.containerStyle} >
-                                <IconButton style={ sharedStyles.btnLarge } 
-                                            iconStyle={ sharedStyles.iconLarge } 
+                                <IconButton style={ sharedStyles.btnLarge }
+                                            iconStyle={ sharedStyles.iconLarge }
                                             tooltip="Convert"
                                             tooltipStyles={ sharedStyles.tooltipIcon }
                                             onClick={()=>{this.props.router.push('/sheet')}}>

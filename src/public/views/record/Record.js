@@ -17,20 +17,20 @@ import TextField from 'material-ui/TextField';
 
 
 const mediumIconProps = {
-	style: sharedStyles.btnMed, 
-	iconStyle: sharedStyles.iconMed, 
+	style: sharedStyles.btnMed,
+	iconStyle: sharedStyles.iconMed,
 	backgroundColor: sharedStyles.white
 }
 
 const largeIconProps = {
 	style: sharedStyles.btnLarge,
-	iconStyle: sharedStyles.iconLarge, 
+	iconStyle: sharedStyles.iconLarge,
 	backgroundColor: sharedStyles.white,
     tooltipStyles: sharedStyles.tooltipIcon
 }
 
 const smallIconProps = {
-	style: sharedStyles.btnSmallUploadAudio,
+	style: sharedStyles.btnSmallAudio,
     iconStyle: sharedStyles.iconSmall,
     tooltipStyles: sharedStyles.tooltipIcon,
     backgroundColor: sharedStyles.white
@@ -212,7 +212,7 @@ export default class Record extends React.Component {
                     <IconButton { ...largeIconProps } tooltip="Stop Recording" onClick={this.stop}>
                         <Stop />
                     </IconButton>
-                    
+
                     <IconButton { ...largeIconProps } tooltip="Pause Recording" onClick={this.pause}>
                         <Pause />
                     </IconButton>
@@ -253,7 +253,7 @@ export default class Record extends React.Component {
         ];
 
         const audioTrack = document.getElementById("audio-track");
-        
+
         if (audioTrack) {
             audioTrack.load();
         }
@@ -269,7 +269,7 @@ export default class Record extends React.Component {
                         </span>
                     </div>
 
-                	<div style ={sharedStyles.containerStyle}> 
+                	<div style ={sharedStyles.containerStyle}>
                 		<span style={ sharedStyles.subtitleCaption }>
 	                		{(!this.url && !this.state.playing && !this.state.paused) && 'Press the button below to begin recording' }
 	                    	{(!this.url && this.state.playing) && 'Recording...' }
@@ -277,10 +277,6 @@ export default class Record extends React.Component {
 	                    	{(this.url && !this.state.playing) && 'Translate your recording now' }
 	                    </span>
                     </div>
-
-	                {!this.url && 
-	                    <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
-	                }
 
 	                {!this.url &&
 	                    <div style={ sharedStyles.containerStyle }>
@@ -290,13 +286,13 @@ export default class Record extends React.Component {
 	                            <IconButton { ...largeIconProps } onClick={this.startRecorder}>
 	                                {this.renderResumeOrPlayOptions()}
 	                            </IconButton>
-	                        } 
+	                        }
 
-	                        <Dialog title={this.props.title} 
-	                        		actions={dialogActions} 
+	                        <Dialog title={this.props.title}
+	                        		actions={dialogActions}
 	                        		contentStyle={ sharedStyles.modalStyle }
-	                        		title="Name Your Audio File" 
-	                        		modal={true} 
+	                        		title="Name Your Audio File"
+	                        		modal={true}
 	                        		open={this.state.dialogOpen}>
 	                        	<TextField hintText="Enter your file name here...." onChange={(evt)=>this.setState({text: evt.currentTarget.value})}/>
 	                        </Dialog>
@@ -305,7 +301,7 @@ export default class Record extends React.Component {
 	                    </div>
 	                }
 
-                    {this.url && 
+                    {this.url &&
 	                    <div style ={ sharedStyles.audioTrackContainer }>
 	                        <audio id = "audio-track" style={ sharedStyles.audio } controls>
 	                          <source src = {'../../' + this.url} />
@@ -315,6 +311,10 @@ export default class Record extends React.Component {
 	                        </IconButton>
 	                    </div>
                     }
+
+	                {!this.url &&
+	                    <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
+	                }
 
                     {this.renderSubmitButton()}
 

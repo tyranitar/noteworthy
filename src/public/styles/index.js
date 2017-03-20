@@ -11,7 +11,6 @@ const paddingLarge = (buttonSizeLarge - iconSizeLarge) / 2;
 const paddingMedium = (buttonSizeMedium - iconSizeMedium) / 2;
 
 export default {
-
     'white': white,
     'grey500': grey500,
     'tealA400': tealA400,
@@ -60,6 +59,7 @@ export default {
         margin: '0px',
         padding: '5px',
         position: 'absolute',
+        top: '30px',
         left: '70%',
         borderRadius: '50%',
         border: `2px solid ${ tealA400 }`

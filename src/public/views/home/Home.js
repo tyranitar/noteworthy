@@ -7,16 +7,19 @@ import sharedStyles from '../../styles/index';
 export default class Home extends Component {
 	render() {
 		const currentLocation = this.props.location.pathname;
-		const divStyle = ('/' == currentLocation) ? { padding: '50px 0 0' } : { padding: 0 };
+		const divStyle = { height: '100%' };
+		const homeLinkStyle = { position: 'absolute' };
 
 		return(
 			<div style={ divStyle } >
 				{('/' != currentLocation) &&
-					<Link to='/'>
-						<IconButton iconStyle={ sharedStyles.iconMed } >
-							<ActionHome />
-						</IconButton>
-					</Link>
+					<div style={ homeLinkStyle }>
+						<Link to='/'>
+							<IconButton iconStyle={ sharedStyles.iconMed } >
+								<ActionHome />
+							</IconButton>
+						</Link>
+					</div>
 				}
 
 				{ this.props.children }
