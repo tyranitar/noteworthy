@@ -103,7 +103,7 @@ function plotSheet(chordArray, timeArray, divWidth) {
             if (time < 3.8) {
                 var upperNote = noteValues[noteValues.length-1]*5;
                 var lowerNote = noteValues[0]*5+skewY10Adjustment*6;
-                var avg = noteValues.reduce(add, 0) >= 0;
+                var avg = noteValues.reduce(add, 0) <= 0;
                 staff.append("line")
                     .attr("x1", shifted||avg ? xPosition+6 : xPosition-6)
                     .attr("y1", avg ? staffMiddle - upperNote - 25 : staffMiddle - upperNote + skewY10Adjustment*6)
