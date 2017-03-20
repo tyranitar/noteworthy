@@ -7,6 +7,7 @@ import Home from './views/home/Home';
 import Index from './views/index/Index';
 import Record from './views/record/Record';
 import Upload from './views/upload/Upload';
+import Sheet from './views/sheet/Sheet';
 
 const app = document.getElementById('app');
 
@@ -19,6 +20,7 @@ ReactDOM.render(
 	            <IndexRoute component={ Index }/>
 	            <Route path='/record' component={ Record }></Route>
 	            <Route path = '/upload' component={ Upload }></Route>
+                <Route path='/sheet' component={ Sheet }></Route>
             </Route>
         </Router>
     </MuiThemeProvider>,
