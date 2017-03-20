@@ -1,7 +1,7 @@
 function generate_examples(wipe = false)
     more off;
 
-    addpath('vendor');
+    addpath('vendor/midi');
     disp('generating examples...');
 
     % Directories.

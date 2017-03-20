@@ -1,6 +1,9 @@
 function train_algorithm()
     more off;
 
+    addpath('vendor/neural_net');
+    disp('training algorithm...');
+
     generate_examples();
 
     % Directories.
@@ -18,8 +21,6 @@ function train_algorithm()
     if ~length(unlabeled_files)
         error('there is no data to train the algorithm');
     end
-
-    disp('training algorithm...');
 
     if exist(weights_path, 'file')
         unlink(weights_path); % Delete existing weights.
