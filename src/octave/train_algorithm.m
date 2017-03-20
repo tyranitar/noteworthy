@@ -15,6 +15,13 @@ function train_algorithm()
     % Setup.
 
     [X, y] = get_shuffled_examples();
+
+    test_len = round(size(X, 1) / 4);
+    X_test = X(1:test_len, :);
+    y_test = y(1:test_len, :);
+    X = X(test_len + 1:end, :);
+    y = y(test_len + 1:end, :);
+
     m = size(X, 1);
 
     input_layer_size = size(X, 2);
@@ -47,14 +54,20 @@ function train_algorithm()
     Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
         num_labels, (hidden_layer_size + 1));
 
-    Theta1_path = strcat(weights_dir, 'theta_1.m');
-    Theta2_path = strcat(weights_dir, 'theta_2.m');
+    Theta1_path = strcat(weights_dir, 'theta_1.mat');
+    Theta2_path = strcat(weights_dir, 'theta_2.mat');
 
     dlmwrite(Theta1_path, Theta1);
     dlmwrite(Theta2_path, Theta2);
 
     % Find training set accuracy.
-    pred = predict(Theta1, Theta2, X);
+    p = predict(Theta1, Theta2, X);
+    accuracy = compare_p_y(p, y);
+    printf('training set accuracy: %d%%\n', accuracy * 100);
+
+    p_test = predict(Theta1, Theta2, X_test);
+    test_accuracy = compare_p_y(p_test, y_test);
+    printf('test set accuracy: %d%%\n', test_accuracy * 100);
 
     % Debug.
     % disp(pred(1:5, :));

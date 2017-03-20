@@ -1,12 +1,17 @@
-function [X, y] = get_shuffled_examples()
+function [X, y] = get_shuffled_examples(training = true)
     more off;
 
     disp('getting shuffled examples...');
 
-    generate_examples();
+    generate_examples(training);
 
     % Directories.
     data_dir = '../../data/';
+
+    if ~training
+        data_dir = '../../data_test/';
+    end
+
     labeled_dir = strcat(data_dir, 'labeled/');
     unlabeled_dir = strcat(data_dir, 'unlabeled/');
 
