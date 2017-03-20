@@ -69,7 +69,7 @@ export default class Record extends React.Component {
 	        const blobAsDataUrl = reader.result;
 	        const base64 = blobAsDataUrl.split(',')[1];
 	        const buf = new Buffer(base64, 'base64');
-	        const filePath = '../temp/' + this.state.text + '.wav'
+	        const filePath = 'temp/' + this.state.text + '.wav'
 	        fs.writeFile(filePath, buf, (err) => {
 	            if (err) {
 	                console.error(err);
@@ -297,7 +297,7 @@ export default class Record extends React.Component {
                       
                       <div style ={ sharedStyles.audioTrackContainer }>
                         <audio id = "audio-track" controls>
-                          <source src = {'../' + this.url} />
+                          <source src = {'../../' + this.url} />
                         </audio>
                         <IconButton { ...smallIconProps} onClick={this.deleteUrl}>
                             <Delete />
