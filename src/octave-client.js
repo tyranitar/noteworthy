@@ -1,5 +1,6 @@
 const net = require('net');
 const exec = require('child_process').exec;
+const path = require('path');
 
 const defaultBufferSize = 1000000;
 const retryInterval = 1000;
@@ -12,12 +13,13 @@ class OctaveClient {
     }
 
     connect() {
-        const { serviceDir, port, bufferSize = defaultBufferSize } = this.options;
+        const { servicePath, port, bufferSize = defaultBufferSize } = this.options;
 
         const promise = new Promise((resolve, reject) => {
+            const resolvedDir = path.dirname(path.resolve(__dirname, servicePath));
             let retries = 0;
 
-            exec(`octave --no-gui ${ serviceDir } ${ port } ${ bufferSize }`, (err, stdout, stderr) => {
+            exec(`octave --no-gui ${ servicePath } ${ resolvedDir } ${ port } ${ bufferSize }`, (err, stdout, stderr) => {
                 if (err) {
                     console.error(err);
                     reject();
@@ -51,7 +53,7 @@ class OctaveClient {
     }
 
     send(data) {
-        this.socket.write(`${ data }\n`);
+        this.socket.write(`${ data }`);
     }
 
     receive(callback) {
