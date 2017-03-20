@@ -7,8 +7,8 @@ import Download from 'material-ui/svg-icons/file/file-download';
 import jspdf from 'jspdf';
 
 const iconProps = {
-	style: styles.downloadBtnSmall, 
-	iconStyle: styles.downloadIconSmall, 
+	style: styles.downloadBtnSmall,
+	iconStyle: styles.downloadIconSmall,
 	backgroundColor: sharedStyles.white
 }
 
@@ -31,6 +31,10 @@ function mapNoteValues(note) {
     return (!!octave && !!letter) && parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 126;
 }
 
+function add(a, b) {
+	return a + b;
+}
+
 function sortNumbers(a, b) {
     return a - b;
 }
@@ -51,7 +55,7 @@ export default class Sheet extends React.Component {
     }
 
     download() {
-    	console.log(document.getElementById("cardContainer").innerHTML);	
+    	console.log(document.getElementById("cardContainer").innerHTML);
     	doc.addHTML(document.getElementById('cardContainer'), 0, 0, () => {
         	doc.save('samplers-file.pdf');
         });
@@ -61,8 +65,11 @@ export default class Sheet extends React.Component {
 	getDataAndPlot() {
 	    d3.selectAll("#sheet svg").remove();
 	    var notes = document.getElementById('note-input').value;
-	    var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
 	    var times = document.getElementById('time-input').value;
+		if(!(notes&&times)) {
+			return;
+		}
+	    var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
 	    var timeResult = times.split(/,| /).filter(function(n){ return n != ''; });
 	    //Convoluted way of finding the width of the div, because .width doesn't work. $("#sheet").width() is equivalent
 	    //below code may not work inside separate file
@@ -71,10 +78,11 @@ export default class Sheet extends React.Component {
 	}
 
 	plotSheet(chordArray, timeArray, divWidth) {
-	    let xPosition = 25 
+	    let xPosition = 25
 	    const distanceBetweenNotes = 50;
 	    const staffMiddle = 50;
-	    const shift = 11;
+		const spacing = 10;
+	    const shift = 12;
 	    //var divWidth = window.getComputedStyle(document.getElementById("sheet"), null).width;
 	    //Adjustment for skew
 	    const skewX15Adjustment = Math.tan(Math.PI/12);
@@ -93,6 +101,10 @@ export default class Sheet extends React.Component {
 	    const length = chordArray.length < timeArray.length ? chordArray.length : timeArray.length;
 
 	    timeArray = timeArray.map(parseFloat);
+		for (let i=0, len=length-1; i < len; i++) {
+			timeArray[i] = timeArray[i+1] - timeArray[i];
+		}
+		timeArray[length-1] = 1;
 
 	    do {
 	        const staff = d3.select("#sheet")
@@ -162,10 +174,41 @@ export default class Sheet extends React.Component {
 	                            .attr("transform", "skewY(-30)")
 	                            .style("fill", "#fff");
 	                    }
-
-
-	                    //If note is outside of staff, add lines - scratch that, always add lines
 	                }
+	            }
+
+				//flag
+				if (time < 3.8) {
+					let upperNote = noteValues[noteValues.length-1]*5;
+	                let lowerNote = noteValues[0]*5+skewY10Adjustment*6;
+	                let avg = noteValues.reduce(add, 0) <= 0;
+	                staff.append("line")
+	                    .attr("x1", shifted||avg ? xPosition+6 : xPosition-6)
+	                    .attr("y1", avg ? staffMiddle - upperNote - 25 : staffMiddle - upperNote + skewY10Adjustment*6)
+	                    .attr("x2", shifted||avg ? xPosition+6 : xPosition-6)
+	                    .attr("y2", avg ? staffMiddle - lowerNote - skewY10Adjustment*6 : staffMiddle - lowerNote + 25)
+	                    .style("stroke", "#000")
+	                    .style("stroke-width", "0.5");
+				}
+
+				//additional lines
+				for (let linePos = staffMiddle-3*spacing, i = noteValues[noteValues.length-1]-6; i >= 0; i -= 2, linePos -= spacing) {
+					staff.append("line")
+	                    .attr("x1", xPosition-10)
+	                    .attr("y1", linePos)
+	                    .attr("x2", shifted ? xPosition+shift+10 : xPosition+10)
+	                    .attr("y2", linePos)
+	                    .style("stroke", "#000")
+	                    .style("stroke-width", "0.5");
+				}
+				for (let linePos = staffMiddle+3*spacing, i = noteValues[0]+6; i <= 0; i += 2, linePos += spacing) {
+	                staff.append("line")
+	                    .attr("x1", xPosition-10)
+	                    .attr("y1", linePos)
+	                    .attr("x2", shifted ? xPosition+shift+10 : xPosition+10)
+	                    .attr("y2", linePos)
+	                    .style("stroke", "#000")
+	                    .style("stroke-width", "0.5");
 	            }
 
 	            xPosition += (time >= 0.5)? time*distanceBetweenNotes : shifted ? 25 : 16;
@@ -175,37 +218,37 @@ export default class Sheet extends React.Component {
 	        //Draw staff
 	        staff.append("line")
 	            .attr("x1", "0")
-	            .attr("y1", "30")
+	            .attr("y1", staffMiddle-2*spacing)
 	            .attr("x2", "100%")
-	            .attr("y2", "30")
+	            .attr("y2", staffMiddle-2*spacing)
 	            .style("stroke", "#000")
 	            .style("stroke-width", "0.5");
 	        staff.append("line")
 	            .attr("x1", "0")
-	            .attr("y1", "40")
+	            .attr("y1", staffMiddle-spacing)
 	            .attr("x2", "100%")
-	            .attr("y2", "40")
+	            .attr("y2", staffMiddle-spacing)
 	            .style("stroke", "#000")
 	            .style("stroke-width", "0.5");
 	        staff.append("line")
 	            .attr("x1", "0")
-	            .attr("y1", "50")
+	            .attr("y1", staffMiddle)
 	            .attr("x2", "100%")
-	            .attr("y2", "50")
+	            .attr("y2", staffMiddle)
 	            .style("stroke", "#000")
 	            .style("stroke-width", "0.5");
 	        staff.append("line")
 	            .attr("x1", "0")
-	            .attr("y1", "60")
+	            .attr("y1", staffMiddle+spacing)
 	            .attr("x2", "100%")
-	            .attr("y2", "60")
+	            .attr("y2", staffMiddle+spacing)
 	            .style("stroke", "#000")
 	            .style("stroke-width", "0.5");
 	        staff.append("line")
 	            .attr("x1", "0")
-	            .attr("y1", "70")
+	            .attr("y1", staffMiddle+2*spacing)
 	            .attr("x2", "100%")
-	            .attr("y2", "70")
+	            .attr("y2", staffMiddle+2*spacing)
 	            .style("stroke", "#000")
 	            .style("stroke-width", "0.5");
 

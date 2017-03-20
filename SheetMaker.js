@@ -21,7 +21,7 @@ function plotSheet(chordArray, timeArray, divWidth) {
     var length = chordArray.length < timeArray.length ? chordArray.length : timeArray.length;
 
     timeArray = timeArray.map(parseFloat);
-    for (i=0, len=length-1; i < len; i++)
+    for (var i=0, len=length-1; i < len; i++)
 	{
 		timeArray[i] = timeArray[i+1] - timeArray[i];
 	}
