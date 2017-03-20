@@ -1,4 +1,4 @@
-import { grey500, tealA400, white } from 'material-ui/styles/colors';
+import { grey300, grey500, tealA400, white } from 'material-ui/styles/colors';
 
 const marginLarge = 20;
 const buttonSizeLarge = 150;
@@ -15,6 +15,7 @@ export default {
     'white': white,
     'grey500': grey500,
     'tealA400': tealA400,
+    'grey300': grey300,
 
     layoutStyle: {
         height: '100%',
@@ -31,6 +32,10 @@ export default {
         justifyContent: 'center'
     },
 
+    modalStyle: {
+        width: '305px'
+    },
+
     largeCaption: {
         fontWeight: 'bold',
         fontSize: '75px',
@@ -39,8 +44,7 @@ export default {
     },
 
     subtitleCaption: {
-        fontWeight: 'bold',
-        fontSize: '40px',
+        fontSize: '22px',
         color: grey500,
         textAlign: 'center'
     },
@@ -101,6 +105,15 @@ export default {
         width: '100px',
         height: '100px',
         fill: tealA400
+    },
+
+    tooltipIcon: {
+        top: '100%',
+        left: '25%'
+    },
+
+    audio: {
+        margin: '12px'
     }
     // Shared styles.
 };

@@ -5,7 +5,6 @@ export default {
 
     uploadPageWidthAndHeight: {
     	width: '100%',
-    	height: '40%'
     },
 
     uploadContainer: {
