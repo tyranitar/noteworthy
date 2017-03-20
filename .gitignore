@@ -1,6 +1,8 @@
-node_modules
 data
+data_test
 examples
+node_modules
+temp
 vendor
 
 *.exe
@@ -8,5 +10,3 @@ vendor
 *.mid
 *.min.js
 *.wav
-
-temp

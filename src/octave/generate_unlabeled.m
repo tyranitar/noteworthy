@@ -26,7 +26,6 @@ function [freq_vecs, freq_vec_timestamps] = generate_unlabeled(file_location)
 
         [f, freq_vec] = fourier_transform(note, fs);
 
-        % TODO: Make the timestamps more general (maybe average).
         freq_vecs = vertcat(freq_vecs, freq_vec');
         freq_vec_timestamps = vertcat(freq_vec_timestamps, t(start_index));
 

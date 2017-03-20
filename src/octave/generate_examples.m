@@ -1,40 +1,27 @@
-function generate_examples(wipe = false)
-    addpath('vendor');
+function generate_examples(training = true, wipe = false)
+    more off;
+
+    addpath('vendor/midi');
     disp('generating examples...');
 
     % Directories.
     data_dir = '../../data/';
-    labeled_dir = strcat(data_dir, 'labeled/');
+
+    if ~training
+        data_dir = '../../data_test/';
+    end
+
+    wav_dir = strcat(data_dir, 'wav/');
     midi_dir = strcat(data_dir, 'midi/');
     unlabeled_dir = strcat(data_dir, 'unlabeled/');
-    wav_dir = strcat(data_dir, 'wav/');
-
-    function wipe_dir(file_dir)
-        printf('wiping directory: %s\n', file_dir);
-
-        [files, err, msg] = readdir(file_dir);
-
-        if err
-            error(msg);
-        end
-
-        for i = 1:length(files)
-            file = files{i};
-            file_path = strcat(file_dir, file);
-            [unused, name, ext] = fileparts(file_path);
-
-            if strcmp(ext, '.')
-                continue;
-            end
-
-            unlink(file_path);
-        end
-    end
+    labeled_dir = strcat(data_dir, 'labeled/');
+    timestamps_dir = strcat(data_dir, 'timestamps/');
 
     if wipe
         % Wipe existing preprocessed data.
-        wipe_dir(labeled_dir);
         wipe_dir(unlabeled_dir);
+        wipe_dir(labeled_dir);
+        wipe_dir(timestamps_dir);
     end
 
     [wav_files, err, msg] = readdir(wav_dir);
@@ -57,6 +44,7 @@ function generate_examples(wipe = false)
         midi_file_path = strcat(midi_dir, name, '.mid');
         unlabeled_path = strcat(unlabeled_dir, name, '.mat');
         labeled_path = strcat(labeled_dir, name, '.mat');
+        timestamps_path = strcat(timestamps_dir, name, '.mat');
 
         if exist(unlabeled_path, 'file') && exist(labeled_path, 'file')
             printf('the following file has already been processed: %s\n', wav_file_path);
@@ -77,6 +65,7 @@ function generate_examples(wipe = false)
             if verified
                 dlmwrite(unlabeled_path, freq_vecs);
                 dlmwrite(labeled_path, note_vecs);
+                dlmwrite(timestamps_path, note_vec_timestamps);
             else
                 printf('failed to verify timestamps for %s\n', wav_file_path);
             end
@@ -84,4 +73,6 @@ function generate_examples(wipe = false)
             printf('an error occurred while processing %s\n', wav_file_path);
         end
     end
+
+    disp('finished generating examples');
 end
