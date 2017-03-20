@@ -38,6 +38,7 @@ function generate_examples(wipe = false)
         % Wipe existing preprocessed data.
         wipe_dir(unlabeled_dir);
         wipe_dir(labeled_dir);
+        wipe_dir(timestamps_dir);
     end
 
     [wav_files, err, msg] = readdir(wav_dir);
