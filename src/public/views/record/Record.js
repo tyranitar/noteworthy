@@ -13,24 +13,27 @@ import Next from 'material-ui/svg-icons/av/skip-next';
 import styles from './styles';
 import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
+import TextField from 'material-ui/TextField';
 
 
 const mediumIconProps = {
-	style: styles.btnMed, 
-	iconStyle: styles.iconMed, 
+	style: sharedStyles.btnMed,
+	iconStyle: sharedStyles.iconMed,
 	backgroundColor: sharedStyles.white
 }
 
 const largeIconProps = {
-	style: styles.btnLarge,
-	iconStyle: styles.iconLarge, 
-	backgroundColor: sharedStyles.white
+	style: sharedStyles.btnLarge,
+	iconStyle: sharedStyles.iconLarge,
+	backgroundColor: sharedStyles.white,
+    tooltipStyles: sharedStyles.tooltipIcon
 }
 
 const smallIconProps = {
-	style: styles.btnSmallAudio,
-	iconStyle: styles.iconSmall, 
-	backgroundColor: sharedStyles.white
+	style: sharedStyles.btnSmallAudio,
+    iconStyle: sharedStyles.iconSmall,
+    tooltipStyles: sharedStyles.tooltipIcon,
+    backgroundColor: sharedStyles.white
 }
 
 export default class Record extends React.Component {
@@ -206,11 +209,11 @@ export default class Record extends React.Component {
    		if (this.state.playing) {
             return (
                 <div>
-                    <IconButton { ...largeIconProps } onClick={this.stop}>
+                    <IconButton { ...largeIconProps } tooltip="Stop Recording" onClick={this.stop}>
                         <Stop />
                     </IconButton>
-                    
-                    <IconButton { ...largeIconProps } onClick={this.pause}>
+
+                    <IconButton { ...largeIconProps } tooltip="Pause Recording" onClick={this.pause}>
                         <Pause />
                     </IconButton>
                 </div>
@@ -221,15 +224,10 @@ export default class Record extends React.Component {
     renderSubmitButton() {
         if (!this.state.playing && this.url) {
             return (
-            	<div>
-					<div style = {sharedStyles.containerStyle} >
-						<IconButton { ...mediumIconProps } onClick={()=>{this.props.router.push('/sheet')}}>
-							<Next />
-						</IconButton>
-					</div>
-					<div style = {sharedStyles.containerStyle}>
-						<span style={styles.successMessage}>Translate your audio file now!</span>
-					</div>
+				<div style = {sharedStyles.containerStyle} >
+					<IconButton { ...largeIconProps } tooltip="Convert" onClick={()=>{this.props.router.push('/sheet')}}>
+						<Next />
+					</IconButton>
 				</div>
 			)
         }
@@ -255,7 +253,7 @@ export default class Record extends React.Component {
         ];
 
         const audioTrack = document.getElementById("audio-track");
-        
+
         if (audioTrack) {
             audioTrack.load();
         }
@@ -265,45 +263,58 @@ export default class Record extends React.Component {
                 <div style={ sharedStyles.fullWidth }>
 
                 	<div style={ sharedStyles.containerStyle }>
-                        <span style={ styles.recordTitle }>Record Here!</span>
+                        <span style={ sharedStyles.largeCaption }>
+                        	<span style={{ color: sharedStyles.tealA400 }}>Record </span>
+                        	Here!
+                        </span>
                     </div>
 
-                    <div style ={sharedStyles.containerStyle}> 
-	                    {(!this.state.playing && !this.state.paused) && 
-                        	<span style={styles.recordCaption}>Press the button below to begin recording.</span>
-	                    }
+                	<div style ={sharedStyles.containerStyle}>
+                		<span style={ sharedStyles.subtitleCaption }>
+	                		{(!this.url && !this.state.playing && !this.state.paused) && 'Press the button below to begin recording' }
+	                    	{(!this.url && this.state.playing) && 'Recording...' }
+	                    	{(!this.url && this.state.paused) && 'Paused, press play to resume recording'}
+	                    	{(this.url && !this.state.playing) && 'Translate your recording now' }
+	                    </span>
                     </div>
 
-                    <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
+	                {!this.url &&
+	                    <div style={ sharedStyles.containerStyle }>
+	                        <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/wav'}} onStart ={this.start} gotStream={this.getStream}/>
 
-                    <div style={ sharedStyles.containerStyle }>
-                        <Recorder ref='Recorder' onStop={this.onStop} blobOpts={{type: 'audio/wav'}} onStart ={this.start} gotStream={this.getStream}/>
+	                        {!this.state.playing &&
+	                            <IconButton { ...largeIconProps } onClick={this.startRecorder}>
+	                                {this.renderResumeOrPlayOptions()}
+	                            </IconButton>
+	                        }
 
-                        {!this.state.playing &&
-                            <IconButton { ...largeIconProps } onClick={this.startRecorder}>
-                                {this.renderResumeOrPlayOptions()}
-                            </IconButton>
-                        } 
+	                        <Dialog title={this.props.title}
+	                        		actions={dialogActions}
+	                        		contentStyle={ sharedStyles.modalStyle }
+	                        		title="Name Your Audio File"
+	                        		modal={true}
+	                        		open={this.state.dialogOpen}>
+	                        	<TextField hintText="Enter your file name here...." onChange={(evt)=>this.setState({text: evt.currentTarget.value})}/>
+	                        </Dialog>
 
-                        <Dialog title={this.props.title} actions={dialogActions} title="Enter your file name" modal={true} open={this.state.dialogOpen}>
-                        	<label htmlFor ='fileName'>File Name</label>
-                         	<input type = "text" onChange={(evt)=>this.setState({text: evt.currentTarget.value})} id='fileName'/>
-                        </Dialog>
+	                        {this.renderStopOrPauseOptions()}
+	                    </div>
+	                }
 
-                        {this.renderStopOrPauseOptions()}
-                    </div>
-
-                    {this.url && 
-                      
-                      <div style ={ styles.audioTrackContainer }>
-                        <audio id = "audio-track" controls>
-                          <source src = {'../../' + this.url} />
-                        </audio>
-                        <IconButton { ...smallIconProps} onClick={this.deleteUrl}>
-                            <Delete />
-                        </IconButton>
-                      </div>
+                    {this.url &&
+	                    <div style ={ sharedStyles.audioTrackContainer }>
+	                        <audio id = "audio-track" style={ sharedStyles.audio } controls>
+	                          <source src = {'../../' + this.url} />
+	                        </audio>
+	                        <IconButton { ...smallIconProps} tooltip="Delete recording" onClick={this.deleteUrl}>
+	                            <Delete />
+	                        </IconButton>
+	                    </div>
                     }
+
+	                {!this.url &&
+	                    <canvas id="mic_activity" style={styles.audioCanvas}></canvas>
+	                }
 
                     {this.renderSubmitButton()}
 
