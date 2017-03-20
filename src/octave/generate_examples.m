@@ -1,4 +1,4 @@
-function generate_examples(wipe = false)
+function generate_examples(training = true, wipe = false)
     more off;
 
     addpath('vendor/midi');
@@ -6,6 +6,11 @@ function generate_examples(wipe = false)
 
     % Directories.
     data_dir = '../../data/';
+
+    if ~training
+        data_dir = '../../data_test/';
+    end
+
     wav_dir = strcat(data_dir, 'wav/');
     midi_dir = strcat(data_dir, 'midi/');
     unlabeled_dir = strcat(data_dir, 'unlabeled/');

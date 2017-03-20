@@ -1,12 +1,7 @@
 function train_algorithm()
-    % TODO: Set these based on X and y.
-    input_layer_size = 1000;
-    num_labels = 34;
-
     % TODO: Try tweaking these.
-    hidden_layer_size = round(sqrt(input_layer_size * num_labels));
-    max_iter = 100;
-    lambda = 1;
+    max_iter = 250;
+    lambda = 0.1;
 
     more off;
 
@@ -21,6 +16,12 @@ function train_algorithm()
 
     [X, y] = get_shuffled_examples();
     m = size(X, 1);
+
+    input_layer_size = size(X, 2);
+    num_labels = size(y, 2);
+
+    % TODO: try tweaking this value as well.
+    hidden_layer_size = round(sqrt(input_layer_size * num_labels));
 
     % Initialize weights.
     initial_Theta1 = rand_init_weights(input_layer_size, hidden_layer_size);
