@@ -14,6 +14,7 @@ import styles from './styles';
 import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
 
+
 const mediumIconProps = {
 	style: styles.btnMed, 
 	iconStyle: styles.iconMed, 
