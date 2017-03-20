@@ -46,9 +46,9 @@ function plotSheet(chordArray, timeArray, divWidth) {
 
             var time = timeArray[index];
 
-
+            var shifted = false;
             //Iterate through each note in chord
-            for (var i=0, len = noteValues.length, dx = 0, shifted = false; i < len; i++) {
+            for (var i=0, len = noteValues.length, dx = 0; i < len; i++) {
                 var yPosition = staffMiddle - noteValues[i]*5;
 
                 if (i > 0 && noteValues[i-1] + 1 == noteValues[i]) {
