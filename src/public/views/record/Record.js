@@ -20,9 +20,9 @@ const mergeBuffers = (channelBuffer, recordingLength) =>{
 	let offset = 0;
 
 	for (var i = 0; i < channelBuffer.length; i++){
-	const buffer = channelBuffer[i];
-	result.set(buffer, offset);
-	offset += buffer.length;
+		const buffer = channelBuffer[i];
+		result.set(buffer, offset);
+		offset += buffer.length;
 	}
 	return result;
 }
@@ -34,17 +34,17 @@ const writeUTFBytes = (view, offset, string) => {
 }
 
 const interleave = (leftChannel, rightChannel) => {
-  const length = leftChannel.length + rightChannel.length;
-  let result = new Float32Array(length);
- 
-  let inputIndex = 0;
- 
-  for (let index = 0; index < length; ){
-    result[index++] = leftChannel[inputIndex];
-    result[index++] = rightChannel[inputIndex];
-    inputIndex++;
-  }
-  return result;
+	const length = leftChannel.length + rightChannel.length;
+	let result = new Float32Array(length);
+
+	let inputIndex = 0;
+
+	for (let index = 0; index < length; ){
+		result[index++] = leftChannel[inputIndex];
+		result[index++] = rightChannel[inputIndex];
+		inputIndex++;
+	}
+	return result;
 }
 
 const mediumIconProps = {
@@ -99,7 +99,7 @@ export default class Record extends React.Component {
 	    const blob = this.state.blob;
 
 	    reader.onload = () => {
-	        let leftBuffer = mergeBuffers ( this.leftChannel, this.recordingLength );
+	    	let leftBuffer = mergeBuffers ( this.leftChannel, this.recordingLength );
 			let rightBuffer = mergeBuffers ( this.rightChannel, this.recordingLength );
 			// we interleave both channels together
 			const interleaved = interleave ( leftBuffer, rightBuffer );
