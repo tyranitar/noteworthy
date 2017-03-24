@@ -16,7 +16,7 @@ import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 
 const mergeBuffers = (channelBuffer, recordingLength) =>{
-	let result = new Float32Array(recordingLength);
+	const result = new Float32Array(recordingLength);
 	let offset = 0;
 
 	for (let i = 0; i < channelBuffer.length; i++){
