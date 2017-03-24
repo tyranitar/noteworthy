@@ -150,7 +150,7 @@ export default class Record extends React.Component {
 	                    dialogOpen: false
 	                });
 	            }
-	        });     
+	        });
 	    }
 	    reader.readAsDataURL(blob);
 	}
@@ -277,7 +277,7 @@ export default class Record extends React.Component {
 	            ctx.fillRect(i * 5, 325 - value, 3, 325);
 	        }
 	    };
-	    
+
 	    this.node = javascriptNode;
 	    this.audioCtx = audioCtx;
 	    this.source = bufferSource;
