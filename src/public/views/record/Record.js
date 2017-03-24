@@ -19,7 +19,7 @@ const mergeBuffers = (channelBuffer, recordingLength) =>{
 	let result = new Float32Array(recordingLength);
 	let offset = 0;
 
-	for (var i = 0; i < channelBuffer.length; i++){
+	for (let i = 0; i < channelBuffer.length; i++){
 		const buffer = channelBuffer[i];
 		result.set(buffer, offset);
 		offset += buffer.length;
@@ -28,7 +28,7 @@ const mergeBuffers = (channelBuffer, recordingLength) =>{
 }
 
 const writeUTFBytes = (view, offset, string) => { 
-	for (var i = 0; i < string.length; i++){
+	for (let i = 0; i < string.length; i++){
 		view.setUint8(offset + i, string.charCodeAt(i));
 	}
 }
@@ -39,7 +39,7 @@ const interleave = (leftChannel, rightChannel) => {
 
 	let inputIndex = 0;
 
-	for (let index = 0; index < length; ){
+	for (let index = 0; index < length;){
 		result[index++] = leftChannel[inputIndex];
 		result[index++] = rightChannel[inputIndex];
 		inputIndex++;
@@ -225,16 +225,16 @@ export default class Record extends React.Component {
 	    analyser.smoothingTimeConstant = 0.3;
 	    analyser.fftSize = 1024;
 
-	    var channels = 2;
+	    const channels = 2;
 		// Create an empty two second stereo buffer at the
 		// sample rate of the AudioContext
-		var frameCount = audioCtx.sampleRate * 2.0;
+		const frameCount = audioCtx.sampleRate * 2.0;
 
-		var myArrayBuffer = audioCtx.createBuffer(2, frameCount, audioCtx.sampleRate);
+		let myArrayBuffer = audioCtx.createBuffer(2, frameCount, audioCtx.sampleRate);
 
-	  	var bufferSize = 2048;
+	  	const bufferSize = 2048;
 
-	  	var bufferSource = audioCtx.createBufferSource();
+	  	let bufferSource = audioCtx.createBufferSource();
 		  // set the buffer in the AudioBufferSourceNode
 		bufferSource.buffer = myArrayBuffer;
 
