@@ -6,6 +6,9 @@ import IconButton from 'material-ui/IconButton';
 import Download from 'material-ui/svg-icons/file/file-download';
 import jspdf from 'jspdf';
 
+import fs from 'fs';
+import dict from './dict';
+
 const iconProps = {
 	style: styles.downloadBtnSmall,
 	iconStyle: styles.downloadIconSmall,
@@ -49,9 +52,7 @@ export default class Sheet extends React.Component {
 	}
 
 	componentDidMount() {
-        window.addEventListener("resize", ()=> {
-        	waitForFinalEvent(this.getDataAndPlot(), 200, "");
-        });
+		this.getDataAndPlot();
     }
 
     download() {
@@ -63,16 +64,26 @@ export default class Sheet extends React.Component {
 
 
 	getDataAndPlot() {
+		console.log(this.props.location.query);
+		const arr = JSON.parse(fs.readFileSync(this.props.location.query.url, 'utf8'));
+
+		const noteResult = arr[0].map((notes) => {
+			let chord = '';
+
+			notes.forEach((note, i) => {
+				if (note === 1) {
+					chord += dict[i];
+				}
+			});
+
+			return chord;
+		});
+
+		const timeResult = arr[1].map((timestamps) => {
+			return timestamps[0];
+		});
+
 	    d3.selectAll("#sheet svg").remove();
-	    var notes = document.getElementById('note-input').value;
-	    var times = document.getElementById('time-input').value;
-		if(!(notes&&times)) {
-			return;
-		}
-	    var noteResult = notes.split(/,| /).filter(function(n){ return n != ''; });
-	    var timeResult = times.split(/,| /).filter(function(n){ return n != ''; });
-	    //Convoluted way of finding the width of the div, because .width doesn't work. $("#sheet").width() is equivalent
-	    //below code may not work inside separate file
 	    var divWidth = parseInt(window.getComputedStyle(document.getElementById("sheet"), null).width);
 	    this.plotSheet(noteResult, timeResult, divWidth);
 	}
@@ -258,17 +269,9 @@ export default class Sheet extends React.Component {
 	render() {
 		return (
 			<div style = { styles.sheetContainer } >
-				<div>
-					<span>Notes:</span>
-					<input id="note-input" type="text" name="NoteInput" /><br/>
-					<span>Times:</span>
-					<input id="time-input" type="text" name="TimeInput" /><br/>
-					<div style = {{float: 'right'}}><IconButton {...iconProps} onClick = {this.download}><Download/></IconButton></div>
-					<button type="button" value="Generate Sheet" onClick={this.getDataAndPlot} />
-				</div>
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
-					    <CardTitle title="Score sheet for #####" titleStyle={ styles.cardTitle }>
+					    <CardTitle title="Scoresheet" titleStyle={ styles.cardTitle }>
 					    </CardTitle>
 						<div id="sheet" style = {{textAlign: 'center', marginLeft: '25px', marginRight: '25px'}}></div>
 					</Card>

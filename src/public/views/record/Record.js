@@ -15,6 +15,7 @@ import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 
+import octaveClientConnection from '../../octave-client-connection';
 
 const mediumIconProps = {
 	style: sharedStyles.btnMed,
@@ -71,7 +72,7 @@ export default class Record extends React.Component {
 	        const blobAsDataUrl = reader.result;
 	        const base64 = blobAsDataUrl.split(',')[1];
 	        const buf = new Buffer(base64, 'base64');
-	        const filePath = 'temp/' + this.state.text + '.wav'
+	        const filePath = 'C:/Users/Tyron/Documents/GitHub/personal/noteworthy/temp/' + this.state.text + '.wav'
 	        fs.writeFile(filePath, buf, (err) => {
 	            if (err) {
 	                console.error(err);
@@ -223,9 +224,22 @@ export default class Record extends React.Component {
 
     renderSubmitButton() {
         if (!this.state.playing && this.url) {
+			const onClick = () => {
+				octaveClientConnection.then((octaveClient) => {
+					octaveClient.receive((chunk) => {
+						console.log(chunk);
+						// this.props.router.push('/sheet?hello=world');
+					});
+
+					console.log(this.url);
+
+					octaveClient.send(this.url);
+				})
+			};
+
             return (
 				<div style = {sharedStyles.containerStyle} >
-					<IconButton { ...largeIconProps } tooltip="Convert" onClick={()=>{this.props.router.push('/sheet')}}>
+					<IconButton { ...largeIconProps } tooltip="Convert" onClick={ onClick }>
 						<Next />
 					</IconButton>
 				</div>

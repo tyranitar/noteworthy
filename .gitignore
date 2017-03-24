@@ -5,6 +5,7 @@ node_modules
 temp
 vendor
 
+output.json
 *.exe
 *.mat
 *.mid
