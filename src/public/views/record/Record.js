@@ -14,7 +14,40 @@ import styles from './styles';
 import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
+const wav = require('node-wav');
+const WavEncoder = require("wav-encoder");
 
+const mergeBuffers = (channelBuffer, recordingLength) =>{
+	let result = new Float32Array(recordingLength);
+	let offset = 0;
+
+	for (var i = 0; i < channelBuffer.length; i++){
+	const buffer = channelBuffer[i];
+	result.set(buffer, offset);
+	offset += buffer.length;
+	}
+	return result;
+}
+
+const writeUTFBytes = (view, offset, string) => { 
+	for (var i = 0; i < string.length; i++){
+		view.setUint8(offset + i, string.charCodeAt(i));
+	}
+}
+
+const interleave = (leftChannel, rightChannel) => {
+  const length = leftChannel.length + rightChannel.length;
+  let result = new Float32Array(length);
+ 
+  let inputIndex = 0;
+ 
+  for (let index = 0; index < length; ){
+    result[index++] = leftChannel[inputIndex];
+    result[index++] = rightChannel[inputIndex];
+    inputIndex++;
+  }
+  return result;
+}
 
 const mediumIconProps = {
 	style: sharedStyles.btnMed,
@@ -68,11 +101,45 @@ export default class Record extends React.Component {
 	    const blob = this.state.blob;
 
 	    reader.onload = () => {
-	        const blobAsDataUrl = reader.result;
-	        const base64 = blobAsDataUrl.split(',')[1];
-	        const buf = new Buffer(base64, 'base64');
+	        let leftBuffer = mergeBuffers ( this.leftChannel, this.recordingLength );
+			let rightBuffer = mergeBuffers ( this.rightChannel, this.recordingLength );
+			// we interleave both channels together
+			const interleaved = interleave ( leftBuffer, rightBuffer );
 	        const filePath = 'temp/' + this.state.text + '.wav'
-	        fs.writeFile(filePath, buf, (err) => {
+
+	    	const buffer = new ArrayBuffer(44 + interleaved.length * 2);
+			let view = new DataView(buffer);
+			const sampleRate = this.audioCtx.sampleRate;
+			// write the WAV container, check spec at: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
+			// RIFF chunk descriptor
+			writeUTFBytes(view, 0, 'RIFF');
+			view.setUint32(4, 44 + interleaved.length * 2, true);
+			writeUTFBytes(view, 8, 'WAVE');
+			// FMT sub-chunk
+			writeUTFBytes(view, 12, 'fmt ');
+			view.setUint32(16, 16, true);
+			view.setUint16(20, 1, true);
+			// stereo (2 channels)
+			view.setUint16(22, 2, true);
+			view.setUint32(24, sampleRate, true);
+			view.setUint32(28, sampleRate * 4, true);
+			view.setUint16(32, 4, true);
+			view.setUint16(34, 16, true);
+			// data sub-chunk
+			writeUTFBytes(view, 36, 'data');
+			view.setUint32(40, interleaved.length * 2, true);
+			 
+			// write the PCM samples
+			const lng = interleaved.length;
+			let index = 44;
+			const volume = 1;
+
+			for (let i = 0; i < interleaved.length; i++){
+			    view.setInt16(index, interleaved[i] * (0x7FFF * volume), true);
+			    index += 2;
+			}
+
+	    	fs.writeFile(filePath, new Buffer(view.buffer),  (err) => {
 	            if (err) {
 	                console.error(err);
 	                this.setState({
@@ -85,7 +152,7 @@ export default class Record extends React.Component {
 	                    dialogOpen: false
 	                });
 	            }
-	        })
+	        });     
 	    }
 	    reader.readAsDataURL(blob);
 	}
@@ -109,6 +176,8 @@ export default class Record extends React.Component {
 
 	start() {
 	    this.node.connect(this.audioCtx.destination);
+	    this.source.connect(this.audioCtx.destination);
+	    this.source.start();
 	    this.setState({
 	        playing: true
 	    });
@@ -130,7 +199,9 @@ export default class Record extends React.Component {
 	stop() {
 	    const ctx = document.getElementById("mic_activity").getContext("2d");
 	    ctx.clearRect(0, 0, 500, 150);
+	    
 	    this.node.disconnect();
+	    
 	    this.refs.Recorder.stop();
 	    this.setState({
 	        playing: false
@@ -151,10 +222,23 @@ export default class Record extends React.Component {
 	    const analyser = audioCtx.createAnalyser();
 	    const source = audioCtx.createMediaStreamSource(stream);
 	    source.connect(analyser);
-	    const javascriptNode = audioCtx.createScriptProcessor(2048, 1, 1);
+	    const javascriptNode = audioCtx.createScriptProcessor(2048, 2, 2);
 
 	    analyser.smoothingTimeConstant = 0.3;
 	    analyser.fftSize = 1024;
+
+	    var channels = 2;
+		// Create an empty two second stereo buffer at the
+		// sample rate of the AudioContext
+		var frameCount = audioCtx.sampleRate * 2.0;
+
+		var myArrayBuffer = audioCtx.createBuffer(2, frameCount, audioCtx.sampleRate);
+
+	  	var bufferSize = 2048;
+
+	  	var bufferSource = audioCtx.createBufferSource();
+		  // set the buffer in the AudioBufferSourceNode
+		bufferSource.buffer = myArrayBuffer;
 
 	    analyser.connect(javascriptNode);
 	    const ctx = document.getElementById("mic_activity").getContext("2d");
@@ -166,8 +250,16 @@ export default class Record extends React.Component {
 	    // when the javascript node is called
 	    // we use information from the analyzer node
 	    // to draw the volume
-	    javascriptNode.onaudioprocess = function() {
+	    javascriptNode.onaudioprocess = (audioProcessingEvent) =>{
+	    	const outputBuffer = audioProcessingEvent.outputBuffer;
+	    	const inputBuffer = audioProcessingEvent.inputBuffer;
 
+	        const left = audioProcessingEvent.inputBuffer.getChannelData (0);
+	        const right = audioProcessingEvent.inputBuffer.getChannelData (1);
+	        // we clone the samples
+	        this.leftChannel.push (new Float32Array (left));
+	        this.rightChannel.push (new Float32Array (right));
+	        this.recordingLength += bufferSize;
 	        // get the average for the first channel
 	        const array = new Uint8Array(analyser.frequencyBinCount);
 	        analyser.getByteFrequencyData(array);
@@ -187,9 +279,13 @@ export default class Record extends React.Component {
 	            ctx.fillRect(i * 5, 325 - value, 3, 325);
 	        }
 	    };
-
+	   	this.bufferSource = myArrayBuffer;
 	    this.node = javascriptNode;
 	    this.audioCtx = audioCtx;
+	    this.source = bufferSource;
+	    this.leftChannel = [];
+	    this.rightChannel = [];
+	    this.recordingLength = 0;
 	}
 
 	onCancel() {
