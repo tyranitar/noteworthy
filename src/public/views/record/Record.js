@@ -226,7 +226,7 @@ export default class Record extends React.Component {
         if (!this.state.playing && this.url) {
 			const onClick = () => {
 				octaveClientConnection.then((octaveClient) => {
-					octaveClient.receive((chunk) => {
+					octaveClient.addListener((chunk) => {
 						console.log(chunk);
 						// this.props.router.push('/sheet?hello=world');
 					});

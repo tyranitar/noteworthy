@@ -11,7 +11,7 @@ const octaveClient = new OctaveClient({
 //     console.error("failed to connect to octave service");
 // });
 //
-// octaveClient.receive((chunk) => {
+// octaveClient.addListener((chunk) => {
 //     console.log(chunk.toString());
 // });
 
