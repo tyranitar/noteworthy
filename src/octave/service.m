@@ -6,6 +6,8 @@ cd(args{1});
 port = str2num(args{2});
 bufferSize = str2num(args{3});
 
+addpath('vendor/jsonlab');
+
 s = socket();
 bind(s, port);
 listen(s, 0);
