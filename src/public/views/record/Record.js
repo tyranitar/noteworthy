@@ -14,8 +14,6 @@ import styles from './styles';
 import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
-const wav = require('node-wav');
-const WavEncoder = require("wav-encoder");
 
 const mergeBuffers = (channelBuffer, recordingLength) =>{
 	let result = new Float32Array(recordingLength);
@@ -279,7 +277,7 @@ export default class Record extends React.Component {
 	            ctx.fillRect(i * 5, 325 - value, 3, 325);
 	        }
 	    };
-	   	this.bufferSource = myArrayBuffer;
+	    
 	    this.node = javascriptNode;
 	    this.audioCtx = audioCtx;
 	    this.source = bufferSource;
