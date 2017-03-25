@@ -63,7 +63,6 @@ export default class Upload extends React.Component {
                         <div style={ styles.uploadContainer }>
                             <IconButton style={ sharedStyles.btnLarge }
                                         iconStyle={ sharedStyles.iconLarge }
-                                        backgroundColor={ sharedStyles.white }
                                         tooltip="Upload a file"
                                         tooltipStyles={ sharedStyles.tooltipIcon }
                                         onClick={()=>{document.getElementById('audioUpload').click()}} >
@@ -83,7 +82,6 @@ export default class Upload extends React.Component {
                                             iconStyle={ sharedStyles.iconSmall }
                                             tooltip="Delete file selection"
                                             tooltipStyles={ sharedStyles.tooltipIcon }
-                                            backgroundColor={ sharedStyles.white }
                                             onClick={this.deleteUrl}>
                                     <Delete />
                                 </IconButton>
