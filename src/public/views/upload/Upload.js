@@ -37,7 +37,6 @@ export default class Upload extends React.Component {
 				octaveClient.addListener((chunk) => {
 					const outputLocation = new TextDecoder("utf-8").decode(chunk);
 					this.props.router.push(`/sheet?url=${ outputLocation }`);
-					console.log("received");
 				});
 
 				octaveClient.send(this.state.url);

@@ -56,7 +56,6 @@ export default class Sheet extends React.Component {
     }
 
     download() {
-    	console.log(document.getElementById("cardContainer").innerHTML);
     	doc.addHTML(document.getElementById('cardContainer'), 0, 0, () => {
         	doc.save('samplers-file.pdf');
         });
@@ -64,7 +63,6 @@ export default class Sheet extends React.Component {
 
 
 	getDataAndPlot() {
-		console.log(this.props.location.query);
 		const arr = JSON.parse(fs.readFileSync(this.props.location.query.url, 'utf8'));
 
 		const noteResult = arr[0].map((notes) => {
