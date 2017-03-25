@@ -95,64 +95,59 @@ export default class Record extends React.Component {
 	}
 
    	onSuccessSubmit() {
-	    const reader = new FileReader;
-	    const blob = this.state.blob;
+	   
+    	let leftBuffer = mergeBuffers ( this.leftChannel, this.recordingLength );
+		let rightBuffer = mergeBuffers ( this.rightChannel, this.recordingLength );
+		// we interleave both channels together
+		const interleaved = interleave ( leftBuffer, rightBuffer );
+        const filePath = 'temp/' + this.state.text + '.wav'
 
-	    reader.onload = () => {
-	    	let leftBuffer = mergeBuffers ( this.leftChannel, this.recordingLength );
-			let rightBuffer = mergeBuffers ( this.rightChannel, this.recordingLength );
-			// we interleave both channels together
-			const interleaved = interleave ( leftBuffer, rightBuffer );
-	        const filePath = 'temp/' + this.state.text + '.wav'
+    	const buffer = new ArrayBuffer(44 + interleaved.length * 2);
+		let view = new DataView(buffer);
+		const sampleRate = this.audioCtx.sampleRate;
+		// write the WAV container, check spec at: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
+		// RIFF chunk descriptor
+		writeUTFBytes(view, 0, 'RIFF');
+		view.setUint32(4, 44 + interleaved.length * 2, true);
+		writeUTFBytes(view, 8, 'WAVE');
+		// FMT sub-chunk
+		writeUTFBytes(view, 12, 'fmt ');
+		view.setUint32(16, 16, true);
+		view.setUint16(20, 1, true);
+		// stereo (2 channels)
+		view.setUint16(22, 2, true);
+		view.setUint32(24, sampleRate, true);
+		view.setUint32(28, sampleRate * 4, true);
+		view.setUint16(32, 4, true);
+		view.setUint16(34, 16, true);
+		// data sub-chunk
+		writeUTFBytes(view, 36, 'data');
+		view.setUint32(40, interleaved.length * 2, true);
+		 
+		// write the PCM samples
+		const lng = interleaved.length;
+		let index = 44;
+		const volume = 1;
 
-	    	const buffer = new ArrayBuffer(44 + interleaved.length * 2);
-			let view = new DataView(buffer);
-			const sampleRate = this.audioCtx.sampleRate;
-			// write the WAV container, check spec at: https://ccrma.stanford.edu/courses/422/projects/WaveFormat/
-			// RIFF chunk descriptor
-			writeUTFBytes(view, 0, 'RIFF');
-			view.setUint32(4, 44 + interleaved.length * 2, true);
-			writeUTFBytes(view, 8, 'WAVE');
-			// FMT sub-chunk
-			writeUTFBytes(view, 12, 'fmt ');
-			view.setUint32(16, 16, true);
-			view.setUint16(20, 1, true);
-			// stereo (2 channels)
-			view.setUint16(22, 2, true);
-			view.setUint32(24, sampleRate, true);
-			view.setUint32(28, sampleRate * 4, true);
-			view.setUint16(32, 4, true);
-			view.setUint16(34, 16, true);
-			// data sub-chunk
-			writeUTFBytes(view, 36, 'data');
-			view.setUint32(40, interleaved.length * 2, true);
-			 
-			// write the PCM samples
-			const lng = interleaved.length;
-			let index = 44;
-			const volume = 1;
+		for (let i = 0; i < interleaved.length; i++){
+		    view.setInt16(index, interleaved[i] * (0x7FFF * volume), true);
+		    index += 2;
+		}
 
-			for (let i = 0; i < interleaved.length; i++){
-			    view.setInt16(index, interleaved[i] * (0x7FFF * volume), true);
-			    index += 2;
-			}
-
-	    	fs.writeFile(filePath, new Buffer(view.buffer),  (err) => {
-	            if (err) {
-	                console.error(err);
-	                this.setState({
-	                    snackBarOpen: true,
-	                    snackBarMessage: err.message || 'Oops! Something went wrong with the audio conversion. Please refresh the page and try again.'
-	                })
-	            } else {
-	                this.url = filePath;
-	                this.setState({
-	                    dialogOpen: false
-	                });
-	            }
-	        });
-	    }
-	    reader.readAsDataURL(blob);
+    	fs.writeFile(filePath, new Buffer(view.buffer),  (err) => {
+            if (err) {
+                console.error(err);
+                this.setState({
+                    snackBarOpen: true,
+                    snackBarMessage: err.message || 'Oops! Something went wrong with the audio conversion. Please refresh the page and try again.'
+                })
+            } else {
+                this.url = filePath;
+                this.setState({
+                    dialogOpen: false
+                });
+            }
+        });
 	}
 
 	deleteUrl() {
