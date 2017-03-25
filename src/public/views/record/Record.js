@@ -76,7 +76,7 @@ export default class Record extends React.Component {
 	    this.state = {
 	        playing: false,
 	        dialogOpen: false,
-	        text: '',
+	        fileName: '',
 	        paused: false,
 	        snackBarOpen: false,
 	        snackBarMessage: ''
@@ -100,7 +100,7 @@ export default class Record extends React.Component {
 		let rightBuffer = mergeBuffers ( this.rightChannel, this.recordingLength );
 		// we interleave both channels together
 		const interleaved = interleave ( leftBuffer, rightBuffer );
-        const filePath = 'temp/' + this.state.text + '.wav'
+        const filePath = 'temp/' + this.state.fileName + '.wav'
 
     	const buffer = new ArrayBuffer(44 + interleaved.length * 2);
 		let view = new DataView(buffer);
@@ -383,7 +383,7 @@ export default class Record extends React.Component {
 	                        		title="Name Your Audio File"
 	                        		modal={true}
 	                        		open={this.state.dialogOpen}>
-	                        	<TextField hintText="Enter your file name here...." onChange={(evt)=>this.setState({text: evt.currentTarget.value})}/>
+	                        	<TextField hintText="Enter your file name here...." onChange={(evt)=>this.setState({fileName: evt.currentTarget.value})}/>
 	                        </Dialog>
 
 	                        {this.renderStopOrPauseOptions()}
