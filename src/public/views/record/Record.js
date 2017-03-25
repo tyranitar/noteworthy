@@ -7,6 +7,7 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import Resume from 'material-ui/svg-icons/av/play-arrow';
 import Recorder from 'react-recorder'
 import fs from 'fs';
+import path from 'path';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
@@ -14,6 +15,7 @@ import styles from './styles';
 import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
+import octaveClientConnection from '../../octave-client-connection';
 
 const mergeBuffers = (channelBuffer, recordingLength) =>{
 	const result = new Float32Array(recordingLength);
@@ -27,7 +29,7 @@ const mergeBuffers = (channelBuffer, recordingLength) =>{
 	return result;
 }
 
-const writeUTFBytes = (view, offset, string) => { 
+const writeUTFBytes = (view, offset, string) => {
 	for (let i = 0; i < string.length; i++){
 		view.setUint8(offset + i, string.charCodeAt(i));
 	}
@@ -50,13 +52,11 @@ const interleave = (leftChannel, rightChannel) => {
 const mediumIconProps = {
 	style: sharedStyles.btnMed,
 	iconStyle: sharedStyles.iconMed,
-	backgroundColor: sharedStyles.white
 }
 
 const largeIconProps = {
 	style: sharedStyles.btnLarge,
 	iconStyle: sharedStyles.iconLarge,
-	backgroundColor: sharedStyles.white,
     tooltipStyles: sharedStyles.tooltipIcon
 }
 
@@ -64,7 +64,6 @@ const smallIconProps = {
 	style: sharedStyles.btnSmallAudio,
     iconStyle: sharedStyles.iconSmall,
     tooltipStyles: sharedStyles.tooltipIcon,
-    backgroundColor: sharedStyles.white
 }
 
 export default class Record extends React.Component {
@@ -95,12 +94,11 @@ export default class Record extends React.Component {
 	}
 
    	onSuccessSubmit() {
-	   
     	let leftBuffer = mergeBuffers ( this.leftChannel, this.recordingLength );
 		let rightBuffer = mergeBuffers ( this.rightChannel, this.recordingLength );
 		// we interleave both channels together
 		const interleaved = interleave ( leftBuffer, rightBuffer );
-        const filePath = 'temp/' + this.state.fileName + '.wav'
+        const filePath = path.resolve(process.cwd(), `./temp/${ this.state.fileName }.wav`);
 
     	const buffer = new ArrayBuffer(44 + interleaved.length * 2);
 		let view = new DataView(buffer);
@@ -123,7 +121,7 @@ export default class Record extends React.Component {
 		// data sub-chunk
 		writeUTFBytes(view, 36, 'data');
 		view.setUint32(40, interleaved.length * 2, true);
-		 
+
 		// write the PCM samples
 		const lng = interleaved.length;
 		let index = 44;
@@ -192,9 +190,9 @@ export default class Record extends React.Component {
 	stop() {
 	    const ctx = document.getElementById("mic_activity").getContext("2d");
 	    ctx.clearRect(0, 0, 500, 150);
-	    
+
 	    this.node.disconnect();
-	    
+
 	    this.refs.Recorder.stop();
 	    this.setState({
 	        playing: false
@@ -312,9 +310,20 @@ export default class Record extends React.Component {
 
     renderSubmitButton() {
         if (!this.state.playing && this.url) {
+			const onClick = () => {
+				octaveClientConnection.then((octaveClient) => {
+					octaveClient.addListener((chunk) => {
+						const outputLocation = new TextDecoder("utf-8").decode(chunk);
+						this.props.router.push(`/sheet?url=${ outputLocation }`);
+					});
+
+					octaveClient.send(this.url);
+				})
+			};
+
             return (
 				<div style = {sharedStyles.containerStyle} >
-					<IconButton { ...largeIconProps } tooltip="Convert" onClick={()=>{this.props.router.push('/sheet')}}>
+					<IconButton { ...largeIconProps } tooltip="Convert" onClick={ onClick }>
 						<Next />
 					</IconButton>
 				</div>
@@ -393,7 +402,7 @@ export default class Record extends React.Component {
                     {this.url &&
 	                    <div style ={ sharedStyles.audioTrackContainer }>
 	                        <audio id = "audio-track" style={ sharedStyles.audio } controls>
-	                          <source src = {'../../' + this.url} />
+	                          <source src = { this.url } />
 	                        </audio>
 	                        <IconButton { ...smallIconProps} tooltip="Delete recording" onClick={this.deleteUrl}>
 	                            <Delete />

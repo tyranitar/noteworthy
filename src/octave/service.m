@@ -1,8 +1,12 @@
 pkg load sockets;
 
 args = argv();
-port = str2num(args{1});
-bufferSize = str2num(args{2});
+
+cd(args{1});
+port = str2num(args{2});
+bufferSize = str2num(args{3});
+
+addpath('vendor/jsonlab');
 
 s = socket();
 bind(s, port);
@@ -10,15 +14,20 @@ listen(s, 0);
 
 client = accept(s);
 
+[Theta1, Theta2] = load_weights();
+
 while true
     [buffer, count] = recv(client, bufferSize);
 
     if count > 0
-        % Data parsing logic.
-        % Load the weights once upon deployment and keep it in memory.
-        % Call predict_notes here with the file location and weights as the arguments.
-        disp(buffer);
-        send(client, buffer);
+        try
+            input_location = char(buffer);
+            output_location = predict_notes(Theta1, Theta2, input_location);
+            send(client, output_location);
+        catch err
+            disp(err.message);
+            send(client, err.message);
+        end
     else
         % Client disconnected.
         break;
