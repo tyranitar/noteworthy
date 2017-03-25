@@ -7,6 +7,7 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import Resume from 'material-ui/svg-icons/av/play-arrow';
 import Recorder from 'react-recorder'
 import fs from 'fs';
+import path from 'path';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Next from 'material-ui/svg-icons/av/skip-next';
@@ -72,7 +73,8 @@ export default class Record extends React.Component {
 	        const blobAsDataUrl = reader.result;
 	        const base64 = blobAsDataUrl.split(',')[1];
 	        const buf = new Buffer(base64, 'base64');
-	        const filePath = 'C:/Users/Tyron/Documents/GitHub/personal/noteworthy/temp/' + this.state.text + '.wav'
+			const filePath = path.resolve(process.cwd(), `./temp/${ this.state.text }.wav`);
+
 	        fs.writeFile(filePath, buf, (err) => {
 	            if (err) {
 	                console.error(err);

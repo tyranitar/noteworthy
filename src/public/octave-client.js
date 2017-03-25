@@ -30,12 +30,12 @@ class OctaveClient {
         const { servicePath, port, bufferSize, retryInterval, maxRetries } = optionsMap.get(this);
 
         const promise = new Promise((resolve, reject) => {
-            const resolvedDir = path.dirname(path.resolve(__dirname, servicePath));
+            const serviceDir = path.dirname(servicePath);
             const listeners = listenersMap.get(this);
             const socket = sockets.get(this);
             let retries = 0;
 
-            exec(`octave --no-gui ${ servicePath } ${ resolvedDir } ${ port } ${ bufferSize }`, (err, stdout, stderr) => {
+            exec(`octave --no-gui ${ servicePath } ${ serviceDir } ${ port } ${ bufferSize }`, (err, stdout, stderr) => {
                 if (err) {
                     console.error(err);
                     reject();
