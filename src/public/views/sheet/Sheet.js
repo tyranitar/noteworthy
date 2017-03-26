@@ -71,7 +71,7 @@ export default class Sheet extends React.Component {
 			if (err) {
 				this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops something went wrong!'})
 			} else {
-				this.setState({snackBarOpen: true, 'Your sheet has been saved!'})	
+				this.setState({snackBarOpen: true, snackBarMessage: 'Your sheet has been saved!'})	
 			}
 		});
     }
