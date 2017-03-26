@@ -15,7 +15,9 @@ export default class Home extends Component {
 				{('/' != currentLocation) &&
 					<div style={ homeLinkStyle }>
 						<Link to='/'>
-							
+							<IconButton iconStyle={ sharedStyles.iconMed } >
+ 								<ActionHome />
+ 							</IconButton>
 						</Link>
 					</div>
 				}

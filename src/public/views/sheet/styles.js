@@ -4,7 +4,7 @@ export default {
 	cardTitle: {
         fontWeight: 'bold',
         fontSize: '25px',
-        color: 'black',
+        color: grey500,
         padding: '0px',
         textAlign: 'center'
     },
@@ -16,7 +16,7 @@ export default {
     },
 
     cardStyle: {
-        padding: '5px', 
+        padding: '5px',
         width: '100%'
     },
 
@@ -31,13 +31,13 @@ export default {
     },
 
     cardContainer: {
-    	width: '100%',
-    	backgroundColor: 'white',
-    	height: '500px',
-    	margin: '5px'
+    	// width: '100%',
+    	backgroundColor: 'white'
     },
 
     sheetContainer: {
-    	height: '20%'
+    	// height: '20%'
+    	padding: '20px',
+		paddingTop: '75px'
     }
 }

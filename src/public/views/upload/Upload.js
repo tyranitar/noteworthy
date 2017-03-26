@@ -6,6 +6,8 @@ import sharedStyles from '../../styles/index';
 import Delete from 'material-ui/svg-icons/action/delete';
 import Next from 'material-ui/svg-icons/av/skip-next';
 
+import octaveClientConnection from '../../octave-client-connection';
+
 export default class Upload extends React.Component {
 
 	constructor() {
@@ -30,6 +32,17 @@ export default class Upload extends React.Component {
             audioTrack.load();
         };
 
+		const onClick = () => {
+			octaveClientConnection.then((octaveClient) => {
+				octaveClient.addListener((chunk) => {
+					const outputLocation = new TextDecoder("utf-8").decode(chunk);
+					this.props.router.push(`/sheet?url=${ outputLocation }`);
+				});
+
+				octaveClient.send(this.state.url);
+			})
+		};
+
         return (
             <div style={ sharedStyles.layoutStyle }>
                 <div style={ styles.uploadPageWidthAndHeight }>
@@ -50,7 +63,6 @@ export default class Upload extends React.Component {
                         <div style={ styles.uploadContainer }>
                             <IconButton style={ sharedStyles.btnLarge }
                                         iconStyle={ sharedStyles.iconLarge }
-                                        backgroundColor={ sharedStyles.white }
                                         tooltip="Upload a file"
                                         tooltipStyles={ sharedStyles.tooltipIcon }
                                         onClick={()=>{document.getElementById('audioUpload').click()}} >
@@ -66,11 +78,10 @@ export default class Upload extends React.Component {
                                 <audio id = "audioTrack" controls style={ sharedStyles.audio }>
                                     <source src = {this.state.url} />
                                 </audio>
-                                <IconButton style={ sharedStyles.btnSmallAudio } 
+                                <IconButton style={ sharedStyles.btnSmallAudio }
                                             iconStyle={ sharedStyles.iconSmall }
                                             tooltip="Delete file selection"
                                             tooltipStyles={ sharedStyles.tooltipIcon }
-                                            backgroundColor={ sharedStyles.white }
                                             onClick={this.deleteUrl}>
                                     <Delete />
                                 </IconButton>
@@ -80,7 +91,7 @@ export default class Upload extends React.Component {
                                             iconStyle={ sharedStyles.iconLarge }
                                             tooltip="Convert"
                                             tooltipStyles={ sharedStyles.tooltipIcon }
-                                            onClick={()=>{this.props.router.push('/sheet')}}>
+                                            onClick={ onClick }>
                                     <Next />
                                 </IconButton>
                             </div>
