@@ -282,16 +282,6 @@ export default class Sheet extends React.Component {
 	render() {
 		return (
 			<div style = { styles.sheetContainer } >
-				<div>
-					<span>Notes:</span>
-					<input id="note-input" type="text" name="NoteInput" /><br/>
-					<span>Times:</span>
-					<input id="time-input" type="text" name="TimeInput" /><br/>
-					<div style = {{float: 'right'}}><IconButton {...iconProps} onClick = {this.download}><Download/></IconButton></div>
-					<div>
-					<button type="button" value="Generate Sheet" onClick={this.getDataAndPlot} />
-					</div>
-				</div>
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
 					    <CardTitle title="Scoresheet" titleStyle={ styles.cardTitle }>
