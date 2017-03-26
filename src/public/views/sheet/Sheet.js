@@ -69,9 +69,9 @@ export default class Sheet extends React.Component {
     	
 		pdf.create(html, config).toFile(filePath, function(err, res){
 			if (err) {
-				this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops something went wrong!'}})
+				this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops something went wrong!'})
 			} else {
-				this.setState({snackBarOpen: true, 'Your sheet has been saved!'}})	
+				this.setState({snackBarOpen: true, 'Your sheet has been saved!'})	
 			}
 		});
     }
