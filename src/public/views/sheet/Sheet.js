@@ -43,7 +43,7 @@ class Chord {
 		this.noteValues = noteValues;
 		this.willShift = willShift;
 	}
-	prevNoteAdjacent() {
+	prevNoteAdjacent(i) {
 		return this.noteValues[i-1] + 1 == this.noteValues[i];
 	}
 	highestNote() {
