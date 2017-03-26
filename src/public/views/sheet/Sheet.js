@@ -76,7 +76,6 @@ export default class Sheet extends React.Component {
 		});
     }
 
-
 	getDataAndPlot() {
 		const arr = JSON.parse(fs.readFileSync(this.props.location.query.url, 'utf8'));
 
