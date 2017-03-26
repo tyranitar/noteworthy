@@ -4,15 +4,25 @@ import styles from './styles';
 import sharedStyles from '../../styles/index';
 import IconButton from 'material-ui/IconButton';
 import Download from 'material-ui/svg-icons/file/file-download';
-import jspdf from 'jspdf';
+import pdf from 'html-pdf';
+import path from 'path';
+
+const config = {
+  "format": "Letter",        // allowed units: A3, A4, A5, Legal, Letter, Tabloid
+  "orientation": "portrait", // portrait or landscape
+  "quality": "75",           // only used for types png & jpeg
+  // Script options
+  "phantomPath": "./node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs", // PhantomJS binary which should get downloaded automatically
+  "phantomArgs": [], // array of strings used as phantomjs args e.g. ["--ignore-ssl-errors=yes"]
+             // Absolute path to a custom phantomjs script, use the file in lib/scripts as example
+  "script": './node_modules/html-pdf/lib/scripts/pdf_a4_portrait.js'
+}
 
 const iconProps = {
 	style: styles.downloadBtnSmall,
 	iconStyle: styles.downloadIconSmall,
 	backgroundColor: sharedStyles.white
 }
-
-const doc = new jspdf();
 
 const waitForFinalEvent = (()=>{
     let timers = {};
@@ -55,10 +65,12 @@ export default class Sheet extends React.Component {
     }
 
     download() {
-    	console.log(document.getElementById("cardContainer").innerHTML);
-    	doc.addHTML(document.getElementById('cardContainer'), 0, 0, () => {
-        	doc.save('samplers-file.pdf');
-        });
+    	const html = document.getElementById("cardContainer").innerHTML
+    	const filePath = './asd.pdf';
+    	
+		pdf.create(html, config).toFile(filePath, function(err, res){
+		  console.log(res);
+		});
     }
 
 
@@ -264,7 +276,9 @@ export default class Sheet extends React.Component {
 					<span>Times:</span>
 					<input id="time-input" type="text" name="TimeInput" /><br/>
 					<div style = {{float: 'right'}}><IconButton {...iconProps} onClick = {this.download}><Download/></IconButton></div>
+					<div>
 					<button type="button" value="Generate Sheet" onClick={this.getDataAndPlot} />
+					</div>
 				</div>
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
