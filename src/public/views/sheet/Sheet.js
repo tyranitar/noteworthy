@@ -370,7 +370,7 @@ export default class Sheet extends React.Component {
 	render() {
 		return (
 			<div style = { styles.sheetContainer } >
-                <div style = { { float: 'right', position: 'absolute', right: '100px' } }>
+                <div style = { { position: 'absolute', top: '-15px', right: '65px' } }>
                     <IconButton { ...smallIconProps } onClick = { this.download.bind(this) }>
                         <Download />
                     </IconButton>
