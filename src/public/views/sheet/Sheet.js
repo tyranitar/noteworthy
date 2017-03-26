@@ -9,12 +9,6 @@ import jspdf from 'jspdf';
 import fs from 'fs';
 import dict from './dict';
 
-const iconProps = {
-	style: styles.downloadBtnSmall,
-	iconStyle: styles.downloadIconSmall,
-	backgroundColor: sharedStyles.white
-}
-
 const doc = new jspdf();
 
 const waitForFinalEvent = (()=>{
