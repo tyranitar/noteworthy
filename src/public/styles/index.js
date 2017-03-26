@@ -11,10 +11,7 @@ const paddingLarge = (buttonSizeLarge - iconSizeLarge) / 2;
 const paddingMedium = (buttonSizeMedium - iconSizeMedium) / 2;
 
 export default {
-    'white': white,
-    'grey500': grey500,
-    'tealA400': tealA400,
-    'grey300': grey300,
+    tealA400,
 
     layoutStyle: {
         height: '100%',
@@ -50,7 +47,7 @@ export default {
 
     audioTrackContainer: {
         display: 'flex',
-        'paddingTop': '25px',
+        paddingTop: '25px',
         justifyContent: 'center',
         position: 'relative'
     },
@@ -78,7 +75,7 @@ export default {
         width: `${ buttonSizeMedium }px`,
         height: `${ buttonSizeMedium }px`,
         padding: `${ paddingMedium }px`,
-        margin: '25px',
+        margin: `${ marginMedium }px`,
         borderRadius: '50%',
         border: `5px solid ${ tealA400 }`
     },
@@ -96,7 +93,7 @@ export default {
         width: `${ buttonSizeLarge }px`,
         height: `${ buttonSizeLarge }px`,
         padding: `${ paddingLarge }px`,
-        margin: '25px',
+        margin: `${ marginLarge }px`,
         borderRadius: '50%',
         border: `5px solid ${ tealA400 }`
     },
@@ -115,5 +112,4 @@ export default {
     audio: {
         margin: '12px'
     }
-    // Shared styles.
 };

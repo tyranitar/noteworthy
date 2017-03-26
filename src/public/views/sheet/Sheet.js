@@ -11,12 +11,6 @@ import dict from './dict';
 
 let chordArray, timeArray;
 
-const iconProps = {
-	style: styles.downloadBtnSmall,
-	iconStyle: styles.downloadIconSmall,
-	backgroundColor: sharedStyles.white
-}
-
 const doc = new jspdf();
 
 const waitForFinalEvent = (()=>{

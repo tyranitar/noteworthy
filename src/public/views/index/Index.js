@@ -8,8 +8,8 @@ import styles from './styles';
 import sharedStyles from '../../styles/index'
 
 const iconProps = {
-    style: styles.buttonStyle,
-    iconStyle: styles.iconStyle
+    style: sharedStyles.btnLarge,
+    iconStyle: sharedStyles.iconLarge
 };
 
 export default class Index extends React.Component {
