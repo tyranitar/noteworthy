@@ -16,8 +16,8 @@ export default class Home extends Component {
 					<div style={ homeLinkStyle }>
 						<Link to='/'>
 							<IconButton iconStyle={ sharedStyles.iconMed } >
-								<ActionHome />
-							</IconButton>
+ 								<ActionHome />
+ 							</IconButton>
 						</Link>
 					</div>
 				}
