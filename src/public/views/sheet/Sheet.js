@@ -6,16 +6,15 @@ import IconButton from 'material-ui/IconButton';
 import Download from 'material-ui/svg-icons/file/file-download';
 import pdf from 'html-pdf';
 import path from 'path';
+import SnackBar from 'material-ui/SnackBar';
 
 const config = {
-  "format": "Letter",        // allowed units: A3, A4, A5, Legal, Letter, Tabloid
-  "orientation": "portrait", // portrait or landscape
-  "quality": "75",           // only used for types png & jpeg
-  // Script options
-  "phantomPath": "./node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs", // PhantomJS binary which should get downloaded automatically
-  "phantomArgs": [], // array of strings used as phantomjs args e.g. ["--ignore-ssl-errors=yes"]
-             // Absolute path to a custom phantomjs script, use the file in lib/scripts as example
-  "script": './node_modules/html-pdf/lib/scripts/pdf_a4_portrait.js'
+  format: "Letter",
+  orientation: "portrait",
+  quality: "75",
+  phantomPath: "./node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
+  phantomArgs: [],
+  script: './node_modules/html-pdf/lib/scripts/pdf_a4_portrait.js'
 }
 
 import fs from 'fs';
@@ -50,6 +49,11 @@ export default class Sheet extends React.Component {
 	constructor() {
 	    super();
 
+	    this.state = {
+	    	snackBarMessage: '',
+	    	snackBarOpen: false
+	    }
+
 	    this.plotSheet = this.plotSheet.bind(this);
 	    this.getDataAndPlot = this.getDataAndPlot.bind(this);
 		this.download = this.download.bind(this);
@@ -61,10 +65,14 @@ export default class Sheet extends React.Component {
 
     download() {
     	const html = document.getElementById("cardContainer").innerHTML
-    	const filePath = './asd.pdf';
+    	const filePath = './sheet.pdf';
     	
 		pdf.create(html, config).toFile(filePath, function(err, res){
-		  console.log(res);
+			if (err) {
+				this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops something went wrong!'}})
+			} else {
+				this.setState({snackBarOpen: true, 'Your sheet has been saved!'}})	
+			}
 		});
     }
 
@@ -291,6 +299,8 @@ export default class Sheet extends React.Component {
 						<div id="sheet" style = {{textAlign: 'center', marginLeft: '25px', marginRight: '25px'}}></div>
 					</Card>
 				</div>
+
+				<Snackbar open={this.state.snackBarOpen} message={this.state.snackBarMessage} autoHideDuration={2000} onRequestClose={()=> {this.setState({snackBarOpen: false})}}/>
 			</div>
 		)
 	}
