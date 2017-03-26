@@ -1,7 +1,7 @@
 function p = predict(Theta1, Theta2, X)
     % Only predictions with a probability > thresh will be returned.
     % TODO: Try tweaking this.
-    thresh = 0.5;
+    thresh = 0.75;
 
     m = size(X, 1);
     num_labels = size(Theta2, 1);
