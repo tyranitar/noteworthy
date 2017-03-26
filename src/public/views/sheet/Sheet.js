@@ -6,19 +6,24 @@ import IconButton from 'material-ui/IconButton';
 import Download from 'material-ui/svg-icons/file/file-download';
 import pdf from 'html-pdf';
 import path from 'path';
-import SnackBar from 'material-ui/SnackBar';
-
-const config = {
-  format: "Letter",
-  orientation: "portrait",
-  quality: "75",
-  phantomPath: "./node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
-  phantomArgs: [],
-  script: './node_modules/html-pdf/lib/scripts/pdf_a4_portrait.js'
-}
-
+import Snackbar from 'material-ui/Snackbar';
 import fs from 'fs';
 import dict from './dict';
+
+const config = {
+    format: "Letter",
+    orientation: "portrait",
+    quality: "75",
+    phantomPath: "./node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
+    phantomArgs: [],
+    script: './node_modules/html-pdf/lib/scripts/pdf_a4_portrait.js'
+};
+
+const smallIconProps = {
+	style: sharedStyles.btnSmallAudio,
+    iconStyle: sharedStyles.iconSmall,
+    tooltipStyles: sharedStyles.tooltipIcon,
+};
 
 const waitForFinalEvent = (()=>{
     let timers = {};
@@ -50,9 +55,9 @@ export default class Sheet extends React.Component {
 	    super();
 
 	    this.state = {
-	    	snackBarMessage: '',
-	    	snackBarOpen: false
-	    }
+	    	snackbarMessage: '',
+	    	snackbarOpen: false
+	    };
 
 	    this.plotSheet = this.plotSheet.bind(this);
 	    this.getDataAndPlot = this.getDataAndPlot.bind(this);
@@ -63,15 +68,28 @@ export default class Sheet extends React.Component {
 		this.getDataAndPlot();
     }
 
+    openSnackbar(snackbarMessage) {
+        this.setState({
+            snackbarOpen: true,
+            snackbarMessage
+        });
+    }
+
+    closeSnackbar() {
+        this.setState({
+            snackbarOpen: false
+        });
+    }
+
     download() {
     	const html = document.getElementById("cardContainer").innerHTML
     	const filePath = './temp/sheet.pdf';
-    	
-		pdf.create(html, config).toFile(filePath, function(err, res){
+
+		pdf.create(html, config).toFile(filePath, (err, res) => {
 			if (err) {
-				this.setState({snackBarOpen: true, snackBarMessage: err.message || 'Oops something went wrong!'})
+				this.openSnackbar(err.message || 'Oops something went wrong!');
 			} else {
-				this.setState({snackBarOpen: true, snackBarMessage: 'Your sheet has been saved!'})	
+				this.openSnackbar('Your sheet has been saved!');
 			}
 		});
     }
@@ -283,13 +301,18 @@ export default class Sheet extends React.Component {
 			<div style = { styles.sheetContainer } >
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
+                        <div style = { { float: 'right', position: 'absolute', right: '100px' } }>
+                            <IconButton { ...smallIconProps } onClick = { this.download.bind(this) }>
+                                <Download />
+                            </IconButton>
+                        </div>
 					    <CardTitle title="Scoresheet" titleStyle={ styles.cardTitle }>
 					    </CardTitle>
 						<div id="sheet" style = {{textAlign: 'center', marginLeft: '25px', marginRight: '25px'}}></div>
 					</Card>
 				</div>
 
-				<Snackbar open={this.state.snackBarOpen} message={this.state.snackBarMessage} autoHideDuration={2000} onRequestClose={()=> {this.setState({snackBarOpen: false})}}/>
+				<Snackbar open={this.state.snackbarOpen} message={this.state.snackbarMessage} autoHideDuration={2000} onRequestClose={ this.closeSnackbar.bind(this) }/>
 			</div>
 		)
 	}
