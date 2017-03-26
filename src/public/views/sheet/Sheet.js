@@ -299,13 +299,13 @@ export default class Sheet extends React.Component {
 	render() {
 		return (
 			<div style = { styles.sheetContainer } >
+                <div style = { { float: 'right', position: 'absolute', right: '100px' } }>
+                    <IconButton { ...smallIconProps } onClick = { this.download.bind(this) }>
+                        <Download />
+                    </IconButton>
+                </div>
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
-                        <div style = { { float: 'right', position: 'absolute', right: '100px' } }>
-                            <IconButton { ...smallIconProps } onClick = { this.download.bind(this) }>
-                                <Download />
-                            </IconButton>
-                        </div>
 					    <CardTitle title="Scoresheet" titleStyle={ styles.cardTitle }>
 					    </CardTitle>
 						<div id="sheet" style = {{textAlign: 'center', marginLeft: '25px', marginRight: '25px'}}></div>
