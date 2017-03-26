@@ -65,7 +65,7 @@ export default class Sheet extends React.Component {
 
     download() {
     	const html = document.getElementById("cardContainer").innerHTML
-    	const filePath = './sheet.pdf';
+    	const filePath = './temp/sheet.pdf';
     	
 		pdf.create(html, config).toFile(filePath, function(err, res){
 			if (err) {
