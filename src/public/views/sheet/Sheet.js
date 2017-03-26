@@ -21,12 +21,6 @@ const config = {
 import fs from 'fs';
 import dict from './dict';
 
-const iconProps = {
-	style: styles.downloadBtnSmall,
-	iconStyle: styles.downloadIconSmall,
-	backgroundColor: sharedStyles.white
-}
-
 const waitForFinalEvent = (()=>{
     let timers = {};
     return function (callback, ms, uniqueId) {

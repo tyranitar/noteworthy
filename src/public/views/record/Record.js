@@ -16,6 +16,7 @@ import sharedStyles from '../../styles/index';
 import Snackbar from 'material-ui/Snackbar';
 import TextField from 'material-ui/TextField';
 import octaveClientConnection from '../../octave-client-connection';
+import Loader from '../../components/loader/Loader';
 
 const mergeBuffers = (channelBuffer, recordingLength) =>{
 	const result = new Float32Array(recordingLength);
@@ -78,7 +79,8 @@ export default class Record extends React.Component {
 	        fileName: '',
 	        paused: false,
 	        snackBarOpen: false,
-	        snackBarMessage: ''
+	        snackBarMessage: '',
+			loading: false
 	    }
 
 	    this.pause = this.pause.bind(this);
@@ -311,6 +313,10 @@ export default class Record extends React.Component {
     renderSubmitButton() {
         if (!this.state.playing && this.url) {
 			const onClick = () => {
+				this.setState({
+					loading: true
+				});
+
 				octaveClientConnection.then((octaveClient) => {
 					octaveClient.addListener((chunk) => {
 						const outputLocation = new TextDecoder("utf-8").decode(chunk);
@@ -356,6 +362,23 @@ export default class Record extends React.Component {
             audioTrack.load();
         }
 
+		if (this.state.loading) {
+			return (
+	            <div style={ sharedStyles.layoutStyle }>
+	                <div style={ sharedStyles.fullWidth }>
+	                    <div style={ sharedStyles.containerStyle }>
+	                        <div style={ sharedStyles.largeCaption }>
+	                            <span style={ { color: sharedStyles.tealA400 } }>Transcribing...</span>
+	                        </div>
+						</div>
+	                    <div style={ sharedStyles.containerStyle }>
+							<Loader />
+						</div>
+					</div>
+				</div>
+			);
+		}
+
         return (
             <div style={ sharedStyles.layoutStyle }>
                 <div style={ sharedStyles.fullWidth }>
@@ -372,7 +395,7 @@ export default class Record extends React.Component {
 	                		{(!this.url && !this.state.playing && !this.state.paused) && 'Press the button below to begin recording' }
 	                    	{(!this.url && this.state.playing) && 'Recording...' }
 	                    	{(!this.url && this.state.paused) && 'Paused, press play to resume recording'}
-	                    	{(this.url && !this.state.playing) && 'Translate your recording now' }
+	                    	{(this.url && !this.state.playing) && 'Transcribe your recording now' }
 	                    </span>
                     </div>
 

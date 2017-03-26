@@ -7,6 +7,7 @@ import Delete from 'material-ui/svg-icons/action/delete';
 import Next from 'material-ui/svg-icons/av/skip-next';
 
 import octaveClientConnection from '../../octave-client-connection';
+import Loader from '../../components/loader/Loader';
 
 export default class Upload extends React.Component {
 
@@ -14,7 +15,8 @@ export default class Upload extends React.Component {
 		super();
 
 		this.state = {
-			url : ''
+			url : '',
+			loading: false
 		}
 
         this.deleteUrl = this.deleteUrl.bind(this);
@@ -33,6 +35,10 @@ export default class Upload extends React.Component {
         };
 
 		const onClick = () => {
+			this.setState({
+				loading: true
+			});
+
 			octaveClientConnection.then((octaveClient) => {
 				octaveClient.addListener((chunk) => {
 					const outputLocation = new TextDecoder("utf-8").decode(chunk);
@@ -42,6 +48,23 @@ export default class Upload extends React.Component {
 				octaveClient.send(this.state.url);
 			})
 		};
+
+		if (this.state.loading) {
+			return (
+	            <div style={ sharedStyles.layoutStyle }>
+	                <div style={ sharedStyles.fullWidth }>
+	                    <div style={ sharedStyles.containerStyle }>
+	                        <div style={ sharedStyles.largeCaption }>
+	                            <span style={ { color: sharedStyles.tealA400 } }>Transcribing...</span>
+	                        </div>
+						</div>
+	                    <div style={ sharedStyles.containerStyle }>
+							<Loader />
+						</div>
+					</div>
+				</div>
+			);
+		}
 
         return (
             <div style={ sharedStyles.layoutStyle }>

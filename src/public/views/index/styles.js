@@ -18,21 +18,6 @@ export default {
         color: tealA400
     },
 
-    buttonStyle: {
-        marginTop: `${ margin }px`,
-        marginLeft: `${ margin }px`,
-        marginRight: `${ margin }px`,
-        width: `${ buttonSize }px`,
-        height: `${ buttonSize }px`,
-        padding: `${ padding }px`
-    },
-
-    iconStyle: {
-        width: `${ iconSize }px`,
-        height: `${ iconSize }px`,
-        fill: tealA400
-    },
-
     spanStyle: {
         display: 'block',
         textAlign: 'center',
