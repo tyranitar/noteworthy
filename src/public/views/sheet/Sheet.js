@@ -4,14 +4,28 @@ import styles from './styles';
 import sharedStyles from '../../styles/index';
 import IconButton from 'material-ui/IconButton';
 import Download from 'material-ui/svg-icons/file/file-download';
-import jspdf from 'jspdf';
-
+import pdf from 'html-pdf';
+import path from 'path';
+import Snackbar from 'material-ui/Snackbar';
 import fs from 'fs';
 import dict from './dict';
 
 let chordArray, timeArray;
 
-const doc = new jspdf();
+const config = {
+    format: "Letter",
+    orientation: "portrait",
+    quality: "75",
+    phantomPath: "./node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs",
+    phantomArgs: [],
+    script: './node_modules/html-pdf/lib/scripts/pdf_a4_portrait.js'
+};
+
+const smallIconProps = {
+	style: sharedStyles.btnSmallAudio,
+    iconStyle: sharedStyles.iconSmall,
+    tooltipStyles: sharedStyles.tooltipIcon,
+};
 
 const waitForFinalEvent = (()=>{
     let timers = {};
@@ -59,6 +73,11 @@ export default class Sheet extends React.Component {
 	constructor() {
 	    super();
 
+	    this.state = {
+	    	snackbarMessage: '',
+	    	snackbarOpen: false
+	    };
+
 	    this.plotSheet = this.plotSheet.bind(this);
 	    this.getDataAndPlot = this.getDataAndPlot.bind(this);
 		this.download = this.download.bind(this);
@@ -72,10 +91,30 @@ export default class Sheet extends React.Component {
         });
     }
 
-    download() {
-    	doc.addHTML(document.getElementById('cardContainer'), 0, 0, () => {
-        	doc.save('samplers-file.pdf');
+    openSnackbar(snackbarMessage) {
+        this.setState({
+            snackbarOpen: true,
+            snackbarMessage
         });
+    }
+
+    closeSnackbar() {
+        this.setState({
+            snackbarOpen: false
+        });
+    }
+
+    download() {
+    	const html = document.getElementById("cardContainer").innerHTML
+    	const filePath = './temp/sheet.pdf';
+
+		pdf.create(html, config).toFile(filePath, (err, res) => {
+			if (err) {
+				this.openSnackbar(err.message || 'Oops something went wrong!');
+			} else {
+				this.openSnackbar('Your sheet has been saved!');
+			}
+		});
     }
 
 	getDataAndPlot() {
@@ -331,6 +370,11 @@ export default class Sheet extends React.Component {
 	render() {
 		return (
 			<div style = { styles.sheetContainer } >
+                <div style = { { float: 'right', position: 'absolute', right: '100px' } }>
+                    <IconButton { ...smallIconProps } onClick = { this.download.bind(this) }>
+                        <Download />
+                    </IconButton>
+                </div>
 				<div id = "cardContainer" style = {styles.cardContainer}>
 					<Card style = { styles.cardStyle }>
 					    <CardTitle title="Scoresheet" titleStyle={ styles.cardTitle }>
@@ -338,6 +382,8 @@ export default class Sheet extends React.Component {
 						<div id="sheet" style = {{textAlign: 'center', marginLeft: '25px', marginRight: '25px'}}></div>
 					</Card>
 				</div>
+
+				<Snackbar open={this.state.snackbarOpen} message={this.state.snackbarMessage} autoHideDuration={2000} onRequestClose={ this.closeSnackbar.bind(this) }/>
 			</div>
 		)
 	}

@@ -25,5 +25,9 @@ module.exports = {
     output: {
         path     : path.join(__dirname, 'src', 'public'),
         filename : 'app.min.js'
-    }
+    },
+
+    plugins: [
+        new webpack.IgnorePlugin(/vertx/)
+    ]
 };
