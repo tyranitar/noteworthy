@@ -9,7 +9,7 @@ import jspdf from 'jspdf';
 import fs from 'fs';
 import dict from './dict';
 
-var chordArray, timeArray;
+let chordArray, timeArray;
 
 const iconProps = {
 	style: styles.downloadBtnSmall,
@@ -29,19 +29,21 @@ const waitForFinalEvent = (()=>{
     };
 })();
 
-function Chord(duration, noteValues, willShift) {
-    this.duration = duration;
-    this.noteValues = noteValues;
-    this.willShift = willShift;
-    this.prevNoteAdjacent = function(i) {
-        return this.noteValues[i-1] + 1 == this.noteValues[i];
-    };
-    this.highestNote = function() {
-        return this.noteValues[this.noteValues.length-1];
-    };
-    this.lowestNote = function() {
-        return this.noteValues[0];
-    }
+class Chord {
+	constructor(duration, noteValues, willShift) {
+		this.duration = duration;
+		this.noteValues = noteValues;
+		this.willShift = willShift;
+	}
+	prevNoteAdjacent() {
+		return this.noteValues[i-1] + 1 == this.noteValues[i];
+	}
+	highestNote() {
+		return this.noteValues[this.noteValues.length-1];
+	}
+	lowestNote() {
+		return this.noteValues[0];
+	}
 }
 
 function mapNoteValues(note) {
@@ -277,7 +279,7 @@ export default class Sheet extends React.Component {
 	            }
 
 	            //additional lines
-	            for (let linePos = staffMiddle - (numberOfStaffLines+1)/2*verticalLineSpacing, i = noteValues[noteValues.length-1] - (numberOfStaffLines+1); i >= 0; i -= 2, linePos -= verticalLineSpacing) {
+	            for (let linePos = staffMiddle - (numberOfStaffLines+1)/2*verticalLineSpacing, i = chord.highestNote() - (numberOfStaffLines+1); i >= 0; i -= 2, linePos -= verticalLineSpacing) {
 	                staff.append("line")
 	                    .attr("x1", xPosition-scale10)
 	                    .attr("y1", linePos)
@@ -286,7 +288,7 @@ export default class Sheet extends React.Component {
 	                    .style("stroke", "#000")
 	                    .style("stroke-width", "0.5");
 	            }
-	            for (let linePos = staffMiddle + (numberOfStaffLines+1)/2*verticalLineSpacing, i = noteValues[0] + (numberOfStaffLines+1); i <= 0; i += 2, linePos += verticalLineSpacing) {
+	            for (let linePos = staffMiddle + (numberOfStaffLines+1)/2*verticalLineSpacing, i = chord.lowestNote() + (numberOfStaffLines+1); i <= 0; i += 2, linePos += verticalLineSpacing) {
 	                staff.append("line")
 	                    .attr("x1", xPosition-scale10)
 	                    .attr("y1", linePos)
