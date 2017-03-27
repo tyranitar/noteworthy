@@ -57,8 +57,10 @@ class Chord {
 function mapNoteValues(note) {
     const octave = note.match(/[+-]?[0-9]+/);
     const letter = note.match(/[a-g]/);
-    // -97 for ASCII conversion, -28 to octave #4 and -6 to shift to B4 = -126, -133 for right-hand staff
-    return (octave && letter) && parseInt(octave[0])*7 + letter[0].charCodeAt(0) - 126;
+    // -97 for ASCII conversion, +5 to shift = -92; -28 to octave #4 and +1 to shift to B4 = -27, -133 for right-hand staff
+    if (!(octave && letter))
+        return null;
+    return parseInt(octave[0])*7 + (letter[0].charCodeAt(0) - 92)%7 - 27;
 }
 
 function add(a, b) {
@@ -243,93 +245,99 @@ export default class Sheet extends React.Component {
 	            let time = duration[index];
 
 	            let shifted = false;
-	            //Iterate through each note in chord
-	            for (let i = 0, len = noteValues.length, dx = 0; i < len; i++) {
-	                let yPosition = staffMiddle - noteValues[i]*verticalNoteSpacing;
 
-	                if (i > 0 && chord.prevNoteAdjacent(i)) {
-	                    //shift note right if adjacent to another, shift back if 2nd adjcent note
-	                    if (dx)//if dx has value (!=0)
-	                        dx = 0;
-	                    else {
-	                        dx = shift;
-	                        shifted = true;
-	                    }
-	                }
+                if (noteValues[0] != null) {
+    	            //Iterate through each note in chord
+    	            for (let i = 0, len = noteValues.length, dx = 0; i < len; i++) {
+    	                let yPosition = staffMiddle - noteValues[i]*verticalNoteSpacing;
 
-	                //whole notes
-	                if (time >= 3.8) {
-	                    staff.append("ellipse")
-	                        .attr("cx", xPosition + dx)
-	                        .attr("cy", yPosition)
-	                        .attr("rx", scale8)
-	                        .attr("ry", scale5)
-	                        .style("fill", "#000");
-	                    staff.append("ellipse")
-	                        .attr("cx", xPosition + dx - yPosition*skewX15Adjustment)
-	                        .attr("cy", yPosition)
-	                        .attr("rx", scale4)
-	                        .attr("ry", scale4)
-	                        .attr("transform", "skewX(15)")
-	                        .style("fill", "#fff");
-	                }
-	                else {
-	                    //black (quarter) note
-	                    staff.append("ellipse")
-	                        .attr("cx", xPosition + dx)
-	                        .attr("cy", yPosition + (xPosition + dx)*skewY10Adjustment)
-	                        .attr("rx", scale6)
-	                        .attr("ry", scale5)
-	                        .attr("transform", "skewY(-10)")
-	                        .style("fill", "#000");
+    	                if (i > 0 && chord.prevNoteAdjacent(i)) {
+    	                    //shift note right if adjacent to another, shift back if 2nd adjcent note
+    	                    if (dx)//if dx has value (!=0)
+    	                        dx = 0;
+    	                    else {
+    	                        dx = shift;
+    	                        shifted = true;
+    	                    }
+    	                }
 
-	                    if (time >= 1.8) {
-	                        //half note
-	                        staff.append("ellipse")
-	                            .attr("cx", xPosition + dx)
-	                            .attr("cy", yPosition + (xPosition + dx)*skewY30Adjustment)
-	                            .attr("rx", scale4_8)
-	                            .attr("ry", scale2_5)
-	                            .attr("transform", "skewY(-30)")
-	                            .style("fill", "#fff");
-	                    }
-	                }
-	            }
-	            //flag
-	            if (time < 3.8) {
-	                let flagVerticalShift = skewY10Adjustment*scale6;
-	                let upperNote = chord.highestNote()*verticalNoteSpacing;
-	                let lowerNote = chord.lowestNote()*verticalNoteSpacing;// + flagVerticalShift;
-	                //draw flag pointing up or down
-	                let pointUp = noteValues.reduce(add, 0) <= 0;
-	                staff.append("line")
-	                    .attr("x1", xPosition + (shifted||pointUp ? shift/2 : -shift/2))
-	                    .attr("y1", staffMiddle - upperNote - (pointUp ? flagTailLength : (shifted ? flagVerticalShift : -flagVerticalShift)))
-	                    .attr("x2", xPosition + (shifted||pointUp ? shift/2 : -shift/2))
-	                    .attr("y2", staffMiddle - lowerNote + (pointUp ? -flagVerticalShift : flagTailLength))
-	                    .style("stroke", "#000")
-	                    .style("stroke-width", "0.5");
-	            }
+    	                //whole notes
+    	                if (time >= 3.8) {
+    	                    staff.append("ellipse")
+    	                        .attr("cx", xPosition + dx)
+    	                        .attr("cy", yPosition)
+    	                        .attr("rx", scale8)
+    	                        .attr("ry", scale5)
+    	                        .style("fill", "#000");
+    	                    staff.append("ellipse")
+    	                        .attr("cx", xPosition + dx - yPosition*skewX15Adjustment)
+    	                        .attr("cy", yPosition)
+    	                        .attr("rx", scale4)
+    	                        .attr("ry", scale4)
+    	                        .attr("transform", "skewX(15)")
+    	                        .style("fill", "#fff");
+    	                }
+    	                else {
+    	                    //black (quarter) note
+    	                    staff.append("ellipse")
+    	                        .attr("cx", xPosition + dx)
+    	                        .attr("cy", yPosition + (xPosition + dx)*skewY10Adjustment)
+    	                        .attr("rx", scale6)
+    	                        .attr("ry", scale5)
+    	                        .attr("transform", "skewY(-10)")
+    	                        .style("fill", "#000");
 
-	            //additional lines
-	            for (let linePos = staffMiddle - (numberOfStaffLines+1)/2*verticalLineSpacing, i = chord.highestNote() - (numberOfStaffLines+1); i >= 0; i -= 2, linePos -= verticalLineSpacing) {
-	                staff.append("line")
-	                    .attr("x1", xPosition-scale10)
-	                    .attr("y1", linePos)
-	                    .attr("x2", xPosition+scale10 + (shifted ? shift : 0))
-	                    .attr("y2", linePos)
-	                    .style("stroke", "#000")
-	                    .style("stroke-width", "0.5");
-	            }
-	            for (let linePos = staffMiddle + (numberOfStaffLines+1)/2*verticalLineSpacing, i = chord.lowestNote() + (numberOfStaffLines+1); i <= 0; i += 2, linePos += verticalLineSpacing) {
-	                staff.append("line")
-	                    .attr("x1", xPosition-scale10)
-	                    .attr("y1", linePos)
-	                    .attr("x2", xPosition+scale10 + (shifted ? shift : 0))
-	                    .attr("y2", linePos)
-	                    .style("stroke", "#000")
-	                    .style("stroke-width", "0.5");
-	            }
+    	                    if (time >= 1.8) {
+    	                        //half note
+    	                        staff.append("ellipse")
+    	                            .attr("cx", xPosition + dx)
+    	                            .attr("cy", yPosition + (xPosition + dx)*skewY30Adjustment)
+    	                            .attr("rx", scale4_8)
+    	                            .attr("ry", scale2_5)
+    	                            .attr("transform", "skewY(-30)")
+    	                            .style("fill", "#fff");
+    	                    }
+    	                }
+    	            }
+    	            //flag
+    	            if (time < 3.8) {
+    	                let flagVerticalShift = skewY10Adjustment*scale6;
+    	                let upperNote = chord.highestNote()*verticalNoteSpacing;
+    	                let lowerNote = chord.lowestNote()*verticalNoteSpacing;// + flagVerticalShift;
+    	                //draw flag pointing up or down
+    	                let pointUp = noteValues.reduce(add, 0) <= 0;
+    	                staff.append("line")
+    	                    .attr("x1", xPosition + (shifted||pointUp ? shift/2 : -shift/2))
+    	                    .attr("y1", staffMiddle - upperNote - (pointUp ? flagTailLength : (shifted ? flagVerticalShift : -flagVerticalShift)))
+    	                    .attr("x2", xPosition + (shifted||pointUp ? shift/2 : -shift/2))
+    	                    .attr("y2", staffMiddle - lowerNote + (pointUp ? -flagVerticalShift : flagTailLength))
+    	                    .style("stroke", "#000")
+    	                    .style("stroke-width", "0.5");
+    	            }
+
+    	            //additional lines
+    	            for (let linePos = staffMiddle - (numberOfStaffLines+1)/2*verticalLineSpacing, i = chord.highestNote() - (numberOfStaffLines+1); i >= 0; i -= 2, linePos -= verticalLineSpacing) {
+    	                staff.append("line")
+    	                    .attr("x1", xPosition-scale10)
+    	                    .attr("y1", linePos)
+    	                    .attr("x2", xPosition+scale10 + (shifted ? shift : 0))
+    	                    .attr("y2", linePos)
+    	                    .style("stroke", "#000")
+    	                    .style("stroke-width", "0.5");
+    	            }
+    	            for (let linePos = staffMiddle + (numberOfStaffLines+1)/2*verticalLineSpacing, i = chord.lowestNote() + (numberOfStaffLines+1); i <= 0; i += 2, linePos += verticalLineSpacing) {
+    	                staff.append("line")
+    	                    .attr("x1", xPosition-scale10)
+    	                    .attr("y1", linePos)
+    	                    .attr("x2", xPosition+scale10 + (shifted ? shift : 0))
+    	                    .attr("y2", linePos)
+    	                    .style("stroke", "#000")
+    	                    .style("stroke-width", "0.5");
+    	            }
+                }
+                else {
+                    //pause
+                }
 
 	            xPosition += (time >= 0.5 ? time*distanceBetweenNotes : minimumDistanceBetweenNotes + (shifted ? shift : 0));
 	            index++;
