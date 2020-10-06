@@ -1,1 +1,13 @@
+data
+data_test
+examples
 node_modules
+temp
+vendor
+
+output.json
+*.exe
+*.mat
+*.mid
+*.min.js
+*.wav
