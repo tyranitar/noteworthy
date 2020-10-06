@@ -19,6 +19,6 @@
   "homepage": "https://github.com/tyron-j/noteworthy#readme",
   "dependencies": {},
   "devDependencies": {
-    "electron": "^1.4.15"
+    "electron": "^10.1.3"
   }
 }
